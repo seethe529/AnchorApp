@@ -15,6 +15,8 @@ import BreathingExercise from './src/components/BreathingExercise';
 import SafetyPlan from './src/components/SafetyPlan';
 import { setupNotifications } from './src/utils/notifications';
 import { storage } from './src/utils/storage';
+import ErrorBoundary from './src/components/ErrorBoundary';
+import ErrorLogger from './src/utils/errorLogger';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -59,8 +61,13 @@ export default function App() {
   }, []);
 
   const checkDisclaimer = async () => {
-    const accepted = await storage.getItem('disclaimer_accepted');
-    setDisclaimerAccepted(accepted === true);
+    try {
+      const accepted = await storage.getItem('disclaimer_accepted');
+      setDisclaimerAccepted(accepted === true);
+    } catch (error) {
+      ErrorLogger.logStorageError(error, 'checkDisclaimer');
+      setDisclaimerAccepted(false);
+    }
   };
 
   if (disclaimerAccepted === null) {
@@ -68,6 +75,7 @@ export default function App() {
   }
 
   return (
+    <ErrorBoundary>
     <SafeAreaProvider>
     <NavigationContainer>
       <Stack.Navigator
@@ -102,5 +110,6 @@ export default function App() {
       </Stack.Navigator>
     </NavigationContainer>
     </SafeAreaProvider>
+    </ErrorBoundary>
   );
 }

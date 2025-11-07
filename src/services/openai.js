@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import ErrorLogger from '../utils/errorLogger';
 
 const OPENAI_API_KEY = Constants.expoConfig?.extra?.openaiApiKey || '';
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
@@ -45,15 +46,24 @@ export const sendMessageToOpenAI = async (message, conversationHistory = []) => 
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('OpenAI API Error Details:', errorData);
+      ErrorLogger.logAPIError(new Error(`Status ${response.status}: ${errorData}`), 'OpenAI');
       throw new Error(`OpenAI API error: ${response.status}`);
     }
 
     const data = await response.json();
     return data.choices[0].message.content;
   } catch (error) {
-    console.error('OpenAI API error:', error);
-    // Fallback to basic response
+    ErrorLogger.logAPIError(error, 'sendMessageToOpenAI');
+    
+    // User-friendly fallback responses
+    if (!OPENAI_API_KEY) {
+      return "I'm here to listen. The AI support feature requires an API key to be configured. In the meantime, you can explore the Tools section for helpful techniques.";
+    }
+    
+    if (error.message?.includes('network') || error.message?.includes('fetch')) {
+      return "I'm having trouble connecting right now. Please check your internet connection and try again.";
+    }
+    
     return "I'm here to support you. Could you tell me more about what you're experiencing right now?";
   }
 };

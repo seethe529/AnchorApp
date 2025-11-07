@@ -1,14 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import ErrorLogger from './errorLogger';
 
 // Secure storage for sensitive data (fallback to AsyncStorage on web)
 export const secureStorage = {
   async setItem(key, value) {
-    if (Platform.OS === 'web') {
-      await AsyncStorage.setItem(`secure_${key}`, JSON.stringify(value));
-    } else {
-      const SecureStore = require('expo-secure-store');
-      await SecureStore.setItemAsync(key, JSON.stringify(value));
+    try {
+      if (Platform.OS === 'web') {
+        await AsyncStorage.setItem(`secure_${key}`, JSON.stringify(value));
+      } else {
+        const SecureStore = require('expo-secure-store');
+        await SecureStore.setItemAsync(key, JSON.stringify(value));
+      }
+    } catch (error) {
+      ErrorLogger.logStorageError(error, `secureStorage.setItem(${key})`);
+      throw error;
     }
   },
   
@@ -23,17 +29,22 @@ export const secureStorage = {
       }
       return value ? JSON.parse(value) : null;
     } catch (error) {
-      console.error('SecureStorage getItem error:', error);
+      ErrorLogger.logStorageError(error, `secureStorage.getItem(${key})`);
       return null;
     }
   },
   
   async removeItem(key) {
-    if (Platform.OS === 'web') {
-      await AsyncStorage.removeItem(`secure_${key}`);
-    } else {
-      const SecureStore = require('expo-secure-store');
-      await SecureStore.deleteItemAsync(key);
+    try {
+      if (Platform.OS === 'web') {
+        await AsyncStorage.removeItem(`secure_${key}`);
+      } else {
+        const SecureStore = require('expo-secure-store');
+        await SecureStore.deleteItemAsync(key);
+      }
+    } catch (error) {
+      ErrorLogger.logStorageError(error, `secureStorage.removeItem(${key})`);
+      throw error;
     }
   }
 };
@@ -41,16 +52,31 @@ export const secureStorage = {
 // Regular storage for non-sensitive data
 export const storage = {
   async setItem(key, value) {
-    await AsyncStorage.setItem(key, JSON.stringify(value));
+    try {
+      await AsyncStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      ErrorLogger.logStorageError(error, `storage.setItem(${key})`);
+      throw error;
+    }
   },
   
   async getItem(key) {
-    const value = await AsyncStorage.getItem(key);
-    return value ? JSON.parse(value) : null;
+    try {
+      const value = await AsyncStorage.getItem(key);
+      return value ? JSON.parse(value) : null;
+    } catch (error) {
+      ErrorLogger.logStorageError(error, `storage.getItem(${key})`);
+      return null;
+    }
   },
   
   async removeItem(key) {
-    await AsyncStorage.removeItem(key);
+    try {
+      await AsyncStorage.removeItem(key);
+    } catch (error) {
+      ErrorLogger.logStorageError(error, `storage.removeItem(${key})`);
+      throw error;
+    }
   }
 };
 

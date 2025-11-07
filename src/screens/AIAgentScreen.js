@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { suggestTechniques } from '../data/techniques';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { sendMessageToOpenAI } from '../services/openai';
+import ErrorLogger from '../utils/errorLogger';
 
 let Location;
 if (Platform.OS !== 'web') {
@@ -32,7 +33,7 @@ export default function AIAgentScreen({ navigation }) {
         setConversation(prev => [...prev, ...history.slice(-10)]);
       }
     } catch (error) {
-      console.error('Error loading conversation history:', error);
+      ErrorLogger.logStorageError(error, 'loadConversationHistory');
     }
   };
 
@@ -42,7 +43,7 @@ export default function AIAgentScreen({ navigation }) {
       const updatedHistory = [...history, { ...msg, timestamp: new Date().toISOString() }].slice(-50);
       await storage.setItem('conversation_history', updatedHistory);
     } catch (error) {
-      console.error('Error saving message:', error);
+      ErrorLogger.logStorageError(error, 'saveMessage');
     }
   };
 
@@ -59,7 +60,7 @@ export default function AIAgentScreen({ navigation }) {
         setUserLocation(location);
       }
     } catch (error) {
-      console.error('Error getting location:', error);
+      ErrorLogger.log(error, 'getCurrentLocation');
     }
   };
 
@@ -99,8 +100,9 @@ export default function AIAgentScreen({ navigation }) {
         setConversation(prev => [...prev, aiMessage]);
         await saveMessage(aiMessage);
       } catch (error) {
-        console.error('AI response error:', error);
-        const fallbackMessage = { type: 'ai', text: "I'm here to support you. Could you tell me more about what you're experiencing?" };
+        ErrorLogger.log(error, 'sendMessage - AI response');
+        const errorMessage = ErrorLogger.getUserFriendlyMessage(error);
+        const fallbackMessage = { type: 'ai', text: errorMessage };
         setConversation(prev => [...prev, fallbackMessage]);
         await saveMessage(fallbackMessage);
       }
