@@ -51,7 +51,11 @@ export default function HomeScreen({ navigation }) {
 
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView 
+      style={styles.container} 
+      keyboardShouldPersistTaps="handled"
+      contentContainerStyle={{ paddingBottom: showMoodTracker ? 300 : 20 }}
+    >
       <View style={styles.header}>
         <Text style={styles.title}>Welcome to Anchor</Text>
         <Text style={styles.subtitle}>Your PTSD support companion</Text>
