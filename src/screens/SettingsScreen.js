@@ -68,8 +68,9 @@ export default function SettingsScreen() {
               await storage.removeItem(STORAGE_KEYS.PROGRESS_DATA);
               await storage.removeItem(STORAGE_KEYS.USER_PREFERENCES);
               await storage.removeItem('conversation_history');
+              await storage.removeItem('disclaimer_accepted');
               await secureStorage.removeItem(STORAGE_KEYS.SAFETY_PLAN);
-              Alert.alert('Success', 'All data has been cleared');
+              Alert.alert('Success', 'All data has been cleared. Please restart the app.');
             } catch (error) {
               Alert.alert('Error', 'Failed to clear data');
             }

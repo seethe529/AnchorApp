@@ -92,7 +92,7 @@ export default function App() {
         <Stack.Screen 
           name="Breathing" 
           component={BreathingExercise} 
-          options={{ title: 'Breathing Exercise' }}
+          options={{ title: 'Breathing Exercise', headerBackTitle: 'Back' }}
         />
         <Stack.Screen 
           name="Safety Plan" 

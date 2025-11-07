@@ -123,12 +123,12 @@ export default function AIAgentScreen({ navigation }) {
   };
 
   const quickActions = [
-    { text: "I'm having a panic attack", icon: "warning" },
-    { text: "I can't sleep", icon: "moon" },
-    { text: "I'm feeling triggered", icon: "alert-circle" },
+    { text: "Help me calm down", icon: "heart" },
     { text: "I need grounding techniques", icon: "leaf" },
-    { text: "I'm having flashbacks", icon: "eye-off" },
-    { text: "I need breathing exercises", icon: "fitness" }
+    { text: "Help with sleep", icon: "moon" },
+    { text: "Breathing exercises", icon: "fitness" },
+    { text: "Feeling overwhelmed", icon: "cloud" },
+    { text: "Need coping strategies", icon: "shield" }
   ];
 
   return (
