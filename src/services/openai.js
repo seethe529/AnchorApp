@@ -1,0 +1,59 @@
+import Constants from 'expo-constants';
+
+const OPENAI_API_KEY = Constants.expoConfig?.extra?.openaiApiKey || '';
+const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
+
+const SYSTEM_PROMPT = `You are a compassionate AI therapist specializing in PTSD and trauma support. You provide evidence-based guidance using DBT/CBT techniques. Always:
+
+- Be empathetic and validating
+- Prioritize safety - if someone mentions self-harm or suicide, immediately provide crisis resources
+- Suggest specific grounding, breathing, or coping techniques when appropriate
+- Keep responses concise but supportive (2-3 sentences max unless crisis situation)
+- Never diagnose or replace professional therapy
+- Focus on immediate coping strategies
+
+Crisis resources to provide when needed:
+- National Suicide Prevention Lifeline: 988
+- Crisis Text Line: Text HOME to 741741
+- Veterans Crisis Line: 1-800-273-8255
+- Emergency Services: 911`;
+
+export const sendMessageToOpenAI = async (message, conversationHistory = []) => {
+  try {
+    const messages = [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...conversationHistory.slice(-6).map(msg => ({
+        role: msg.type === 'user' ? 'user' : 'assistant',
+        content: msg.text
+      })),
+      { role: 'user', content: message }
+    ];
+
+    const response = await fetch(OPENAI_API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: messages,
+        max_tokens: 200,
+        temperature: 0.7
+      })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('OpenAI API Error Details:', errorData);
+      throw new Error(`OpenAI API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content;
+  } catch (error) {
+    console.error('OpenAI API error:', error);
+    // Fallback to basic response
+    return "I'm here to support you. Could you tell me more about what you're experiencing right now?";
+  }
+};
