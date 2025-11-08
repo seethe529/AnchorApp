@@ -68,6 +68,7 @@ export default function ProgressScreen() {
     const chartData = Object.entries(techniqueStats)
       .map(([name, stats]) => ({
         name: name.substring(0, 10),
+        fullName: name,
         count: stats.count,
         avgEffectiveness: stats.ratings > 0 ? (stats.totalEffectiveness / stats.ratings).toFixed(1) : null
       }))
@@ -152,7 +153,7 @@ export default function ProgressScreen() {
               {techniqueData.map((tech, idx) => (
                 tech.avgEffectiveness && (
                   <View key={idx} style={styles.effectivenessRow}>
-                    <Text style={styles.effectivenessTechnique}>{tech.name}</Text>
+                    <Text style={styles.effectivenessTechnique} numberOfLines={1} ellipsizeMode="tail">{tech.fullName}</Text>
                     <View style={styles.effectivenessBar}>
                       <View style={[styles.effectivenessFill, { width: `${(tech.avgEffectiveness / 5) * 100}%` }]} />
                       <Text style={styles.effectivenessScore}>{tech.avgEffectiveness}/5</Text>
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
   effectivenessContainer: { marginTop: 20, paddingTop: 15, borderTopWidth: 1, borderTopColor: '#E0E0E0' },
   effectivenessTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10, color: '#333' },
   effectivenessRow: { marginBottom: 12 },
-  effectivenessTechnique: { fontSize: 14, color: '#666', marginBottom: 4 },
+  effectivenessTechnique: { fontSize: 14, color: '#666', marginBottom: 4, flexWrap: 'wrap' },
   effectivenessBar: { height: 24, backgroundColor: '#F0F0F0', borderRadius: 12, position: 'relative', justifyContent: 'center' },
   effectivenessFill: { position: 'absolute', left: 0, top: 0, bottom: 0, backgroundColor: '#2E8B57', borderRadius: 12 },
   effectivenessScore: { fontSize: 12, fontWeight: 'bold', color: '#333', textAlign: 'center', zIndex: 1 }
