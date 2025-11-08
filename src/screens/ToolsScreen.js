@@ -92,7 +92,7 @@ export default function ToolsScreen() {
               accessibilityLabel="Technique helped"
               accessibilityRole="button"
             >
-              <Text style={styles.feedbackEmoji}>✅</Text>
+              <Ionicons name="checkmark-circle" size={32} color="#2E8B57" />
               <Text style={styles.feedbackText}>Helped</Text>
             </TouchableOpacity>
             
@@ -105,7 +105,7 @@ export default function ToolsScreen() {
               accessibilityLabel="Technique somewhat helped"
               accessibilityRole="button"
             >
-              <Text style={styles.feedbackEmoji}>➖</Text>
+              <Ionicons name="remove-circle" size={32} color="#FFA500" />
               <Text style={styles.feedbackText}>Somewhat</Text>
             </TouchableOpacity>
             
@@ -118,7 +118,7 @@ export default function ToolsScreen() {
               accessibilityLabel="Technique did not help much"
               accessibilityRole="button"
             >
-              <Text style={styles.feedbackEmoji}>❌</Text>
+              <Ionicons name="close-circle" size={32} color="#DC143C" />
               <Text style={styles.feedbackText}>Not much</Text>
             </TouchableOpacity>
           </View>
@@ -241,6 +241,5 @@ const styles = StyleSheet.create({
   feedbackQuestion: { fontSize: 16, fontWeight: '600', color: '#333', marginBottom: 10, textAlign: 'center' },
   feedbackButtons: { flexDirection: 'row', justifyContent: 'space-around' },
   feedbackButton: { alignItems: 'center', padding: 10 },
-  feedbackEmoji: { fontSize: 32, marginBottom: 5 },
-  feedbackText: { fontSize: 14, color: '#666', fontWeight: '500' }
+  feedbackText: { fontSize: 14, color: '#666', fontWeight: '500', marginTop: 5 }
 });
