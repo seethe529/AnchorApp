@@ -81,7 +81,7 @@ export default function ToolsScreen() {
         </View>
         
         <View style={styles.feedbackBar}>
-          <Text style={styles.feedbackQuestion}>Did this help?</Text>
+          <Text style={styles.feedbackQuestion}>Was this helpful?</Text>
           <View style={styles.feedbackButtons}>
             <TouchableOpacity 
               style={styles.feedbackButton}
