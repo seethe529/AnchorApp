@@ -16,13 +16,14 @@ export default function ToolsScreen() {
 
   const categories = Object.keys(dbtCbtTechniques);
 
-  const logTechniqueUsage = async (technique) => {
+  const logTechniqueUsage = async (technique, effectiveness = null) => {
     try {
       const usage = {
         technique: technique.name,
         category: selectedCategory,
         timestamp: new Date().toISOString(),
-        date: new Date().toDateString()
+        date: new Date().toDateString(),
+        effectiveness: effectiveness
       };
       
       const existingUsage = await storage.getItem(STORAGE_KEYS.TECHNIQUE_USAGE) || [];
@@ -77,6 +78,50 @@ export default function ToolsScreen() {
             <Text style={styles.backButtonText}>← Back</Text>
           </TouchableOpacity>
           <Text style={styles.techniqueTitle}>{selectedTechnique.name}</Text>
+        </View>
+        
+        <View style={styles.feedbackBar}>
+          <Text style={styles.feedbackQuestion}>Did this help?</Text>
+          <View style={styles.feedbackButtons}>
+            <TouchableOpacity 
+              style={styles.feedbackButton}
+              onPress={() => {
+                logTechniqueUsage(selectedTechnique, 5);
+                setSelectedTechnique(null);
+              }}
+              accessibilityLabel="Technique helped"
+              accessibilityRole="button"
+            >
+              <Text style={styles.feedbackEmoji}>👍</Text>
+              <Text style={styles.feedbackText}>Helped</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={styles.feedbackButton}
+              onPress={() => {
+                logTechniqueUsage(selectedTechnique, 3);
+                setSelectedTechnique(null);
+              }}
+              accessibilityLabel="Technique somewhat helped"
+              accessibilityRole="button"
+            >
+              <Text style={styles.feedbackEmoji}>😐</Text>
+              <Text style={styles.feedbackText}>Somewhat</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={styles.feedbackButton}
+              onPress={() => {
+                logTechniqueUsage(selectedTechnique, 1);
+                setSelectedTechnique(null);
+              }}
+              accessibilityLabel="Technique did not help much"
+              accessibilityRole="button"
+            >
+              <Text style={styles.feedbackEmoji}>👎</Text>
+              <Text style={styles.feedbackText}>Not much</Text>
+            </TouchableOpacity>
+          </View>
         </View>
         
         <ScrollView style={styles.content}>
@@ -191,5 +236,11 @@ const styles = StyleSheet.create({
   exampleText: { fontSize: 14, lineHeight: 22, color: '#333', fontStyle: 'italic' },
   stepByStep: { backgroundColor: 'white', padding: 15, borderRadius: 10 },
   stepTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15, color: '#2E8B57' },
-  step: { fontSize: 16, marginBottom: 10, paddingLeft: 10, color: '#333' }
+  step: { fontSize: 16, marginBottom: 10, paddingLeft: 10, color: '#333' },
+  feedbackBar: { backgroundColor: '#F0F8F0', padding: 15, borderBottomWidth: 1, borderBottomColor: '#E0E0E0' },
+  feedbackQuestion: { fontSize: 16, fontWeight: '600', color: '#333', marginBottom: 10, textAlign: 'center' },
+  feedbackButtons: { flexDirection: 'row', justifyContent: 'space-around' },
+  feedbackButton: { alignItems: 'center', padding: 10 },
+  feedbackEmoji: { fontSize: 32, marginBottom: 5 },
+  feedbackText: { fontSize: 14, color: '#666', fontWeight: '500' }
 });

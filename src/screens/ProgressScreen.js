@@ -52,15 +52,27 @@ export default function ProgressScreen() {
   };
 
   const processTechniqueData = (usage) => {
-    const techniqueCount = {};
+    const techniqueStats = {};
+    
     usage.forEach(entry => {
-      techniqueCount[entry.technique] = (techniqueCount[entry.technique] || 0) + 1;
+      if (!techniqueStats[entry.technique]) {
+        techniqueStats[entry.technique] = { count: 0, totalEffectiveness: 0, ratings: 0 };
+      }
+      techniqueStats[entry.technique].count++;
+      if (entry.effectiveness) {
+        techniqueStats[entry.technique].totalEffectiveness += entry.effectiveness;
+        techniqueStats[entry.technique].ratings++;
+      }
     });
     
-    const chartData = Object.entries(techniqueCount)
-      .sort(([,a], [,b]) => b - a)
-      .slice(0, 5)
-      .map(([name, count]) => ({ name: name.substring(0, 10), count }));
+    const chartData = Object.entries(techniqueStats)
+      .map(([name, stats]) => ({
+        name: name.substring(0, 10),
+        count: stats.count,
+        avgEffectiveness: stats.ratings > 0 ? (stats.totalEffectiveness / stats.ratings).toFixed(1) : null
+      }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
     
     setTechniqueData(chartData);
   };
@@ -121,19 +133,35 @@ export default function ProgressScreen() {
       <View style={styles.chartContainer}>
         <Text style={styles.chartTitle}>Most Used Techniques</Text>
         {techniqueData.length > 0 ? (
-          <BarChart
-            data={{
-              labels: techniqueData.map(d => d.name),
-              datasets: [{
-                data: techniqueData.map(d => d.count)
-              }]
-            }}
-            width={screenWidth - 40}
-            height={220}
-            yAxisSuffix=""
-            chartConfig={chartConfig}
-            style={styles.chart}
-          />
+          <>
+            <BarChart
+              data={{
+                labels: techniqueData.map(d => d.name),
+                datasets: [{
+                  data: techniqueData.map(d => d.count)
+                }]
+              }}
+              width={screenWidth - 40}
+              height={220}
+              yAxisSuffix=""
+              chartConfig={chartConfig}
+              style={styles.chart}
+            />
+            <View style={styles.effectivenessContainer}>
+              <Text style={styles.effectivenessTitle}>Effectiveness Ratings:</Text>
+              {techniqueData.map((tech, idx) => (
+                tech.avgEffectiveness && (
+                  <View key={idx} style={styles.effectivenessRow}>
+                    <Text style={styles.effectivenessTechnique}>{tech.name}</Text>
+                    <View style={styles.effectivenessBar}>
+                      <View style={[styles.effectivenessFill, { width: `${(tech.avgEffectiveness / 5) * 100}%` }]} />
+                      <Text style={styles.effectivenessScore}>{tech.avgEffectiveness}/5</Text>
+                    </View>
+                  </View>
+                )
+              ))}
+            </View>
+          </>
         ) : (
           <View style={styles.noDataContainer}>
             <Text style={styles.noDataText}>No technique usage data yet</Text>
@@ -180,5 +208,12 @@ const styles = StyleSheet.create({
   statsTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15, color: '#333' },
   statRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
   statLabel: { fontSize: 16, color: '#666' },
-  statValue: { fontSize: 16, fontWeight: 'bold', color: '#2E8B57' }
+  statValue: { fontSize: 16, fontWeight: 'bold', color: '#2E8B57' },
+  effectivenessContainer: { marginTop: 20, paddingTop: 15, borderTopWidth: 1, borderTopColor: '#E0E0E0' },
+  effectivenessTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10, color: '#333' },
+  effectivenessRow: { marginBottom: 12 },
+  effectivenessTechnique: { fontSize: 14, color: '#666', marginBottom: 4 },
+  effectivenessBar: { height: 24, backgroundColor: '#F0F0F0', borderRadius: 12, position: 'relative', justifyContent: 'center' },
+  effectivenessFill: { position: 'absolute', left: 0, top: 0, bottom: 0, backgroundColor: '#2E8B57', borderRadius: 12 },
+  effectivenessScore: { fontSize: 12, fontWeight: 'bold', color: '#333', textAlign: 'center', zIndex: 1 }
 });
