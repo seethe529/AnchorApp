@@ -133,7 +133,7 @@ export default function ProgressScreen() {
       <View style={styles.chartContainer}>
         <Text style={styles.chartTitle}>Most Used Techniques</Text>
         {techniqueData.length > 0 ? (
-          <>
+          <View>
             <BarChart
               data={{
                 labels: techniqueData.map(d => d.name),
@@ -141,7 +141,7 @@ export default function ProgressScreen() {
                   data: techniqueData.map(d => d.count)
                 }]
               }}
-              width={screenWidth - 40}
+              width={screenWidth - 70}
               height={220}
               yAxisSuffix=""
               chartConfig={chartConfig}
@@ -161,7 +161,7 @@ export default function ProgressScreen() {
                 )
               ))}
             </View>
-          </>
+          </View>
         ) : (
           <View style={styles.noDataContainer}>
             <Text style={styles.noDataText}>No technique usage data yet</Text>
