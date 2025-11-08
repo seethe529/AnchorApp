@@ -92,7 +92,7 @@ export default function ToolsScreen() {
               accessibilityLabel="Technique helped"
               accessibilityRole="button"
             >
-              <Text style={styles.feedbackEmoji}>👍</Text>
+              <Text style={styles.feedbackEmoji}>✅</Text>
               <Text style={styles.feedbackText}>Helped</Text>
             </TouchableOpacity>
             
@@ -105,7 +105,7 @@ export default function ToolsScreen() {
               accessibilityLabel="Technique somewhat helped"
               accessibilityRole="button"
             >
-              <Text style={styles.feedbackEmoji}>😐</Text>
+              <Text style={styles.feedbackEmoji}>➖</Text>
               <Text style={styles.feedbackText}>Somewhat</Text>
             </TouchableOpacity>
             
@@ -118,7 +118,7 @@ export default function ToolsScreen() {
               accessibilityLabel="Technique did not help much"
               accessibilityRole="button"
             >
-              <Text style={styles.feedbackEmoji}>👎</Text>
+              <Text style={styles.feedbackEmoji}>❌</Text>
               <Text style={styles.feedbackText}>Not much</Text>
             </TouchableOpacity>
           </View>
