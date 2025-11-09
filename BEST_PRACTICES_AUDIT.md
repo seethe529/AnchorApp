@@ -309,10 +309,10 @@ Allow direct navigation to specific features.
 
 ### Version Control
 - [x] Git repository
-- [ ] Semantic versioning
+- [x] Branch strategy (main, develop, feature)
+- [ ] Semantic versioning (ready to implement)
 - [ ] Release notes
 - [ ] Tag releases
-- [ ] Branch strategy (main, develop, feature)
 
 ## ✨ Summary
 
