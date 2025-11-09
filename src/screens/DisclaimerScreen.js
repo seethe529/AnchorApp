@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { storage } from '../utils/storage';
 
@@ -12,7 +13,7 @@ export default function DisclaimerScreen({ navigation }) {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
       <View style={styles.header}>
         <Ionicons name="shield-checkmark" size={60} color="#2E8B57" />
         <Text style={styles.title}>Important Notice</Text>
@@ -68,7 +69,7 @@ export default function DisclaimerScreen({ navigation }) {
       >
         <Text style={styles.acceptButtonText}>Continue to App</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
