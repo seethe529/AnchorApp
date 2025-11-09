@@ -17,7 +17,7 @@ export default {
     ios: {
       supportsTablet: true,
       bundleIdentifier: "com.anchor.ptsd-support",
-      buildNumber: "1.0.0"
+      buildNumber: "1"
     },
     android: {
       adaptiveIcon: {
@@ -33,7 +33,7 @@ export default {
     extra: {
       openaiApiKey: process.env.OPENAI_API_KEY || "",
       eas: {
-        projectId: "your-project-id-here"
+        projectId: "4609714b-3491-4121-8a80-0a47549079d1"
       }
     }
   }
