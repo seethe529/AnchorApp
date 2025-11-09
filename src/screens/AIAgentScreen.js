@@ -171,9 +171,16 @@ export default function AIAgentScreen({ navigation }) {
         contentContainerStyle={styles.conversationContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        accessible={false}
       >
         {conversation.map((msg, index) => (
-          <View key={index} style={[styles.message, msg.type === 'user' ? styles.userMessage : styles.aiMessage]}>
+          <View 
+            key={index} 
+            style={[styles.message, msg.type === 'user' ? styles.userMessage : styles.aiMessage]}
+            accessible={true}
+            accessibilityLabel={`${msg.type === 'user' ? 'You said' : 'AI responded'}: ${msg.text}`}
+            accessibilityRole="text"
+          >
             <Text style={[styles.messageText, msg.type === 'user' ? styles.userText : styles.aiText]}>
               {msg.text}
             </Text>
@@ -181,7 +188,12 @@ export default function AIAgentScreen({ navigation }) {
         ))}
         
         {isTyping && (
-          <View style={[styles.message, styles.aiMessage]}>
+          <View 
+            style={[styles.message, styles.aiMessage]}
+            accessible={true}
+            accessibilityLabel="AI is typing"
+            accessibilityRole="text"
+          >
             <Text style={styles.typingText}>AI is typing...</Text>
           </View>
         )}
