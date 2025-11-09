@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MoodTracker from '../components/MoodTracker';
 import { storage, STORAGE_KEYS } from '../utils/storage';
@@ -10,10 +10,24 @@ export default function HomeScreen({ navigation }) {
   const [todayMoodLogged, setTodayMoodLogged] = useState(false);
   const [recentMood, setRecentMood] = useState(null);
   const [dailyReminder, setDailyReminder] = useState('');
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const scrollViewRef = useRef(null);
 
   useEffect(() => {
     checkTodayMoodLog();
     setDailyReminder(getRandomReminder());
+    
+    const keyboardDidShow = Keyboard.addListener('keyboardDidShow', (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+    const keyboardDidHide = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardHeight(0);
+    });
+    
+    return () => {
+      keyboardDidShow.remove();
+      keyboardDidHide.remove();
+    };
   }, []);
 
   const checkTodayMoodLog = async () => {
@@ -52,9 +66,10 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <ScrollView 
+      ref={scrollViewRef}
       style={styles.container} 
       keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{ paddingBottom: 20 }}
+      contentContainerStyle={{ paddingBottom: keyboardHeight > 0 ? keyboardHeight + 20 : 20 }}
     >
       <View style={styles.header}>
         <Text style={styles.title}>Welcome to Anchor</Text>
