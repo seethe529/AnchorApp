@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-nativ
 import { Ionicons } from '@expo/vector-icons';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { sanitizeText, validateMoodEntry } from '../utils/dataValidation';
+import { trackMoodLog } from '../utils/appRating';
 
 const MOODS = [
   { name: 'Excellent', icon: 'happy', color: '#4CAF50', value: 5 },
@@ -40,6 +41,7 @@ const MoodTracker = memo(({ onMoodLogged }) => {
       const updatedLogs = [moodEntry, ...existingLogs];
       
       await storage.setItem(STORAGE_KEYS.MOOD_LOGS, updatedLogs);
+      await trackMoodLog();
       
       setSelectedMood(null);
       setNotes('');

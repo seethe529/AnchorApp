@@ -131,7 +131,7 @@
 
 ### Medium Priority (Post-Launch)
 - [x] Add data export feature
-- [ ] Add app rating prompt (after positive interactions)
+- [x] Add app rating prompt (after positive interactions)
 - [ ] Add onboarding tutorial
 - [ ] Add dark mode support
 - [ ] Implement crash reporting

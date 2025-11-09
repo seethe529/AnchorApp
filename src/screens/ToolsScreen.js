@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { Ionicons } from '@expo/vector-icons';
 import { dbtCbtTechniques } from '../data/techniques';
 import { storage, STORAGE_KEYS } from '../utils/storage';
+import { trackTechniqueUsed } from '../utils/appRating';
 import { Platform } from 'react-native';
 
 let Haptics;
@@ -90,8 +91,9 @@ export default function ToolsScreen() {
           <View style={styles.feedbackButtons}>
             <TouchableOpacity 
               style={styles.feedbackButton}
-              onPress={() => {
-                logTechniqueUsage(selectedTechnique, 5);
+              onPress={async () => {
+                await logTechniqueUsage(selectedTechnique, 5);
+                await trackTechniqueUsed();
                 setSelectedTechnique(null);
               }}
               accessibilityLabel="Technique helped"
