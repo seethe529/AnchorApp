@@ -14,17 +14,17 @@
       }
     },
     "production": {
-      "env": {
-        "OPENAI_API_KEY": ""
+      "ios": {
+        "usesNonExemptEncryption": false
       }
     }
   },
   "submit": {
     "production": {
       "ios": {
-        "appleId": "your-apple-id@email.com",
-        "ascAppId": "your-app-store-connect-id",
-        "appleTeamId": "your-team-id"
+        "appleId": "lingoryan084@gmail.com",
+        "ascAppId": "6755088021",
+        "appleTeamId": "X57B3HGZ6U"
       }
     }
   }
