@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, AccessibilityInfo } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform } from 'react-native';
 
@@ -13,8 +13,15 @@ export default function BreathingExercise({ onComplete }) {
   const [phase, setPhase] = useState('inhale'); // inhale, hold, exhale, hold
   const [count, setCount] = useState(4);
   const [cycles, setCycles] = useState(0);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const intervalRef = useRef(null);
+
+  useEffect(() => {
+    AccessibilityInfo.isReduceMotionEnabled().then(enabled => {
+      setReduceMotion(enabled);
+    });
+  }, []);
 
   const phases = {
     inhale: { text: 'Breathe In', duration: 4, next: 'hold1' },
@@ -46,19 +53,21 @@ export default function BreathingExercise({ onComplete }) {
       });
     }, 1000);
 
-    // Animate circle based on phase
-    if (phase === 'inhale') {
-      Animated.timing(scaleAnim, {
-        toValue: 1.5,
-        duration: 4000,
-        useNativeDriver: true,
-      }).start();
-    } else if (phase === 'exhale') {
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 4000,
-        useNativeDriver: true,
-      }).start();
+    // Animate circle based on phase (skip if reduced motion enabled)
+    if (!reduceMotion) {
+      if (phase === 'inhale') {
+        Animated.timing(scaleAnim, {
+          toValue: 1.5,
+          duration: 4000,
+          useNativeDriver: true,
+        }).start();
+      } else if (phase === 'exhale') {
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 4000,
+          useNativeDriver: true,
+        }).start();
+      }
     }
   };
 
