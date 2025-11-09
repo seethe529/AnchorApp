@@ -13,11 +13,7 @@
         "simulator": true
       }
     },
-    "production": {
-      "ios": {
-        "usesNonExemptEncryption": false
-      }
-    }
+    "production": {}
   },
   "submit": {
     "production": {

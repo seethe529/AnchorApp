@@ -17,7 +17,10 @@ export default {
     ios: {
       supportsTablet: false,
       bundleIdentifier: "com.anchor.ptsd-support",
-      buildNumber: "2"
+      buildNumber: "2",
+      config: {
+        usesNonExemptEncryption: false
+      }
     },
     android: {
       adaptiveIcon: {
