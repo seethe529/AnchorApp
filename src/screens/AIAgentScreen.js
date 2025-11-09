@@ -141,39 +141,55 @@ export default function AIAgentScreen({ navigation }) {
     >
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1 }}>
-      <View style={styles.quickActionsContainer}>
-        <Text style={styles.quickActionsTitle}>Quick Help:</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.quickActionsScroll}>
-          {quickActions.map((action, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.quickActionButton}
-              onPress={() => {
-                setMessage(action.text);
-                requestAnimationFrame(() => {
-                  sendMessage();
-                });
-              }}
-              accessibilityLabel={action.text}
-              accessibilityHint="Sends this message to AI support"
-              accessibilityRole="button"
-            >
-              <Ionicons name={action.icon} size={16} color="#2E8B57" />
-              <Text style={styles.quickActionText}>{action.text}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-      </View>
-
       <ScrollView 
         ref={scrollViewRef}
         style={styles.conversation}
         contentContainerStyle={styles.conversationContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        accessible={false}
       >
+        <View 
+          style={styles.quickActionsContainer}
+          accessible={false}
+          accessibilityElementsHidden={false}
+        >
+          <Text style={styles.quickActionsTitle}>Quick Help:</Text>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            style={styles.quickActionsScroll}
+            accessible={false}
+          >
+            {quickActions.map((action, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.quickActionButton}
+                onPress={() => {
+                  setMessage(action.text);
+                  requestAnimationFrame(() => {
+                    sendMessage();
+                  });
+                }}
+                accessibilityLabel={action.text}
+                accessibilityHint="Sends this message to AI support"
+                accessibilityRole="button"
+              >
+                <Ionicons name={action.icon} size={16} color="#2E8B57" />
+                <Text style={styles.quickActionText}>{action.text}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
         {conversation.map((msg, index) => (
-          <View key={index} style={[styles.message, msg.type === 'user' ? styles.userMessage : styles.aiMessage]}>
+          <View 
+            key={index} 
+            style={[styles.message, msg.type === 'user' ? styles.userMessage : styles.aiMessage]}
+            accessible={true}
+            accessibilityLabel={`${msg.type === 'user' ? 'You said' : 'AI responded'}: ${msg.text}`}
+            accessibilityRole="text"
+          >
             <Text style={[styles.messageText, msg.type === 'user' ? styles.userText : styles.aiText]}>
               {msg.text}
             </Text>
@@ -181,7 +197,12 @@ export default function AIAgentScreen({ navigation }) {
         ))}
         
         {isTyping && (
-          <View style={[styles.message, styles.aiMessage]}>
+          <View 
+            style={[styles.message, styles.aiMessage]}
+            accessible={true}
+            accessibilityLabel="AI is typing"
+            accessibilityRole="text"
+          >
             <Text style={styles.typingText}>AI is typing...</Text>
           </View>
         )}
@@ -199,7 +220,7 @@ export default function AIAgentScreen({ navigation }) {
         </View>
       )}
 
-      <View style={styles.inputContainer}>
+      <View style={styles.inputContainer} importantForAccessibility="yes">
         <TextInput
           style={styles.textInput}
           value={message}
@@ -209,8 +230,9 @@ export default function AIAgentScreen({ navigation }) {
           maxLength={500}
           returnKeyType="done"
           blurOnSubmit={true}
-          accessibilityLabel="Message input"
-          accessibilityHint="Type your message to AI support here"
+          accessibilityLabel="Message to AI"
+          accessibilityHint="Type your message here. Double tap to edit."
+          accessibilityRole="search"
         />
         <TouchableOpacity 
           style={[styles.sendButton, !message.trim() && styles.sendButtonDisabled]} 
@@ -233,7 +255,7 @@ export default function AIAgentScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5' },
   conversation: { flex: 1 },
-  conversationContent: { padding: 15, paddingBottom: 30 },
+  conversationContent: { paddingBottom: 30 },
   quickActionsContainer: { padding: 15, backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E0E0E0' },
   quickActionsTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10, color: '#333' },
   quickActionsScroll: { flexDirection: 'row' },

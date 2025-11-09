@@ -161,7 +161,7 @@ export default function CrisisScreen({ navigation }) {
     <ScrollView style={styles.container}>
       <View style={styles.warningBanner}>
         <Ionicons name="warning" size={24} color="#DC143C" />
-        <Text style={styles.warningText}>If you're in immediate danger, call 911</Text>
+        <Text style={styles.warningText}>Immediate danger? Call 911</Text>
       </View>
 
       <View style={styles.section}>

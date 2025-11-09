@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { setupNotifications, scheduleMoodReminder, scheduleBreathingReminder } from '../utils/notifications';
+import Constants from 'expo-constants';
+
+const APP_VERSION = Constants.expoConfig?.version || '1.0.0';
 
 export default function SettingsScreen() {
   const [preferences, setPreferences] = useState({
@@ -80,8 +83,66 @@ export default function SettingsScreen() {
     );
   };
 
-  const exportData = () => {
-    Alert.alert('Export Data', 'Data export feature coming soon. This will allow you to share your progress with healthcare providers.');
+  const exportData = async () => {
+    try {
+      // Gather all user data
+      const moodLogs = await storage.getItem(STORAGE_KEYS.MOOD_LOGS) || [];
+      const techniqueUsage = await storage.getItem(STORAGE_KEYS.TECHNIQUE_USAGE) || [];
+      const userPreferences = await storage.getItem(STORAGE_KEYS.USER_PREFERENCES) || {};
+      const conversationHistory = await storage.getItem('conversation_history') || [];
+      
+      const exportData = {
+        exportDate: new Date().toISOString(),
+        appVersion: APP_VERSION,
+        data: {
+          moodLogs: moodLogs.map(log => ({
+            date: log.date,
+            mood: log.moodName,
+            value: log.mood,
+            notes: log.notes || '',
+            timestamp: log.timestamp
+          })),
+          techniqueUsage: techniqueUsage.map(usage => ({
+            technique: usage.technique,
+            category: usage.category,
+            effectiveness: usage.effectiveness,
+            date: usage.date,
+            timestamp: usage.timestamp
+          })),
+          conversationCount: conversationHistory.length,
+          preferences: userPreferences
+        },
+        summary: {
+          totalMoodLogs: moodLogs.length,
+          totalTechniquesUsed: techniqueUsage.length,
+          averageMood: moodLogs.length > 0 
+            ? (moodLogs.reduce((sum, log) => sum + log.mood, 0) / moodLogs.length).toFixed(2)
+            : 'N/A'
+        }
+      };
+
+      const jsonString = JSON.stringify(exportData, null, 2);
+      
+      if (Platform.OS === 'web') {
+        // Web: Download as file
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `anchor-data-${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        Alert.alert('Success', 'Data exported successfully');
+      } else {
+        // Mobile: Share
+        await Share.share({
+          message: jsonString,
+          title: 'Anchor App Data Export'
+        });
+      }
+    } catch (error) {
+      console.error('Export error:', error);
+      Alert.alert('Error', 'Failed to export data. Please try again.');
+    }
   };
 
   const settingSections = [
@@ -174,11 +235,11 @@ export default function SettingsScreen() {
         <Text style={styles.sectionTitle}>About</Text>
         <View style={styles.infoItem}>
           <Text style={styles.infoLabel}>Version:</Text>
-          <Text style={styles.infoValue}>1.0.0</Text>
+          <Text style={styles.infoValue}>{APP_VERSION}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text style={styles.infoLabel}>Build:</Text>
-          <Text style={styles.infoValue}>Enhanced</Text>
+          <Text style={styles.infoLabel}>Platform:</Text>
+          <Text style={styles.infoValue}>{Platform.OS === 'ios' ? 'iOS' : Platform.OS === 'android' ? 'Android' : 'Web'}</Text>
         </View>
         <Text style={styles.disclaimer}>
           This app is not a replacement for professional mental health treatment. 

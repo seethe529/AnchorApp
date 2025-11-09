@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -17,6 +18,7 @@ import { setupNotifications } from './src/utils/notifications';
 import { storage } from './src/utils/storage';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import ErrorLogger from './src/utils/errorLogger';
+import OfflineIndicator from './src/components/OfflineIndicator';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -54,11 +56,22 @@ function MainTabs() {
 
 export default function App() {
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setupNotifications();
-    checkDisclaimer();
+    initializeApp();
   }, []);
+
+  const initializeApp = async () => {
+    try {
+      await setupNotifications();
+      await checkDisclaimer();
+    } catch (error) {
+      ErrorLogger.log(error, 'App initialization');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const checkDisclaimer = async () => {
     try {
@@ -70,13 +83,19 @@ export default function App() {
     }
   };
 
-  if (disclaimerAccepted === null) {
-    return null; // Loading
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#2E8B57" />
+        <Text style={styles.loadingText}>Loading Anchor...</Text>
+      </View>
+    );
   }
 
   return (
     <ErrorBoundary>
     <SafeAreaProvider>
+    <OfflineIndicator />
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
@@ -113,3 +132,17 @@ export default function App() {
     </ErrorBoundary>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+  },
+  loadingText: {
+    marginTop: 15,
+    fontSize: 16,
+    color: '#666',
+  },
+});

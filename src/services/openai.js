@@ -4,6 +4,11 @@ import ErrorLogger from '../utils/errorLogger';
 const OPENAI_API_KEY = Constants.expoConfig?.extra?.openaiApiKey || '';
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
+// Rate limiting: Max 10 requests per minute
+const RATE_LIMIT = 10;
+const RATE_WINDOW = 60000; // 1 minute in ms
+let requestTimestamps = [];
+
 const SYSTEM_PROMPT = `You are a compassionate AI therapist specializing in PTSD and trauma support. You provide evidence-based guidance using DBT/CBT techniques. Always:
 
 - Be empathetic and validating
@@ -20,6 +25,16 @@ Crisis resources to provide when needed:
 - Emergency Services: 911`;
 
 export const sendMessageToOpenAI = async (message, conversationHistory = []) => {
+  // Rate limiting check
+  const now = Date.now();
+  requestTimestamps = requestTimestamps.filter(ts => now - ts < RATE_WINDOW);
+  
+  if (requestTimestamps.length >= RATE_LIMIT) {
+    return "You're sending messages too quickly. Please wait a moment before trying again. Take a deep breath.";
+  }
+  
+  requestTimestamps.push(now);
+  
   try {
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT },
