@@ -54,7 +54,7 @@ export default function HomeScreen({ navigation }) {
     <ScrollView 
       style={styles.container} 
       keyboardShouldPersistTaps="handled"
-      contentContainerStyle={{ paddingBottom: showMoodTracker ? 300 : 20 }}
+      contentContainerStyle={{ paddingBottom: 20 }}
     >
       <View style={styles.header}>
         <Text style={styles.title}>Welcome to Anchor</Text>
