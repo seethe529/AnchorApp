@@ -141,9 +141,26 @@ export default function AIAgentScreen({ navigation }) {
     >
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={{ flex: 1 }}>
-      <View style={styles.quickActionsContainer}>
+      <View 
+        style={styles.screenHeader}
+        accessible={true}
+        accessibilityRole="header"
+        accessibilityLabel="AI Support. Use quick help buttons or type your own message below."
+      >
+        <Text style={styles.screenHeaderText}>AI Support</Text>
+      </View>
+      <View 
+        style={styles.quickActionsContainer}
+        accessible={false}
+        accessibilityElementsHidden={false}
+      >
         <Text style={styles.quickActionsTitle}>Quick Help:</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.quickActionsScroll}>
+        <ScrollView 
+          horizontal 
+          showsHorizontalScrollIndicator={false} 
+          style={styles.quickActionsScroll}
+          accessible={false}
+        >
           {quickActions.map((action, index) => (
             <TouchableOpacity
               key={index}
@@ -211,7 +228,7 @@ export default function AIAgentScreen({ navigation }) {
         </View>
       )}
 
-      <View style={styles.inputContainer}>
+      <View style={styles.inputContainer} importantForAccessibility="yes">
         <TextInput
           style={styles.textInput}
           value={message}
@@ -221,8 +238,9 @@ export default function AIAgentScreen({ navigation }) {
           maxLength={500}
           returnKeyType="done"
           blurOnSubmit={true}
-          accessibilityLabel="Message input"
-          accessibilityHint="Type your message to AI support here"
+          accessibilityLabel="Message to AI"
+          accessibilityHint="Type your message here. Double tap to edit."
+          accessibilityRole="search"
         />
         <TouchableOpacity 
           style={[styles.sendButton, !message.trim() && styles.sendButtonDisabled]} 
@@ -244,6 +262,8 @@ export default function AIAgentScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5' },
+  screenHeader: { padding: 15, backgroundColor: '#2E8B57', alignItems: 'center' },
+  screenHeaderText: { fontSize: 20, fontWeight: 'bold', color: 'white' },
   conversation: { flex: 1 },
   conversationContent: { padding: 15, paddingBottom: 30 },
   quickActionsContainer: { padding: 15, backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E0E0E0' },
