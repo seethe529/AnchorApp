@@ -71,6 +71,9 @@ export default function SafetyPlan() {
         <TouchableOpacity
           style={styles.editButton}
           onPress={() => isEditing ? saveSafetyPlan() : setIsEditing(true)}
+          accessibilityLabel={isEditing ? 'Save safety plan' : 'Edit safety plan'}
+          accessibilityHint={isEditing ? 'Saves your changes to the safety plan' : 'Allows you to edit your safety plan'}
+          accessibilityRole="button"
         >
           <Ionicons name={isEditing ? 'checkmark' : 'create'} size={24} color="white" />
         </TouchableOpacity>
@@ -91,9 +94,11 @@ export default function SafetyPlan() {
               onChangeText={(text) => setPlan(prev => ({ ...prev, [section.key]: text }))}
               multiline
               numberOfLines={4}
+              accessibilityLabel={`${section.title} input`}
+              accessibilityHint={section.placeholder}
             />
           ) : (
-            <Text style={styles.content}>
+            <Text style={styles.content} accessible={true} accessibilityLabel={`${section.title}: ${plan[section.key] || 'No content added yet'}`}>
               {plan[section.key] || 'Tap edit to add content'}
             </Text>
           )}
@@ -102,13 +107,28 @@ export default function SafetyPlan() {
 
       <View style={styles.emergencySection}>
         <Text style={styles.emergencyTitle}>Emergency Contacts</Text>
-        <TouchableOpacity style={styles.emergencyButton}>
+        <TouchableOpacity 
+          style={styles.emergencyButton}
+          accessibilityLabel="National Suicide Prevention Lifeline, 988"
+          accessibilityHint="Call for immediate crisis support"
+          accessibilityRole="button"
+        >
           <Text style={styles.emergencyText}>National Suicide Prevention Lifeline: 988</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.emergencyButton}>
+        <TouchableOpacity 
+          style={styles.emergencyButton}
+          accessibilityLabel="Crisis Text Line, Text HOME to 741741"
+          accessibilityHint="Send a text message for crisis support"
+          accessibilityRole="button"
+        >
           <Text style={styles.emergencyText}>Crisis Text Line: Text HOME to 741741</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.emergencyButton}>
+        <TouchableOpacity 
+          style={styles.emergencyButton}
+          accessibilityLabel="Veterans Crisis Line, 1-800-273-8255"
+          accessibilityHint="Call for veteran-specific crisis support"
+          accessibilityRole="button"
+        >
           <Text style={styles.emergencyText}>Veterans Crisis Line: 1-800-273-8255</Text>
         </TouchableOpacity>
       </View>
