@@ -8,6 +8,7 @@ const screenWidth = Dimensions.get('window').width;
 export default function ProgressScreen() {
   const [moodData, setMoodData] = useState([]);
   const [techniqueData, setTechniqueData] = useState([]);
+  const [allRatedTechniques, setAllRatedTechniques] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -75,7 +76,16 @@ export default function ProgressScreen() {
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
     
+    const allRated = Object.entries(techniqueStats)
+      .filter(([name, stats]) => stats.ratings > 0)
+      .map(([name, stats]) => ({
+        fullName: name,
+        avgEffectiveness: (stats.totalEffectiveness / stats.ratings).toFixed(1)
+      }))
+      .sort((a, b) => b.avgEffectiveness - a.avgEffectiveness);
+    
     setTechniqueData(chartData);
+    setAllRatedTechniques(allRated);
   };
 
   const chartConfig = {
@@ -148,10 +158,10 @@ export default function ProgressScreen() {
               chartConfig={chartConfig}
               style={styles.chart}
             />
-            <View style={styles.effectivenessContainer}>
-              <Text style={styles.effectivenessTitle}>Effectiveness Ratings:</Text>
-              {techniqueData.map((tech, idx) => (
-                tech.avgEffectiveness && (
+            {allRatedTechniques.length > 0 && (
+              <View style={styles.effectivenessContainer}>
+                <Text style={styles.effectivenessTitle}>Effectiveness Ratings:</Text>
+                {allRatedTechniques.map((tech, idx) => (
                   <View key={idx} style={styles.effectivenessRow}>
                     <Text style={styles.effectivenessTechnique} numberOfLines={1} ellipsizeMode="tail">{tech.fullName}</Text>
                     <View style={styles.effectivenessBar}>
@@ -159,9 +169,9 @@ export default function ProgressScreen() {
                       <Text style={styles.effectivenessScore}>{tech.avgEffectiveness}/5</Text>
                     </View>
                   </View>
-                )
-              ))}
-            </View>
+                ))}
+              </View>
+            )}
           </View>
         ) : (
           <View style={styles.noDataContainer}>
