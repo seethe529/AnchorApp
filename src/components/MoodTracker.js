@@ -2,6 +2,7 @@ import React, { useState, memo, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { storage, STORAGE_KEYS } from '../utils/storage';
+import { sanitizeText, validateMoodEntry } from '../utils/dataValidation';
 
 const MOODS = [
   { name: 'Excellent', icon: 'happy', color: '#4CAF50', value: 5 },
@@ -24,10 +25,16 @@ const MoodTracker = memo(({ onMoodLogged }) => {
       const moodEntry = {
         mood: selectedMood.value,
         moodName: selectedMood.name,
-        notes,
+        notes: sanitizeText(notes, 500),
         timestamp: new Date().toISOString(),
         date: new Date().toDateString()
       };
+
+      // Validate before saving
+      if (!validateMoodEntry(moodEntry)) {
+        console.error('Invalid mood entry');
+        return;
+      }
 
       const existingLogs = await storage.getItem(STORAGE_KEYS.MOOD_LOGS) || [];
       const updatedLogs = [moodEntry, ...existingLogs];
