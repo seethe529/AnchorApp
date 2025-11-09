@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Git branching strategy (main, develop, feature branches)
 - Comprehensive documentation for contributors
 
-## [1.0.0] - 2025-01-XX (Pending Release)
+## [1.0.0] - 2025-01-09 (Submitted to App Store)
+
+**Status:** In Review (Submitted January 9, 2025)
 
 ### Added
 - **Core Features**
