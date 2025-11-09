@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { suggestTechniques } from '../data/techniques';
@@ -64,7 +64,7 @@ export default function AIAgentScreen({ navigation }) {
     }
   };
 
-  const handleInputChange = (text) => {
+  const handleInputChange = useCallback((text) => {
     setMessage(text);
     if (text.length > 10) {
       const newSuggestions = suggestTechniques(text);
@@ -72,7 +72,7 @@ export default function AIAgentScreen({ navigation }) {
     } else {
       setSuggestions([]);
     }
-  };
+  }, []);
 
   const sendMessage = async () => {
     if (!message.trim()) return;
@@ -113,7 +113,7 @@ export default function AIAgentScreen({ navigation }) {
 
 
 
-  const applySuggestion = (technique) => {
+  const applySuggestion = useCallback((technique) => {
     Alert.alert(
       technique.name,
       technique.description,
@@ -122,16 +122,16 @@ export default function AIAgentScreen({ navigation }) {
         { text: 'Not Now', style: 'cancel' }
       ]
     );
-  };
+  }, []);
 
-  const quickActions = [
+  const quickActions = useMemo(() => [
     { text: "Help me calm down", icon: "heart" },
     { text: "I need grounding techniques", icon: "leaf" },
     { text: "Help with sleep", icon: "moon" },
     { text: "Breathing exercises", icon: "fitness" },
     { text: "Feeling overwhelmed", icon: "cloud" },
     { text: "Need coping strategies", icon: "shield" }
-  ];
+  ], []);
 
   return (
     <KeyboardAvoidingView 

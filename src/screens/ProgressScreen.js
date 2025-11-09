@@ -1,9 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 
 const screenWidth = Dimensions.get('window').width;
+
+const QuickStats = memo(({ moodData, techniqueData }) => {
+  const totalMoodLogs = useMemo(() => moodData.filter(d => d.mood > 0).length, [moodData]);
+  const totalTechniques = useMemo(() => techniqueData.reduce((sum, d) => sum + d.count, 0), [techniqueData]);
+  const avgMood = useMemo(() => {
+    const validMoods = moodData.filter(d => d.mood > 0);
+    return validMoods.length > 0
+      ? (moodData.reduce((sum, d) => sum + d.mood, 0) / validMoods.length).toFixed(1)
+      : '0.0';
+  }, [moodData]);
+
+  return (
+    <View style={styles.statsContainer}>
+      <Text style={styles.statsTitle}>Quick Stats</Text>
+      <View style={styles.statRow}>
+        <Text style={styles.statLabel}>Total Mood Logs:</Text>
+        <Text style={styles.statValue}>{totalMoodLogs}</Text>
+      </View>
+      <View style={styles.statRow}>
+        <Text style={styles.statLabel}>Techniques Used:</Text>
+        <Text style={styles.statValue}>{totalTechniques}</Text>
+      </View>
+      <View style={styles.statRow}>
+        <Text style={styles.statLabel}>Average Mood:</Text>
+        <Text style={styles.statValue}>{avgMood}</Text>
+      </View>
+    </View>
+  );
+});
+
 
 export default function ProgressScreen() {
   const [moodData, setMoodData] = useState([]);
@@ -88,7 +118,7 @@ export default function ProgressScreen() {
     setAllRatedTechniques(allRated);
   };
 
-  const chartConfig = {
+  const chartConfig = useMemo(() => ({
     backgroundColor: '#ffffff',
     backgroundGradientFrom: '#ffffff',
     backgroundGradientTo: '#ffffff',
@@ -101,7 +131,7 @@ export default function ProgressScreen() {
       strokeWidth: '2',
       stroke: '#2E8B57'
     }
-  };
+  }), []);
 
   if (isLoading) {
     return (
@@ -181,26 +211,7 @@ export default function ProgressScreen() {
         )}
       </View>
 
-      <View style={styles.statsContainer}>
-        <Text style={styles.statsTitle}>Quick Stats</Text>
-        <View style={styles.statRow}>
-          <Text style={styles.statLabel}>Total Mood Logs:</Text>
-          <Text style={styles.statValue}>{moodData.filter(d => d.mood > 0).length}</Text>
-        </View>
-        <View style={styles.statRow}>
-          <Text style={styles.statLabel}>Techniques Used:</Text>
-          <Text style={styles.statValue}>{techniqueData.reduce((sum, d) => sum + d.count, 0)}</Text>
-        </View>
-        <View style={styles.statRow}>
-          <Text style={styles.statLabel}>Average Mood:</Text>
-          <Text style={styles.statValue}>
-            {moodData.length > 0 
-              ? (moodData.reduce((sum, d) => sum + d.mood, 0) / moodData.filter(d => d.mood > 0).length || 0).toFixed(1)
-              : '0.0'
-            }
-          </Text>
-        </View>
-      </View>
+      <QuickStats moodData={moodData} techniqueData={techniqueData} />
     </ScrollView>
   );
 }

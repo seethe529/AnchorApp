@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, memo, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { storage, STORAGE_KEYS } from '../utils/storage';
@@ -11,12 +11,12 @@ const MOODS = [
   { name: 'Terrible', icon: 'sad', color: '#F44336', value: 1 }
 ];
 
-export default function MoodTracker({ onMoodLogged }) {
+const MoodTracker = memo(({ onMoodLogged }) => {
   const [selectedMood, setSelectedMood] = useState(null);
   const [notes, setNotes] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const logMood = async () => {
+  const logMood = useCallback(async () => {
     if (!selectedMood) return;
     
     setIsLoading(true);
@@ -42,7 +42,7 @@ export default function MoodTracker({ onMoodLogged }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedMood, notes, onMoodLogged]);
 
   return (
     <View style={styles.container}>
@@ -89,7 +89,9 @@ export default function MoodTracker({ onMoodLogged }) {
       )}
     </View>
   );
-}
+});
+
+export default MoodTracker;
 
 const styles = StyleSheet.create({
   container: { padding: 20, backgroundColor: 'white', borderRadius: 10, margin: 10 },

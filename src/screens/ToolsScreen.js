@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { dbtCbtTechniques } from '../data/techniques';
@@ -14,9 +14,9 @@ export default function ToolsScreen() {
   const [selectedCategory, setSelectedCategory] = useState('grounding');
   const [selectedTechnique, setSelectedTechnique] = useState(null);
 
-  const categories = Object.keys(dbtCbtTechniques);
+  const categories = useMemo(() => Object.keys(dbtCbtTechniques), []);
 
-  const logTechniqueUsage = async (technique, effectiveness = null) => {
+  const logTechniqueUsage = useCallback(async (technique, effectiveness = null) => {
     try {
       const usage = {
         technique: technique.name,
@@ -35,9 +35,9 @@ export default function ToolsScreen() {
     } catch (error) {
       console.error('Error logging technique usage:', error);
     }
-  };
+  }, [selectedCategory]);
 
-  const renderTechnique = (technique) => (
+  const renderTechnique = useCallback((technique) => (
     <TouchableOpacity 
       key={technique.name} 
       style={styles.techniqueCard}
@@ -62,6 +62,11 @@ export default function ToolsScreen() {
         ))}
       </View>
     </TouchableOpacity>
+  ), [logTechniqueUsage]);
+
+  const currentTechniques = useMemo(
+    () => dbtCbtTechniques[selectedCategory],
+    [selectedCategory]
   );
 
   if (selectedTechnique) {
@@ -204,7 +209,7 @@ export default function ToolsScreen() {
       </ScrollView>
 
       <ScrollView style={styles.techniquesList}>
-        {dbtCbtTechniques[selectedCategory].map(renderTechnique)}
+        {currentTechniques.map(renderTechnique)}
       </ScrollView>
     </View>
   );
