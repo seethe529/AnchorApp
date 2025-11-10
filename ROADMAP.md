@@ -81,9 +81,73 @@ This document tracks planned features, enhancements, and ideas for future versio
 - [ ] Widget support (iOS 14+)
 - [ ] Apple Watch companion app
 - [ ] Siri shortcuts for quick technique access
-- [ ] Localization (Spanish, etc.)
+- [ ] **Internationalization (i18n)** - See detailed plan below
 - [ ] Community forum (moderated)
 - [ ] Therapist portal for tracking client progress
+
+### 🌍 Internationalization Plan (High Priority)
+
+**Problem:** Language barriers prevent people in crisis from accessing mental health support.
+
+**Solution Phases:**
+
+#### Phase 1: AI-Powered (Free, Immediate)
+- [ ] Update OpenAI system prompt to respond in user's language
+- [ ] Add language detection to AI Support
+- [ ] Test with Spanish, French, German, Arabic, Mandarin
+- **Cost:** $0 (OpenAI already supports 50+ languages)
+- **Impact:** AI Support becomes multilingual immediately
+
+#### Phase 2: Community Translation (Free, Crowdsourced)
+- [ ] Set up i18next framework
+- [ ] Create translation contribution guide
+- [ ] Open GitHub issues for each language
+- [ ] Accept pull requests from bilingual volunteers
+- [ ] Native speakers review and approve translations
+- **Cost:** $0 (volunteer-driven)
+- **Priority Languages:** Spanish, French, Arabic, Mandarin, German, Portuguese
+- **Impact:** Core app UI translated by community
+
+#### Phase 3: Professional Review (Paid, Quality Assurance)
+- [ ] Partner with mental health organizations for translation review
+- [ ] Reach out to veteran organizations (VA, international equivalents)
+- [ ] Apply for grants to fund professional translation
+- [ ] Seek pro-bono translation from mental health professionals
+- **Cost:** Seek grants/donations
+- **Impact:** Ensure clinical accuracy of mental health terminology
+
+#### Phase 4: Localized Crisis Resources
+- [ ] Research crisis hotlines by country
+- [ ] Add country detection
+- [ ] Display local emergency numbers (not just US)
+- [ ] Partner with international crisis organizations
+- **Examples:**
+  - Spain: 024 (Suicide Prevention)
+  - France: 3114 (Mental Health Crisis)
+  - Germany: 0800-1110111 (Telefonseelsorge)
+  - Australia: 13 11 14 (Lifeline)
+- **Cost:** $0 (research and data entry)
+- **Impact:** Life-saving for international users
+
+**Technical Implementation:**
+```javascript
+// Install: npm install i18next react-i18next
+// Auto-detect device language
+// Fallback to English if translation missing
+// ~5,000 words to translate
+```
+
+**Why This Matters:**
+- 75% of the world doesn't speak English
+- PTSD affects veterans and trauma survivors globally
+- Mental health crisis doesn't care about language barriers
+- Free app should be accessible to everyone
+
+**Call for Help:**
+- Seeking bilingual volunteers
+- Mental health professionals who can review translations
+- Partnerships with international veteran organizations
+- Grant opportunities for accessibility funding
 
 ---
 
