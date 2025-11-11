@@ -74,7 +74,10 @@ export const sendMessageToOpenAI = async (message, conversationHistory = []) => 
     const data = await response.json();
     return data.choices[0].message.content;
   } catch (error) {
-    ErrorLogger.logAPIError(error, 'sendMessageToOpenAI');
+    // Don't log expected timeout/network errors
+    if (error.name !== 'AbortError' && !error.message?.includes('network') && !error.message?.includes('Failed to fetch')) {
+      ErrorLogger.logAPIError(error, 'sendMessageToOpenAI');
+    }
     
     // User-friendly fallback responses
     if (!OPENAI_API_KEY) {
