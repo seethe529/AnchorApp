@@ -74,17 +74,12 @@ export const sendMessageToOpenAI = async (message, conversationHistory = []) => 
     const data = await response.json();
     return data.choices[0].message.content;
   } catch (error) {
-    // Don't log expected timeout/network errors
-    if (error.name !== 'AbortError' && !error.message?.includes('network') && !error.message?.includes('Failed to fetch')) {
-      ErrorLogger.logAPIError(error, 'sendMessageToOpenAI');
-    }
-    
     // User-friendly fallback responses
     if (!OPENAI_API_KEY) {
       return "I'm here to support you. While I can't provide AI responses right now, I can suggest helpful techniques. Try the Tools tab for grounding exercises, breathing techniques, and coping strategies.";
     }
     
-    if (error.name === 'AbortError') {
+    if (error.name === 'AbortError' || error.message?.includes('Aborted')) {
       return "Connection timeout. Please check your internet connection and try again. The Tools tab has offline techniques you can use now.";
     }
     
@@ -92,6 +87,8 @@ export const sendMessageToOpenAI = async (message, conversationHistory = []) => 
       return "Unable to connect. Please check your internet connection and try again. The Tools tab has offline techniques you can use now.";
     }
     
+    // Only log unexpected errors
+    ErrorLogger.logAPIError(error, 'sendMessageToOpenAI');
     return "I'm having trouble responding right now. Try the Tools tab for helpful coping techniques, or try again in a moment.";
   }
 };
