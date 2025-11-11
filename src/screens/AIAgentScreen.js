@@ -77,23 +77,21 @@ export default function AIAgentScreen({ navigation }) {
     setIsTyping(true);
     
     // Generate AI response using OpenAI
-    requestAnimationFrame(async () => {
-      try {
-        const aiResponse = await sendMessageToOpenAI(messageText, conversation);
-        const aiMessage = { type: 'ai', text: aiResponse };
-        
-        setConversation(prev => [...prev, aiMessage]);
-        await saveMessage(aiMessage);
-      } catch (error) {
-        ErrorLogger.log(error, 'sendMessage - AI response');
-        const errorMessage = ErrorLogger.getUserFriendlyMessage(error);
-        const fallbackMessage = { type: 'ai', text: errorMessage };
-        setConversation(prev => [...prev, fallbackMessage]);
-        await saveMessage(fallbackMessage);
-      }
+    try {
+      const aiResponse = await sendMessageToOpenAI(messageText, conversation);
+      const aiMessage = { type: 'ai', text: aiResponse };
       
+      setConversation(prev => [...prev, aiMessage]);
+      await saveMessage(aiMessage);
+    } catch (error) {
+      ErrorLogger.log(error, 'sendMessage - AI response');
+      const errorMessage = ErrorLogger.getUserFriendlyMessage(error);
+      const fallbackMessage = { type: 'ai', text: errorMessage };
+      setConversation(prev => [...prev, fallbackMessage]);
+      await saveMessage(fallbackMessage);
+    } finally {
       setIsTyping(false);
-    });
+    }
   };
 
 
@@ -137,11 +135,9 @@ export default function AIAgentScreen({ navigation }) {
             <TouchableOpacity
               key={index}
               style={styles.quickActionButton}
-              onPress={() => {
+              onPress={async () => {
                 setMessage(action.text);
-                requestAnimationFrame(() => {
-                  sendMessage();
-                });
+                setTimeout(() => sendMessage(), 0);
               }}
               accessibilityLabel={action.text}
               accessibilityHint="Sends this message to AI support"
