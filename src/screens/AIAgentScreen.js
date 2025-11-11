@@ -206,7 +206,7 @@ export default function AIAgentScreen({ navigation }) {
         </View>
       )}
 
-      <View style={styles.inputContainer} importantForAccessibility="yes">
+      <View style={styles.inputContainer} importantForAccessibility="yes" accessible={false}>
         <TextInput
           style={styles.textInput}
           value={message}
