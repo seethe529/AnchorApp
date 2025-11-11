@@ -35,7 +35,7 @@ const QuickStats = memo(({ moodData, techniqueData }) => {
 });
 
 
-export default function ProgressScreen() {
+export default function ProgressScreen({ navigation }) {
   const [moodData, setMoodData] = useState([]);
   const [techniqueData, setTechniqueData] = useState([]);
   const [allRatedTechniques, setAllRatedTechniques] = useState([]);
@@ -44,6 +44,13 @@ export default function ProgressScreen() {
   useEffect(() => {
     loadProgressData();
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadProgressData();
+    });
+    return unsubscribe;
+  }, [navigation]);
 
   const loadProgressData = async () => {
     try {
