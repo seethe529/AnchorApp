@@ -196,7 +196,7 @@ export default function ProgressScreen({ navigation }) {
               chartConfig={chartConfig}
               style={styles.chart}
               horizontalLabelRotation={0}
-              verticalLabelRotation={30}
+              verticalLabelRotation={20}
             />
             {allRatedTechniques.length > 0 && (
               <View style={styles.effectivenessContainer}>
