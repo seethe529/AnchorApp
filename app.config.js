@@ -17,9 +17,12 @@ export default {
     ios: {
       supportsTablet: false,
       bundleIdentifier: "com.anchor.ptsd-support",
-      buildNumber: "2",
+      buildNumber: "3",
       config: {
         usesNonExemptEncryption: false
+      },
+      infoPlist: {
+        NSLocationWhenInUseUsageDescription: "Anchor uses your location to help you find nearby crisis centers and emergency rooms when you need immediate help. Your location is only used when you tap 'Find Local Crisis Centers' or 'Hospital Emergency Room' and is never stored or shared."
       }
     },
     android: {

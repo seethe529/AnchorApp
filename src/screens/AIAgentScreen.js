@@ -6,24 +6,17 @@ import { storage, STORAGE_KEYS } from '../utils/storage';
 import { sendMessageToOpenAI } from '../services/openai';
 import ErrorLogger from '../utils/errorLogger';
 
-let Location;
-if (Platform.OS !== 'web') {
-  Location = require('expo-location');
-}
-
 export default function AIAgentScreen({ navigation }) {
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState([
     { type: 'ai', text: 'Hi, I\'m here to support you through difficult moments. How are you feeling right now?' }
   ]);
   const [suggestions, setSuggestions] = useState([]);
-  const [userLocation, setUserLocation] = useState(null);
   const [isTyping, setIsTyping] = useState(false);
   const scrollViewRef = useRef(null);
 
   useEffect(() => {
     loadConversationHistory();
-    getCurrentLocation();
   }, []);
 
   const loadConversationHistory = async () => {
@@ -44,23 +37,6 @@ export default function AIAgentScreen({ navigation }) {
       await storage.setItem('conversation_history', updatedHistory);
     } catch (error) {
       ErrorLogger.logStorageError(error, 'saveMessage');
-    }
-  };
-
-  const getCurrentLocation = async () => {
-    if (Platform.OS === 'web') {
-      console.log('Location services not available on web');
-      return;
-    }
-    
-    try {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status === 'granted') {
-        const location = await Location.getCurrentPositionAsync({});
-        setUserLocation(location);
-      }
-    } catch (error) {
-      ErrorLogger.log(error, 'getCurrentLocation');
     }
   };
 
