@@ -5,8 +5,8 @@ import { storage, STORAGE_KEYS } from '../utils/storage';
 
 const screenWidth = Dimensions.get('window').width;
 
-const QuickStats = memo(({ moodData, techniqueData }) => {
-  const totalMoodLogs = useMemo(() => moodData.filter(d => d.mood > 0).length, [moodData]);
+const QuickStats = memo(({ moodData, techniqueData, allMoodLogs }) => {
+  const totalMoodLogs = useMemo(() => allMoodLogs?.length || 0, [allMoodLogs]);
   const totalTechniques = useMemo(() => techniqueData.reduce((sum, d) => sum + d.count, 0), [techniqueData]);
   const avgMood = useMemo(() => {
     const validMoods = moodData.filter(d => d.mood > 0);
@@ -39,6 +39,7 @@ export default function ProgressScreen({ navigation }) {
   const [moodData, setMoodData] = useState([]);
   const [techniqueData, setTechniqueData] = useState([]);
   const [allRatedTechniques, setAllRatedTechniques] = useState([]);
+  const [allMoodLogs, setAllMoodLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -57,6 +58,7 @@ export default function ProgressScreen({ navigation }) {
       const moodLogs = await storage.getItem(STORAGE_KEYS.MOOD_LOGS) || [];
       const techniqueUsage = await storage.getItem(STORAGE_KEYS.TECHNIQUE_USAGE) || [];
       
+      setAllMoodLogs(moodLogs);
       processMoodData(moodLogs);
       processTechniqueData(techniqueUsage);
     } catch (error) {
@@ -219,7 +221,7 @@ export default function ProgressScreen({ navigation }) {
         )}
       </View>
 
-      <QuickStats moodData={moodData} techniqueData={techniqueData} />
+      <QuickStats moodData={moodData} techniqueData={techniqueData} allMoodLogs={allMoodLogs} />
     </ScrollView>
   );
 }
