@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import AIAgentScreen from '../src/screens/AIAgentScreen';
-import { sendMessageToOpenAI } from '../src/services/openai';
-import { storage } from '../src/utils/storage';
+import AIAgentScreen from '../screens/AIAgentScreen';
+import { sendMessageToOpenAI } from '../services/openai';
+import { storage } from '../utils/storage';
 
-jest.mock('../src/services/openai');
-jest.mock('../src/utils/storage');
-jest.mock('../src/utils/errorLogger', () => ({
+jest.mock('../services/openai');
+jest.mock('../utils/storage');
+jest.mock('../utils/errorLogger', () => ({
   log: jest.fn(),
   logStorageError: jest.fn(),
   getUserFriendlyMessage: jest.fn(() => 'Error occurred')
