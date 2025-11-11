@@ -133,7 +133,7 @@ export default function AIAgentScreen({ navigation }) {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         accessible={false}
-        accessibilityElementsHidden={false}
+        importantForAccessibility="no"
       >
         <View 
           style={styles.quickActionsContainer}
@@ -206,7 +206,7 @@ export default function AIAgentScreen({ navigation }) {
         </View>
       )}
 
-      <View style={styles.inputContainer} importantForAccessibility="yes" accessible={false}>
+      <View style={styles.inputContainer} importantForAccessibility="yes">
         <TextInput
           style={styles.textInput}
           value={message}
