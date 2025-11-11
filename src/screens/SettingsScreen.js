@@ -157,7 +157,6 @@ export default function SettingsScreen() {
     {
       title: 'Experience',
       items: [
-        { key: 'darkMode', title: 'Dark Mode', subtitle: 'Use dark theme (coming soon)' },
         { key: 'hapticFeedback', title: 'Haptic Feedback', subtitle: 'Vibration for interactions' }
       ]
     },
