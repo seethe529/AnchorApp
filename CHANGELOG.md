@@ -11,9 +11,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Git branching strategy (main, develop, feature branches)
 - Comprehensive documentation for contributors
 
-## [1.0.0] - 2025-01-09 (Submitted to App Store)
+## [1.0.0] - 2025-01-11 (Build 5 - TestFlight)
 
-**Status:** In Review (Submitted January 9, 2025)
+**Status:** Testing in TestFlight (Build 5 submitted November 11, 2025)
+
+### Fixed (Build 5)
+- **Apple Rejection Fixes:**
+  - Added clear location permission explanation for Crisis screen
+  - Disabled iPad support (iPhone only)
+  - Removed "Dark Mode (coming soon)" incomplete feature
+  - Fixed AI Support API key configuration for production builds
+  - Improved AI Support error messages to not sound incomplete
+
+- **AI Support Improvements:**
+  - Added auto-scroll to bottom when new messages arrive
+  - Improved message padding and layout
+  - Added 8 comprehensive unit tests (all passing)
+
+- **Progress Screen:**
+  - Fixed data not updating after logging mood
+  - Added auto-refresh when tab is focused
+
+### Technical Changes
+- OpenAI API key stored as EAS secret (secure)
+- Location permission only used for Crisis screen features
+- Improved test coverage for AI Support screen
+
+## [1.0.0] - 2025-01-09 (Build 1 - Rejected)
+
+**Status:** Rejected by Apple (January 11, 2025)
+**Rejection Reasons:**
+- Guideline 5.1.1: Missing location permission explanation
+- Guideline 4.0: iPad layout issues
+- Guideline 2.2: AI Support appeared as incomplete feature
 
 ### Added
 - **Core Features**

@@ -1,7 +1,9 @@
-# Apple Rejection Fixes - Build 3
+# Apple Rejection Fixes - Build 5
 
 **Rejection Date:** November 11, 2025  
-**Submission ID:** 4b3a717a-62b5-49e3-8c1a-32221593c51c
+**Submission ID:** 4b3a717a-62b5-49e3-8c1a-32221593c51c  
+**Resolution Date:** November 11, 2025  
+**Status:** ✅ All issues fixed in Build 5 (Testing in TestFlight)
 
 ---
 
