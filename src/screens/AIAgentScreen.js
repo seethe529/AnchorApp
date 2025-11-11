@@ -19,6 +19,15 @@ export default function AIAgentScreen({ navigation }) {
     loadConversationHistory();
   }, []);
 
+  useEffect(() => {
+    // Auto-scroll to bottom when conversation updates
+    if (scrollViewRef.current) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollToEnd({ animated: true });
+      }, 100);
+    }
+  }, [conversation]);
+
   const loadConversationHistory = async () => {
     try {
       const history = await storage.getItem('conversation_history') || [];
@@ -231,7 +240,7 @@ export default function AIAgentScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5' },
   conversation: { flex: 1 },
-  conversationContent: { paddingBottom: 30 },
+  conversationContent: { paddingBottom: 30, paddingHorizontal: 15, paddingTop: 10 },
   quickActionsContainer: { padding: 15, backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E0E0E0' },
   quickActionsTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10, color: '#333' },
   quickActionsScroll: { flexDirection: 'row' },

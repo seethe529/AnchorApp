@@ -32,3 +32,8 @@ jest.mock('expo-haptics', () => ({
   impactAsync: jest.fn(() => Promise.resolve()),
   notificationAsync: jest.fn(() => Promise.resolve()),
 }));
+
+// Mock Ionicons
+jest.mock('@expo/vector-icons', () => ({
+  Ionicons: 'Ionicons',
+}));
