@@ -72,13 +72,13 @@ export const sendMessageToOpenAI = async (message, conversationHistory = []) => 
     
     // User-friendly fallback responses
     if (!OPENAI_API_KEY) {
-      return "I'm here to listen. The AI support feature requires an API key to be configured. In the meantime, you can explore the Tools section for helpful techniques.";
+      return "I'm here to support you. While I can't provide AI responses right now, I can suggest helpful techniques. Try the Tools tab for grounding exercises, breathing techniques, and coping strategies. What are you struggling with?";
     }
     
     if (error.message?.includes('network') || error.message?.includes('fetch')) {
-      return "I'm having trouble connecting right now. Please check your internet connection and try again.";
+      return "I'm having trouble connecting right now. Please check your internet connection and try again. In the meantime, check out the Tools tab for offline techniques.";
     }
     
-    return "I'm here to support you. Could you tell me more about what you're experiencing right now?";
+    return "I'm here to support you. Try describing what you're feeling, or check the Tools tab for helpful coping techniques.";
   }
 };
