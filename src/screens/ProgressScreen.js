@@ -191,10 +191,12 @@ export default function ProgressScreen({ navigation }) {
                 }]
               }}
               width={screenWidth - 70}
-              height={220}
+              height={240}
               yAxisSuffix=""
               chartConfig={chartConfig}
               style={styles.chart}
+              horizontalLabelRotation={30}
+              verticalLabelRotation={0}
             />
             {allRatedTechniques.length > 0 && (
               <View style={styles.effectivenessContainer}>
