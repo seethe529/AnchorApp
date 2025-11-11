@@ -119,7 +119,8 @@ export default function ProgressScreen({ navigation }) {
         fullName: name,
         avgEffectiveness: (stats.totalEffectiveness / stats.ratings).toFixed(1)
       }))
-      .sort((a, b) => b.avgEffectiveness - a.avgEffectiveness);
+      .sort((a, b) => b.avgEffectiveness - a.avgEffectiveness)
+      .slice(0, 5);
     
     setTechniqueData(chartData);
     setAllRatedTechniques(allRated);
@@ -197,7 +198,7 @@ export default function ProgressScreen({ navigation }) {
             />
             {allRatedTechniques.length > 0 && (
               <View style={styles.effectivenessContainer}>
-                <Text style={styles.effectivenessTitle}>Effectiveness Ratings:</Text>
+                <Text style={styles.effectivenessTitle}>Top 5 Most Effective:</Text>
                 {allRatedTechniques.map((tech, idx) => (
                   <View key={idx} style={styles.effectivenessRow}>
                     <Text style={styles.effectivenessTechnique} numberOfLines={1} ellipsizeMode="tail">{tech.fullName}</Text>
