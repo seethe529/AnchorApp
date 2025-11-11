@@ -137,7 +137,6 @@ export default function AIAgentScreen({ navigation }) {
         <View 
           style={styles.quickActionsContainer}
           accessible={false}
-          accessibilityElementsHidden={false}
         >
           <Text style={styles.quickActionsTitle}>Quick Help:</Text>
           <ScrollView 
@@ -145,6 +144,7 @@ export default function AIAgentScreen({ navigation }) {
             showsHorizontalScrollIndicator={false} 
             style={styles.quickActionsScroll}
             accessible={false}
+            importantForAccessibility="no-hide-descendants"
           >
             {quickActions.map((action, index) => (
               <TouchableOpacity
