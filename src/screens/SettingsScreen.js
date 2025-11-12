@@ -7,7 +7,7 @@ import Constants from 'expo-constants';
 
 const APP_VERSION = Constants.expoConfig?.version || '1.0.0';
 
-export default function SettingsScreen() {
+export default function SettingsScreen({ navigation }) {
   const [preferences, setPreferences] = useState({
     darkMode: false,
     notifications: true,
@@ -225,6 +225,25 @@ export default function SettingsScreen() {
           <View style={styles.actionInfo}>
             <Text style={[styles.actionTitle, { color: '#F44336' }]}>Clear All Data</Text>
             <Text style={styles.actionSubtitle}>Permanently delete all data</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Information</Text>
+        
+        <TouchableOpacity 
+          style={styles.actionButton} 
+          onPress={() => navigation.navigate('Resources')}
+          accessibilityLabel="Resources & Citations"
+          accessibilityHint="View medical sources and citations for techniques"
+          accessibilityRole="button"
+        >
+          <Ionicons name="book" size={24} color="#2E8B57" />
+          <View style={styles.actionInfo}>
+            <Text style={styles.actionTitle}>Resources & Citations</Text>
+            <Text style={styles.actionSubtitle}>Medical sources and references</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color="#ccc" />
         </TouchableOpacity>

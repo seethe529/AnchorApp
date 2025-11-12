@@ -12,6 +12,7 @@ import CrisisScreen from './src/screens/CrisisScreen';
 import ProgressScreen from './src/screens/ProgressScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import DisclaimerScreen from './src/screens/DisclaimerScreen';
+import ResourcesScreen from './src/screens/ResourcesScreen';
 import BreathingExercise from './src/components/BreathingExercise';
 import SafetyPlan from './src/components/SafetyPlan';
 import { setupNotifications } from './src/utils/notifications';
@@ -125,6 +126,11 @@ export default function App() {
           name="Safety Plan" 
           component={SafetyPlan} 
           options={{ title: 'Safety Plan', headerBackTitle: 'Back' }}
+        />
+        <Stack.Screen 
+          name="Resources" 
+          component={ResourcesScreen} 
+          options={{ title: 'Resources & Citations', headerBackTitle: 'Back' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

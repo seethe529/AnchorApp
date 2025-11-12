@@ -2,9 +2,10 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { dbtCbtTechniques } from '../data/techniques';
+import { getCitationForTechnique, formatCitation } from '../data/citations';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { trackTechniqueUsed } from '../utils/appRating';
-import { Platform } from 'react-native';
+import { Platform, Linking } from 'react-native';
 
 let Haptics;
 if (Platform.OS !== 'web') {
@@ -185,6 +186,27 @@ export default function ToolsScreen() {
               <Text style={styles.step}>N - Negotiate when possible</Text>
             </View>
           )}
+          
+          <View style={styles.citationBox}>
+            <Text style={styles.citationTitle}>📚 Source:</Text>
+            <Text style={styles.citationText}>
+              {formatCitation(getCitationForTechnique(selectedTechnique.name))}
+            </Text>
+            <TouchableOpacity 
+              style={styles.citationLink}
+              onPress={() => {
+                const citation = getCitationForTechnique(selectedTechnique.name);
+                if (citation.url) {
+                  Linking.openURL(citation.url);
+                }
+              }}
+              accessibilityLabel="View source"
+              accessibilityRole="button"
+            >
+              <Text style={styles.citationLinkText}>View Source</Text>
+              <Ionicons name="open-outline" size={16} color="#2E8B57" />
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View>
     );
@@ -248,5 +270,10 @@ const styles = StyleSheet.create({
   feedbackQuestion: { fontSize: 16, fontWeight: '600', color: '#333', marginBottom: 10, textAlign: 'center' },
   feedbackButtons: { flexDirection: 'row', justifyContent: 'space-around' },
   feedbackButton: { alignItems: 'center', padding: 10 },
-  feedbackText: { fontSize: 14, color: '#666', fontWeight: '500', marginTop: 5 }
+  feedbackText: { fontSize: 14, color: '#666', fontWeight: '500', marginTop: 5 },
+  citationBox: { backgroundColor: '#F9F9F9', padding: 15, borderRadius: 10, marginTop: 20, borderLeftWidth: 3, borderLeftColor: '#2E8B57' },
+  citationTitle: { fontSize: 14, fontWeight: 'bold', color: '#2E8B57', marginBottom: 8 },
+  citationText: { fontSize: 13, color: '#555', lineHeight: 20, marginBottom: 10, fontStyle: 'italic' },
+  citationLink: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 12, backgroundColor: '#E8F5E8', borderRadius: 8, alignSelf: 'flex-start' },
+  citationLinkText: { fontSize: 14, color: '#2E8B57', fontWeight: '500', marginRight: 5 }
 });
