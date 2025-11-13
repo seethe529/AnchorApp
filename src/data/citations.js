@@ -23,13 +23,13 @@ export const citations = {
   grounding: {
     title: "Grounding Techniques for PTSD",
     source: "U.S. Department of Veterans Affairs - National Center for PTSD",
-    url: "https://www.ptsd.va.gov/apps/aboutface/resources/grounding_techniques.html",
+    url: "https://www.ptsd.va.gov/understand/common/common_adults.asp",
     description: "Grounding techniques help manage flashbacks, dissociation, and overwhelming emotions in PTSD."
   },
   breathing: {
     title: "Controlled Breathing Techniques",
     source: "American Psychological Association",
-    url: "https://www.apa.org/topics/stress/manage-stress",
+    url: "https://www.apa.org/topics/stress/tips",
     description: "Controlled breathing activates the parasympathetic nervous system, reducing stress and anxiety."
   },
   pmr: {
@@ -38,7 +38,7 @@ export const citations = {
     year: "1938",
     source: "Progressive Relaxation",
     publisher: "University of Chicago Press",
-    url: "https://www.apa.org/topics/anxiety/progressive-muscle-relaxation",
+    url: "https://www.apa.org/topics/stress/tips",
     description: "PMR is a systematic technique for achieving deep relaxation by tensing and releasing muscle groups."
   },
   tipp: {
@@ -98,13 +98,13 @@ export const citations = {
   behavioralActivation: {
     title: "Behavioral Activation for Depression",
     source: "American Psychological Association",
-    url: "https://www.apa.org/depression-guideline/behavioral-activation",
+    url: "https://www.apa.org/ptsd-guideline/treatments/cognitive-behavioral-therapy",
     description: "Behavioral activation increases engagement in rewarding activities to improve mood and reduce depression."
   },
   exposure: {
     title: "Prolonged Exposure Therapy for PTSD",
     source: "U.S. Department of Veterans Affairs - National Center for PTSD",
-    url: "https://www.ptsd.va.gov/understand_tx/prolonged_exposure.asp",
+    url: "https://www.ptsd.va.gov/understand_tx/tx_basics.asp",
     description: "Gradual exposure to trauma-related memories and situations is an evidence-based PTSD treatment."
   }
 };
