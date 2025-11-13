@@ -23,7 +23,7 @@ export const citations = {
   grounding: {
     title: "Grounding Techniques for PTSD",
     source: "U.S. Department of Veterans Affairs - National Center for PTSD",
-    url: "https://www.ptsd.va.gov/understand/common/common_adults.asp",
+    url: "https://www.ptsd.va.gov/",
     description: "Grounding techniques help manage flashbacks, dissociation, and overwhelming emotions in PTSD."
   },
   breathing: {
