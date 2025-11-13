@@ -63,8 +63,8 @@ export default function ResourcesScreen() {
         <Text style={styles.sectionTitle}>Technique-Specific Citations</Text>
 
         <View style={styles.citationCard}>
-          <Text style={styles.citationTitle}>Grounding Techniques</Text>
-          <Text style={styles.citationText}>{citations.grounding.source}</Text>
+          <Text style={styles.citationTitle}>{citations.grounding.title}</Text>
+          <Text style={styles.citationText}>{formatCitation(citations.grounding)}</Text>
           <Text style={styles.citationDescription}>{citations.grounding.description}</Text>
           <TouchableOpacity 
             style={styles.linkButton} 
@@ -72,14 +72,14 @@ export default function ResourcesScreen() {
             accessibilityLabel="Learn more about grounding techniques"
             accessibilityRole="button"
           >
-            <Text style={styles.linkText}>VA PTSD Resources</Text>
+            <Text style={styles.linkText}>View Source</Text>
             <Ionicons name="open-outline" size={16} color="#2E8B57" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.citationCard}>
-          <Text style={styles.citationTitle}>Breathing & Relaxation</Text>
-          <Text style={styles.citationText}>{formatCitation(citations.pmr)}</Text>
+          <Text style={styles.citationTitle}>{citations.breathing.title}</Text>
+          <Text style={styles.citationText}>{formatCitation(citations.breathing)}</Text>
           <Text style={styles.citationDescription}>{citations.breathing.description}</Text>
           <TouchableOpacity 
             style={styles.linkButton} 
@@ -87,14 +87,14 @@ export default function ResourcesScreen() {
             accessibilityLabel="Learn more about breathing techniques"
             accessibilityRole="button"
           >
-            <Text style={styles.linkText}>APA Stress Management</Text>
+            <Text style={styles.linkText}>View Source</Text>
             <Ionicons name="open-outline" size={16} color="#2E8B57" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.citationCard}>
-          <Text style={styles.citationTitle}>Mindfulness Practices</Text>
-          <Text style={styles.citationText}>{citations.mindfulness.source}</Text>
+          <Text style={styles.citationTitle}>{citations.mindfulness.title}</Text>
+          <Text style={styles.citationText}>{formatCitation(citations.mindfulness)}</Text>
           <Text style={styles.citationDescription}>{citations.mindfulness.description}</Text>
           <TouchableOpacity 
             style={styles.linkButton} 
@@ -102,22 +102,22 @@ export default function ResourcesScreen() {
             accessibilityLabel="Learn more about mindfulness"
             accessibilityRole="button"
           >
-            <Text style={styles.linkText}>NCCIH Resources</Text>
+            <Text style={styles.linkText}>View Source</Text>
             <Ionicons name="open-outline" size={16} color="#2E8B57" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.citationCard}>
-          <Text style={styles.citationTitle}>Exposure Therapy</Text>
-          <Text style={styles.citationText}>{citations.exposure.source}</Text>
-          <Text style={styles.citationDescription}>{citations.exposure.description}</Text>
+          <Text style={styles.citationTitle}>{citations.tipp.title}</Text>
+          <Text style={styles.citationText}>{formatCitation(citations.tipp)}</Text>
+          <Text style={styles.citationDescription}>{citations.tipp.description}</Text>
           <TouchableOpacity 
             style={styles.linkButton} 
-            onPress={() => openURL(citations.exposure.url)}
-            accessibilityLabel="Learn more about exposure therapy"
+            onPress={() => openURL(citations.tipp.url)}
+            accessibilityLabel="Learn more about DBT skills"
             accessibilityRole="button"
           >
-            <Text style={styles.linkText}>VA Treatment Guide</Text>
+            <Text style={styles.linkText}>View Source</Text>
             <Ionicons name="open-outline" size={16} color="#2E8B57" />
           </TouchableOpacity>
         </View>

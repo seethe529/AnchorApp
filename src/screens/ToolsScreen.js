@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { dbtCbtTechniques } from '../data/techniques';
@@ -15,8 +15,15 @@ if (Platform.OS !== 'web') {
 export default function ToolsScreen() {
   const [selectedCategory, setSelectedCategory] = useState('grounding');
   const [selectedTechnique, setSelectedTechnique] = useState(null);
+  const scrollViewRef = useRef(null);
 
   const categories = useMemo(() => Object.keys(dbtCbtTechniques), []);
+
+  useEffect(() => {
+    if (selectedTechnique && scrollViewRef.current) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: false });
+    }
+  }, [selectedTechnique]);
 
   const logTechniqueUsage = useCallback(async (technique, effectiveness = null) => {
     try {
@@ -82,57 +89,13 @@ export default function ToolsScreen() {
             accessibilityHint="Returns to the list of techniques"
             accessibilityRole="button"
           >
-            <Text style={styles.backButtonText}>← Back</Text>
+            <Ionicons name="chevron-back" size={28} color="#2E8B57" />
           </TouchableOpacity>
           <Text style={styles.techniqueTitle}>{selectedTechnique.name}</Text>
+          <View style={styles.backButton} />
         </View>
         
-        <View style={styles.feedbackBar}>
-          <Text style={styles.feedbackQuestion}>Was this helpful?</Text>
-          <View style={styles.feedbackButtons}>
-            <TouchableOpacity 
-              style={styles.feedbackButton}
-              onPress={async () => {
-                await logTechniqueUsage(selectedTechnique, 5);
-                await trackTechniqueUsed();
-                setSelectedTechnique(null);
-              }}
-              accessibilityLabel="Technique helped"
-              accessibilityRole="button"
-            >
-              <Ionicons name="checkmark-circle" size={32} color="#2E8B57" />
-              <Text style={styles.feedbackText}>Helped</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={styles.feedbackButton}
-              onPress={() => {
-                logTechniqueUsage(selectedTechnique, 3);
-                setSelectedTechnique(null);
-              }}
-              accessibilityLabel="Technique somewhat helped"
-              accessibilityRole="button"
-            >
-              <Ionicons name="remove-circle" size={32} color="#FFA500" />
-              <Text style={styles.feedbackText}>Somewhat</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={styles.feedbackButton}
-              onPress={() => {
-                logTechniqueUsage(selectedTechnique, 1);
-                setSelectedTechnique(null);
-              }}
-              accessibilityLabel="Technique did not help much"
-              accessibilityRole="button"
-            >
-              <Ionicons name="close-circle" size={32} color="#DC143C" />
-              <Text style={styles.feedbackText}>Not much</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        
-        <ScrollView style={styles.content}>
+        <ScrollView ref={scrollViewRef} style={styles.content} contentContainerStyle={styles.contentContainer}>
           <Text style={styles.fullDescription}>{selectedTechnique.description}</Text>
           
           {selectedTechnique.example && (
@@ -188,7 +151,7 @@ export default function ToolsScreen() {
           )}
           
           <View style={styles.citationBox}>
-            <Text style={styles.citationTitle}>📚 Source:</Text>
+            <Text style={styles.citationTitle}>📚 Source</Text>
             <Text style={styles.citationText}>
               {formatCitation(getCitationForTechnique(selectedTechnique.name))}
             </Text>
@@ -206,6 +169,51 @@ export default function ToolsScreen() {
               <Text style={styles.citationLinkText}>View Source</Text>
               <Ionicons name="open-outline" size={16} color="#2E8B57" />
             </TouchableOpacity>
+          </View>
+
+          <View style={styles.feedbackSection}>
+            <Text style={styles.feedbackQuestion}>Was this helpful?</Text>
+            <View style={styles.feedbackButtons}>
+              <TouchableOpacity 
+                style={styles.feedbackButton}
+                onPress={async () => {
+                  await logTechniqueUsage(selectedTechnique, 5);
+                  await trackTechniqueUsed();
+                  setSelectedTechnique(null);
+                }}
+                accessibilityLabel="Technique helped"
+                accessibilityRole="button"
+              >
+                <Ionicons name="checkmark-circle" size={32} color="#2E8B57" />
+                <Text style={styles.feedbackText}>Helped</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={styles.feedbackButton}
+                onPress={() => {
+                  logTechniqueUsage(selectedTechnique, 3);
+                  setSelectedTechnique(null);
+                }}
+                accessibilityLabel="Technique somewhat helped"
+                accessibilityRole="button"
+              >
+                <Ionicons name="remove-circle" size={32} color="#FFA500" />
+                <Text style={styles.feedbackText}>Somewhat</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={styles.feedbackButton}
+                onPress={() => {
+                  logTechniqueUsage(selectedTechnique, 1);
+                  setSelectedTechnique(null);
+                }}
+                accessibilityLabel="Technique did not help much"
+                accessibilityRole="button"
+              >
+                <Ionicons name="close-circle" size={32} color="#DC143C" />
+                <Text style={styles.feedbackText}>Not much</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </ScrollView>
       </View>
@@ -241,39 +249,39 @@ export default function ToolsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#F5F5F5' },
-  categoryTabs: { backgroundColor: 'white', paddingVertical: 15 },
-  categoryTab: { paddingHorizontal: 20, paddingVertical: 10, marginHorizontal: 5, borderRadius: 20, backgroundColor: '#E0E0E0' },
+  categoryTabs: { backgroundColor: 'white', paddingVertical: 12, paddingHorizontal: 8, borderBottomWidth: 1, borderBottomColor: '#E5E5E5' },
+  categoryTab: { paddingHorizontal: 16, paddingVertical: 8, marginHorizontal: 4, borderRadius: 16, backgroundColor: '#F5F5F5' },
   activeTab: { backgroundColor: '#2E8B57' },
-  categoryText: { fontSize: 12, fontWeight: 'bold', color: '#666' },
+  categoryText: { fontSize: 13, fontWeight: '600', color: '#666' },
   activeTabText: { color: 'white' },
-  techniquesList: { flex: 1, padding: 15 },
-  techniqueCard: { backgroundColor: 'white', padding: 15, borderRadius: 10, marginBottom: 10, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.22, shadowRadius: 2.22 },
-  techniqueHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 5 },
-  techniqueName: { fontSize: 18, fontWeight: 'bold', color: '#2E8B57', flex: 1 },
-  techniqueDescription: { fontSize: 14, color: '#666', marginBottom: 10 },
-  keywordTags: { flexDirection: 'row', flexWrap: 'wrap' },
-  keywordTag: { backgroundColor: '#E8F5E8', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 12, marginRight: 6, marginBottom: 4 },
+  techniquesList: { flex: 1, padding: 16 },
+  techniqueCard: { backgroundColor: 'white', padding: 16, borderRadius: 12, marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },
+  techniqueHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
+  techniqueName: { fontSize: 17, fontWeight: '600', color: '#2E8B57', flex: 1 },
+  techniqueDescription: { fontSize: 15, color: '#666', marginBottom: 12, lineHeight: 22 },
+  keywordTags: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 4 },
+  keywordTag: { backgroundColor: '#E8F5E8', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 12, marginRight: 6, marginBottom: 6 },
   keywordText: { fontSize: 12, color: '#2E8B57', fontWeight: '500' },
-  header: { backgroundColor: 'white', padding: 20, flexDirection: 'row', alignItems: 'center' },
-  backButton: { marginRight: 15 },
-  backButtonText: { fontSize: 16, color: '#2E8B57' },
-  techniqueTitle: { fontSize: 20, fontWeight: 'bold', color: '#333' },
-  content: { flex: 1, padding: 20 },
-  fullDescription: { fontSize: 16, lineHeight: 24, marginBottom: 20, color: '#333' },
-  exampleBox: { backgroundColor: '#F0F8F0', padding: 15, borderRadius: 10, marginBottom: 20, borderLeftWidth: 4, borderLeftColor: '#2E8B57' },
-  exampleTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10, color: '#2E8B57' },
-  exampleText: { fontSize: 14, lineHeight: 22, color: '#333', fontStyle: 'italic' },
-  stepByStep: { backgroundColor: 'white', padding: 15, borderRadius: 10 },
-  stepTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15, color: '#2E8B57' },
-  step: { fontSize: 16, marginBottom: 10, paddingLeft: 10, color: '#333' },
-  feedbackBar: { backgroundColor: '#F0F8F0', padding: 15, borderBottomWidth: 1, borderBottomColor: '#E0E0E0' },
-  feedbackQuestion: { fontSize: 16, fontWeight: '600', color: '#333', marginBottom: 10, textAlign: 'center' },
+  header: { backgroundColor: 'white', paddingVertical: 16, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: '#E5E5E5' },
+  backButton: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
+  techniqueTitle: { fontSize: 20, fontWeight: '600', color: '#333', flex: 1, textAlign: 'center' },
+  content: { flex: 1 },
+  contentContainer: { padding: 20, paddingBottom: 40 },
+  fullDescription: { fontSize: 16, lineHeight: 26, marginBottom: 24, color: '#333' },
+  exampleBox: { backgroundColor: '#F0F8F0', padding: 16, borderRadius: 12, marginBottom: 24, borderLeftWidth: 4, borderLeftColor: '#2E8B57' },
+  exampleTitle: { fontSize: 15, fontWeight: '600', marginBottom: 8, color: '#2E8B57' },
+  exampleText: { fontSize: 15, lineHeight: 24, color: '#333', fontStyle: 'italic' },
+  stepByStep: { backgroundColor: 'white', padding: 16, borderRadius: 12, marginBottom: 24, borderWidth: 1, borderColor: '#E5E5E5' },
+  stepTitle: { fontSize: 17, fontWeight: '600', marginBottom: 16, color: '#2E8B57' },
+  step: { fontSize: 16, marginBottom: 12, paddingLeft: 8, color: '#333', lineHeight: 24 },
+  feedbackSection: { backgroundColor: 'white', padding: 20, borderRadius: 12, marginTop: 24, borderWidth: 1, borderColor: '#E5E5E5' },
+  feedbackQuestion: { fontSize: 17, fontWeight: '600', color: '#333', marginBottom: 16, textAlign: 'center' },
   feedbackButtons: { flexDirection: 'row', justifyContent: 'space-around' },
-  feedbackButton: { alignItems: 'center', padding: 10 },
-  feedbackText: { fontSize: 14, color: '#666', fontWeight: '500', marginTop: 5 },
-  citationBox: { backgroundColor: '#F9F9F9', padding: 15, borderRadius: 10, marginTop: 20, borderLeftWidth: 3, borderLeftColor: '#2E8B57' },
-  citationTitle: { fontSize: 14, fontWeight: 'bold', color: '#2E8B57', marginBottom: 8 },
-  citationText: { fontSize: 13, color: '#555', lineHeight: 20, marginBottom: 10, fontStyle: 'italic' },
-  citationLink: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 12, backgroundColor: '#E8F5E8', borderRadius: 8, alignSelf: 'flex-start' },
-  citationLinkText: { fontSize: 14, color: '#2E8B57', fontWeight: '500', marginRight: 5 }
+  feedbackButton: { alignItems: 'center', padding: 12, minWidth: 80 },
+  feedbackText: { fontSize: 13, color: '#666', fontWeight: '500', marginTop: 6 },
+  citationBox: { backgroundColor: '#F9F9F9', padding: 16, borderRadius: 12, marginTop: 24, borderLeftWidth: 4, borderLeftColor: '#2E8B57' },
+  citationTitle: { fontSize: 15, fontWeight: '600', color: '#2E8B57', marginBottom: 8 },
+  citationText: { fontSize: 13, color: '#666', lineHeight: 20, marginBottom: 12 },
+  citationLink: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 14, backgroundColor: '#E8F5E8', borderRadius: 8, alignSelf: 'flex-start' },
+  citationLinkText: { fontSize: 14, color: '#2E8B57', fontWeight: '600', marginRight: 6 }
 });
