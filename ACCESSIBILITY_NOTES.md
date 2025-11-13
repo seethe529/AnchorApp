@@ -1,6 +1,6 @@
-# Accessibility Assessment for Anchor v1.0
+# Accessibility Assessment for Anchor v1.0 (Build 9)
 
-## Current Status: Good with Known Limitations
+## Current Status: Excellent with Minor Limitations
 
 ### ✅ Fully Accessible Screens
 
@@ -13,8 +13,11 @@
 **Tools Screen**
 - Category navigation works well
 - Technique cards are accessible
-- Detail views are readable
-- Feedback buttons (✅ ➖ ❌) are clear
+- Detail views are readable with improved layout (Build 9)
+- Medical citations visible with "View Source" links (Build 9)
+- Auto-scroll to top when opening techniques (Build 9)
+- Feedback buttons (✅ ➖ ❌) moved to bottom for better flow (Build 9)
+- Back button uses standard iOS chevron icon (Build 9)
 - **Rating: Excellent**
 
 **Crisis Screen**
@@ -39,6 +42,14 @@
 - All toggles accessible
 - Export/Clear data buttons work
 - Version info readable
+- Resources & Citations screen accessible from Settings (Build 9)
+- **Rating: Excellent**
+
+**Resources & Citations Screen (Build 9)**
+- All citations readable with VoiceOver
+- Clickable source links clearly labeled
+- Educational disclaimer prominently displayed
+- Organized by category for easy navigation
 - **Rating: Excellent**
 
 ### ⚠️ Partially Accessible
@@ -164,8 +175,26 @@ Most mental health apps have similar or worse accessibility for chat features. A
 
 **Recommendation**: Ship v1.0 with current accessibility, gather user feedback, improve AI chat in v1.1.
 
+## Build 9 Accessibility Improvements
+
+### Added:
+- Medical citations on all technique pages with clear "View Source" buttons
+- Dedicated Resources & Citations screen
+- Improved technique detail page layout with better spacing
+- Auto-scroll to top when opening techniques
+- Centered titles with proper navigation structure
+
+### Changed:
+- Moved feedback section to bottom of technique pages (better reading flow)
+- Improved typography and line heights for readability
+- Better visual hierarchy throughout app
+
+### Fixed:
+- Removed conflicting swipe gesture that interfered with scrolling
+- Fixed blank screen navigation issue
+
 ---
 
-**Last Updated**: January 2025
+**Last Updated**: January 13, 2025 (Build 9)
 **Tested With**: VoiceOver on iOS 17+
 **Tester**: App developer with VoiceOver experience

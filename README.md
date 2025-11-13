@@ -9,13 +9,14 @@ A mobile application designed to provide comprehensive support for veterans and 
 - Daily motivational reminders
 - Emergency crisis button
 
-### 🛠️ DBT/CBT Tools
+### 🛠️ DBT/CBT Tools (with Medical Citations)
 - **Grounding Techniques**: 5-4-3-2-1, Box Breathing, Progressive Muscle Relaxation
 - **Distress Tolerance**: TIPP, ACCEPTS, Self-Soothe
 - **Emotion Regulation**: PLEASE, Opposite Action, Check the Facts
 - **Interpersonal Skills**: DEAR MAN, GIVE
 - **Mindfulness**: Observe, Describe, Participate
 - **Cognitive Techniques**: Thought Records, Behavioral Activation, Exposure
+- **All techniques include citations** from authoritative sources (Harvard Medical School, Mayo Clinic, APA, VA, etc.)
 
 ### 🤖 AI Support Agent
 - Real-time technique suggestions based on user input
@@ -71,18 +72,35 @@ npm run android # for Android
 ## Key Components
 
 - `src/data/techniques.js` - Comprehensive DBT/CBT technique database
+- `src/data/citations.js` - Medical citations from authoritative sources
 - `src/screens/AIAgentScreen.js` - Intelligent support agent
-- `src/screens/ToolsScreen.js` - Categorized technique browser
+- `src/screens/ToolsScreen.js` - Categorized technique browser with citations
+- `src/screens/ResourcesScreen.js` - Dedicated resources and citations screen
 - `src/screens/CrisisScreen.js` - Emergency support resources
+- `src/screens/DisclaimerScreen.js` - Medical disclaimer on first launch
+
+## Recent Updates (Build 9)
+
+### Medical Citations (Apple Guideline 1.4.1 Compliance)
+- ✅ Comprehensive citations on every technique
+- ✅ Sources from Harvard Medical School, Mayo Clinic, APA, VA National Center for PTSD, University of Rochester Medical Center, Behavioural Tech, NAMI
+- ✅ Clickable "View Source" links
+- ✅ Dedicated Resources & Citations screen
+- ✅ All URLs verified and working
+
+### UI/UX Improvements
+- ✅ Improved technique detail page layout (Apple HIG compliant)
+- ✅ Better spacing and typography
+- ✅ Auto-scroll to top when opening techniques
+- ✅ Feedback moved to bottom for better reading flow
 
 ## Future Enhancements
 
-- Integration with OpenAI API for advanced AI responses
-- Progress tracking and mood logging
-- Personalized technique recommendations
-- Offline functionality
+- Enhanced AI conversation capabilities
+- Personalized technique recommendations based on usage
 - Push notifications for reminders
 - Integration with wearable devices
+- Multi-language support
 
 ## Contributing
 

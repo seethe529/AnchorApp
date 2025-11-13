@@ -11,6 +11,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Git branching strategy (main, develop, feature branches)
 - Comprehensive documentation for contributors
 
+## [1.0.0] - 2025-01-13 (Build 9 - Submitted for Review)
+
+**Status:** Submitted to App Store (Build 9)
+
+### Added (Build 9)
+- **Medical Citations (Apple Guideline 1.4.1 Compliance):**
+  - Comprehensive citations from authoritative sources on every technique
+  - Sources include: Harvard Medical School, Mayo Clinic, American Psychological Association, VA National Center for PTSD, University of Rochester Medical Center, Behavioural Tech, NAMI
+  - Clickable "View Source" links on all technique detail pages
+  - Dedicated Resources & Citations screen accessible from Settings
+  - formatCitation() function for consistent citation formatting
+  - All citation URLs verified and working
+
+### Changed (Build 9)
+- **UI/UX Improvements:**
+  - Improved technique detail page layout following Apple HIG
+  - Moved "Was this helpful?" feedback to bottom of technique pages
+  - Added breathing space and better typography throughout
+  - Centered technique titles with proper back button placement
+  - Auto-scroll to top when opening technique details
+  - Removed swipe gesture (conflicted with ScrollView)
+
+- **Citations Structure:**
+  - Replaced generic URLs with technique-specific authoritative sources
+  - Added separate citation for Self-Soothe (was sharing with ACCEPTS)
+  - Updated all DBT skill citations to use official Behavioural Tech Knowledge Center
+  - Added source property to key citations for ResourcesScreen compatibility
+
+### Fixed (Build 9)
+- Fixed blank screen issue when navigating back from techniques
+- Fixed ResourcesScreen crash due to missing citation properties
+- Updated disclaimer lastUpdated date to November 2025
+
+## [1.0.0] - 2025-01-12 (Build 8 - TestFlight)
+
+**Status:** Testing in TestFlight (Build 8 submitted January 12, 2025)
+
+### Added (Build 8)
+- Initial medical citations implementation
+- Basic citation structure in citations.js
+
+### Fixed (Build 8)
+- Fixed broken citation URLs
+- Removed conflicting app.json file
+- Updated to use app.config.js as single source of truth
+
 ## [1.0.0] - 2025-01-11 (Build 5 - TestFlight)
 
 **Status:** Testing in TestFlight (Build 5 submitted November 11, 2025)
