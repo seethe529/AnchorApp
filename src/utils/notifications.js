@@ -73,7 +73,7 @@ export const scheduleMedicationReminder = async (medication) => {
   await Notifications.scheduleNotificationAsync({
     content: {
       title: "Medication Reminder",
-      body: `Time to take your ${medication.name}.",
+      body: `Time to take your ${medication.name}.`,
       data: { type: 'medication', medicationId: medication.id },
     },
     trigger: {
