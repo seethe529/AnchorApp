@@ -5,13 +5,19 @@ if (Platform.OS !== 'web') {
   Notifications = require('expo-notifications');
   
   Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true, // Keep for backwards compatibility
-      shouldShowBanner: true,
-      shouldShowList: true,
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-    }),
+    handleNotification: async (notification) => {
+      // Only show notifications when app is in background
+      const isScheduled = notification.request.trigger?.type === 'calendar' || 
+                         notification.request.trigger?.type === 'timeInterval';
+      
+      return {
+        shouldShowAlert: isScheduled, // Only show scheduled notifications
+        shouldShowBanner: isScheduled,
+        shouldShowList: true,
+        shouldPlaySound: isScheduled,
+        shouldSetBadge: false,
+      };
+    },
   });
 }
 
@@ -47,6 +53,7 @@ export const scheduleMoodReminder = async () => {
   // Cancel any existing mood reminders first
   await cancelReminderType('mood_reminder');
   
+  // Schedule for 8:00 PM daily (will fire tomorrow if already past 8pm today)
   const id = await Notifications.scheduleNotificationAsync({
     content: {
       title: "Daily Check-in",
@@ -61,10 +68,6 @@ export const scheduleMoodReminder = async () => {
   });
   
   console.log(`✅ Mood reminder scheduled (ID: ${id}) - Daily at 8:00 PM`);
-  
-  // Debug: Show all scheduled
-  const all = await Notifications.getAllScheduledNotificationsAsync();
-  console.log(`📋 Total scheduled notifications: ${all.length}`);
 };
 
 export const scheduleMedicationReminder = async (medication) => {
@@ -90,6 +93,7 @@ export const scheduleBreathingReminder = async () => {
   // Cancel any existing breathing reminders first
   await cancelReminderType('breathing_reminder');
   
+  // Schedule for every hour (will fire in 1 hour from now)
   const id = await Notifications.scheduleNotificationAsync({
     content: {
       title: "Breathing Break",
@@ -103,10 +107,6 @@ export const scheduleBreathingReminder = async () => {
   });
   
   console.log(`✅ Breathing reminder scheduled (ID: ${id}) - Every hour`);
-  
-  // Debug: Show all scheduled
-  const all = await Notifications.getAllScheduledNotificationsAsync();
-  console.log(`📋 Total scheduled notifications: ${all.length}`);
 };
 
 // Generic helper to cancel by type
