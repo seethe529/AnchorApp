@@ -16,8 +16,8 @@ import ResourcesScreen from './src/screens/ResourcesScreen';
 import BreathingExercise from './src/components/BreathingExercise';
 import BreathingScreen from './src/screens/BreathingScreen';
 import SafetyPlan from './src/components/SafetyPlan';
-import { setupNotifications, scheduleMoodReminder, scheduleBreathingReminder } from './src/utils/notifications';
-import { storage, STORAGE_KEYS } from './src/utils/storage';
+import { setupNotifications } from './src/utils/notifications';
+import { storage } from './src/utils/storage';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import ErrorLogger from './src/utils/errorLogger';
 import OfflineIndicator from './src/components/OfflineIndicator';
@@ -66,30 +66,12 @@ export default function App() {
 
   const initializeApp = async () => {
     try {
+      await setupNotifications();
       await checkDisclaimer();
-      await rehydrateNotifications();
     } catch (error) {
       ErrorLogger.log(error, 'App initialization');
     } finally {
       setIsLoading(false);
-    }
-  };
-  
-  const rehydrateNotifications = async () => {
-    const prefs = await storage.getItem(STORAGE_KEYS.USER_PREFERENCES);
-    if (!prefs || !prefs.notifications) return;
-    
-    const granted = await setupNotifications();
-    if (!granted) return;
-    
-    // Reschedule enabled reminders on app start
-    if (prefs.moodReminders) {
-      await scheduleMoodReminder();
-      console.log('🔄 Rehydrated mood reminder');
-    }
-    if (prefs.breathingReminders) {
-      await scheduleBreathingReminder();
-      console.log('🔄 Rehydrated breathing reminder');
     }
   };
 
