@@ -55,7 +55,7 @@ export default function HomeScreen({ navigation }) {
 
   const quickActions = [
     { title: 'Quick Grounding', icon: 'leaf', action: () => navigation.navigate('Tools', { technique: 'grounding' }) },
-    { title: 'Breathing Exercise', icon: 'fitness', action: () => navigation.navigate('Breathing') },
+    { title: 'Breathing Exercises', icon: 'fitness', action: () => navigation.navigate('BreathingMethods') },
     { title: 'Talk to AI', icon: 'chatbubble', action: () => navigation.navigate('AI Support') },
     { title: 'Crisis Help', icon: 'medical', color: '#DC143C', action: () => navigation.navigate('Crisis') },
     { title: 'Safety Plan', icon: 'shield', action: () => navigation.navigate('Safety Plan') },
