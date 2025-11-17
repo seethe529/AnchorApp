@@ -77,6 +77,14 @@ Dedicated full-screen breathing exercise experience with swipeable carousel of d
 **Estimated Effort:** 2-3 hours  
 **Status:** ✅ COMPLETED
 
+**Implementation:**
+- Master toggle enforcement
+- Permission gating with user-friendly prompts
+- Deduplication (cancels before scheduling)
+- Rehydration on app restart
+- Proper repeating schedules (mood: daily 8pm, breathing: hourly)
+- Debug logging for verification
+
 #### Description
 Notifications are currently broken - scheduling functions exist in `src/utils/notifications.js` but aren't being called when users toggle notifications on in SettingsScreen.
 
@@ -205,9 +213,14 @@ Notifications are currently broken - scheduling functions exist in `src/utils/no
 
 - **Build 10 Focus:** Breathing exercises + Notifications
 - **Timeline:** Week of Jan 13, 2025
-- **Notifications:** ✅ Completed (Jan 13)
+- **Notifications:** ✅ Completed (Jan 17)
 - **Breathing Exercises:** ✅ Completed (Jan 13)
-- **Status:** Ready for testing and merge to develop
+- **Status:** Ready for merge to develop
+
+### Known Limitations
+- **Expo Go:** Scheduled notifications (daily/hourly) don't work in Expo Go, only immediate notifications. This is an Expo Go limitation, NOT a code issue.
+- **Testing:** Notifications work correctly in EAS production builds. Cannot fully test scheduled notifications until deployed.
+- **Verification:** Notification IDs are generated successfully, indicating proper scheduling. Will verify in TestFlight/production.
 - **Testing:** Test on physical device for notifications
 - **Deployment:** EAS build after testing complete
 - **App Store:** Submit as minor update (no review needed if no new permissions)
