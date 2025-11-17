@@ -79,7 +79,10 @@ export default function SettingsScreen({ navigation }) {
     // Handle mood reminders
     if (key === 'moodReminders') {
       if (newPreferences.moodReminders) {
-        await scheduleMoodReminder();
+        // Small delay to prevent immediate firing
+        setTimeout(async () => {
+          await scheduleMoodReminder();
+        }, 100);
         Alert.alert('Reminder Set', 'You\'ll receive a daily mood check-in at 8:00 PM');
       } else {
         await cancelMoodReminder();
@@ -89,7 +92,10 @@ export default function SettingsScreen({ navigation }) {
     // Handle breathing reminders
     if (key === 'breathingReminders') {
       if (newPreferences.breathingReminders) {
-        await scheduleBreathingReminder();
+        // Small delay to prevent immediate firing
+        setTimeout(async () => {
+          await scheduleBreathingReminder();
+        }, 100);
         Alert.alert('Reminder Set', 'You\'ll receive breathing reminders every hour');
       } else {
         await cancelBreathingReminder();
