@@ -13,8 +13,26 @@ export default function SettingsScreen({ navigation }) {
 
   useEffect(() => {
     loadPreferences();
-    setupNotifications();
+    rehydrateNotifications();
   }, []);
+  
+  const rehydrateNotifications = async () => {
+    const prefs = await storage.getItem(STORAGE_KEYS.USER_PREFERENCES);
+    if (!prefs || !prefs.notifications) return;
+    
+    const granted = await setupNotifications();
+    if (!granted) return;
+    
+    // Reschedule enabled reminders
+    if (prefs.moodReminders) {
+      await scheduleMoodReminder();
+      console.log('🔄 Rehydrated mood reminder');
+    }
+    if (prefs.breathingReminders) {
+      await scheduleBreathingReminder();
+      console.log('🔄 Rehydrated breathing reminder');
+    }
+  };
 
   const loadPreferences = async () => {
     try {
@@ -51,20 +69,47 @@ export default function SettingsScreen({ navigation }) {
   };
 
   const togglePreference = async (key) => {
+    // Master notifications toggle
+    if (key === 'notifications') {
+      if (!preferences.notifications) {
+        // Turning ON - check permission
+        const granted = await setupNotifications();
+        if (!granted) {
+          Alert.alert(
+            'Permission Required',
+            'Please enable notifications in your device settings to receive reminders.',
+            [{ text: 'OK' }]
+          );
+          return;
+        }
+      } else {
+        // Turning OFF - cancel all
+        await cancelMoodReminder();
+        await cancelBreathingReminder();
+      }
+    }
+    
     const newPreferences = { ...preferences, [key]: !preferences[key] };
     await savePreferences(newPreferences);
     
-    // Handle notification scheduling
+    // Only schedule if master notifications is enabled
+    if (!newPreferences.notifications) return;
+    
+    // Handle mood reminders
     if (key === 'moodReminders') {
       if (newPreferences.moodReminders) {
         await scheduleMoodReminder();
+        Alert.alert('Reminder Set', 'You\'ll receive a daily mood check-in at 8:00 PM');
       } else {
         await cancelMoodReminder();
       }
     }
+    
+    // Handle breathing reminders
     if (key === 'breathingReminders') {
       if (newPreferences.breathingReminders) {
         await scheduleBreathingReminder();
+        Alert.alert('Reminder Set', 'You\'ll receive breathing reminders every hour');
       } else {
         await cancelBreathingReminder();
       }

@@ -44,7 +44,10 @@ export const setupNotifications = async () => {
 export const scheduleMoodReminder = async () => {
   if (Platform.OS === 'web') return;
   
-  await Notifications.scheduleNotificationAsync({
+  // Cancel any existing mood reminders first
+  await cancelReminderType('mood_reminder');
+  
+  const id = await Notifications.scheduleNotificationAsync({
     content: {
       title: "Daily Check-in",
       body: "How are you feeling today? Take a moment to log your mood.",
@@ -56,6 +59,12 @@ export const scheduleMoodReminder = async () => {
       repeats: true,
     },
   });
+  
+  console.log(`✅ Mood reminder scheduled (ID: ${id}) - Daily at 8:00 PM`);
+  
+  // Debug: Show all scheduled
+  const all = await Notifications.getAllScheduledNotificationsAsync();
+  console.log(`📋 Total scheduled notifications: ${all.length}`);
 };
 
 export const scheduleMedicationReminder = async (medication) => {
@@ -78,7 +87,10 @@ export const scheduleMedicationReminder = async (medication) => {
 export const scheduleBreathingReminder = async () => {
   if (Platform.OS === 'web') return;
   
-  await Notifications.scheduleNotificationAsync({
+  // Cancel any existing breathing reminders first
+  await cancelReminderType('breathing_reminder');
+  
+  const id = await Notifications.scheduleNotificationAsync({
     content: {
       title: "Breathing Break",
       body: "Take a moment for a quick breathing exercise",
@@ -89,30 +101,28 @@ export const scheduleBreathingReminder = async () => {
       repeats: true,
     },
   });
+  
+  console.log(`✅ Breathing reminder scheduled (ID: ${id}) - Every hour`);
+  
+  // Debug: Show all scheduled
+  const all = await Notifications.getAllScheduledNotificationsAsync();
+  console.log(`📋 Total scheduled notifications: ${all.length}`);
+};
+
+// Generic helper to cancel by type
+export const cancelReminderType = async (type) => {
+  if (Platform.OS === 'web') return;
+  
+  const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+  const toCancel = scheduled.filter(n => n.content.data?.type === type);
+  await Promise.all(toCancel.map(n => Notifications.cancelScheduledNotificationAsync(n.identifier)));
+  console.log(`🧹 Cancelled ${toCancel.length} notifications of type: ${type}`);
 };
 
 export const cancelMoodReminder = async () => {
-  if (Platform.OS === 'web') return;
-  
-  const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
-  const moodNotifications = scheduledNotifications.filter(
-    notif => notif.content.data?.type === 'mood_reminder'
-  );
-  
-  for (const notif of moodNotifications) {
-    await Notifications.cancelScheduledNotificationAsync(notif.identifier);
-  }
+  await cancelReminderType('mood_reminder');
 };
 
 export const cancelBreathingReminder = async () => {
-  if (Platform.OS === 'web') return;
-  
-  const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
-  const breathingNotifications = scheduledNotifications.filter(
-    notif => notif.content.data?.type === 'breathing_reminder'
-  );
-  
-  for (const notif of breathingNotifications) {
-    await Notifications.cancelScheduledNotificationAsync(notif.identifier);
-  }
+  await cancelReminderType('breathing_reminder');
 };
