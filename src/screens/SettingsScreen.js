@@ -2,20 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
-import { setupNotifications, scheduleMoodReminder, scheduleBreathingReminder } from '../utils/notifications';
+import { setupNotifications, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, sendTestNotification } from '../utils/notifications';
 import Constants from 'expo-constants';
 
 const APP_VERSION = Constants.expoConfig?.version || '1.0.0';
 
 export default function SettingsScreen({ navigation }) {
-  const [preferences, setPreferences] = useState({
-    darkMode: false,
-    notifications: true,
-    moodReminders: true,
-    breathingReminders: false,
-    hapticFeedback: true,
-    dataSharing: false
-  });
+  const [preferences, setPreferences] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadPreferences();
@@ -27,9 +21,23 @@ export default function SettingsScreen({ navigation }) {
       const savedPreferences = await storage.getItem(STORAGE_KEYS.USER_PREFERENCES);
       if (savedPreferences) {
         setPreferences(savedPreferences);
+      } else {
+        // Set defaults only if no saved preferences
+        const defaults = {
+          darkMode: false,
+          notifications: true,
+          moodReminders: false,
+          breathingReminders: false,
+          hapticFeedback: true,
+          dataSharing: false
+        };
+        setPreferences(defaults);
+        await storage.setItem(STORAGE_KEYS.USER_PREFERENCES, defaults);
       }
     } catch (error) {
       console.error('Error loading preferences:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -47,11 +55,19 @@ export default function SettingsScreen({ navigation }) {
     await savePreferences(newPreferences);
     
     // Handle notification scheduling
-    if (key === 'moodReminders' && newPreferences.moodReminders) {
-      await scheduleMoodReminder();
+    if (key === 'moodReminders') {
+      if (newPreferences.moodReminders) {
+        await scheduleMoodReminder();
+      } else {
+        await cancelMoodReminder();
+      }
     }
-    if (key === 'breathingReminders' && newPreferences.breathingReminders) {
-      await scheduleBreathingReminder();
+    if (key === 'breathingReminders') {
+      if (newPreferences.breathingReminders) {
+        await scheduleBreathingReminder();
+      } else {
+        await cancelBreathingReminder();
+      }
     }
   };
 
@@ -168,6 +184,14 @@ export default function SettingsScreen({ navigation }) {
     }
   ];
 
+  if (isLoading || !preferences) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={{ color: '#666' }}>Loading settings...</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.title}>Settings</Text>
@@ -195,6 +219,31 @@ export default function SettingsScreen({ navigation }) {
           ))}
         </View>
       ))}
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Notifications Test</Text>
+        
+        <TouchableOpacity 
+          style={styles.actionButton} 
+          onPress={async () => {
+            const sent = await sendTestNotification();
+            Alert.alert(
+              sent ? 'Test Sent' : 'Error',
+              sent ? 'Check your notifications in 3 seconds!' : 'Failed to send test notification'
+            );
+          }}
+          accessibilityLabel="Test Notification"
+          accessibilityHint="Send a test notification to verify notifications are working"
+          accessibilityRole="button"
+        >
+          <Ionicons name="notifications" size={24} color="#2E8B57" />
+          <View style={styles.actionInfo}>
+            <Text style={styles.actionTitle}>Test Notification</Text>
+            <Text style={styles.actionSubtitle}>Send test notification (3 seconds)</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+        </TouchableOpacity>
+      </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Data Management</Text>

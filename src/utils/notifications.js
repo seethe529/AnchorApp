@@ -88,3 +88,53 @@ export const scheduleBreathingReminder = async () => {
     },
   });
 };
+
+export const cancelMoodReminder = async () => {
+  if (Platform.OS === 'web') return;
+  
+  const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
+  const moodNotifications = scheduledNotifications.filter(
+    notif => notif.content.data?.type === 'mood_reminder'
+  );
+  
+  for (const notif of moodNotifications) {
+    await Notifications.cancelScheduledNotificationAsync(notif.identifier);
+  }
+};
+
+export const cancelBreathingReminder = async () => {
+  if (Platform.OS === 'web') return;
+  
+  const scheduledNotifications = await Notifications.getAllScheduledNotificationsAsync();
+  const breathingNotifications = scheduledNotifications.filter(
+    notif => notif.content.data?.type === 'breathing_reminder'
+  );
+  
+  for (const notif of breathingNotifications) {
+    await Notifications.cancelScheduledNotificationAsync(notif.identifier);
+  }
+};
+
+export const sendTestNotification = async () => {
+  if (Platform.OS === 'web') {
+    console.log('Notifications not supported on web');
+    return false;
+  }
+  
+  try {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "🎯 Test Notification",
+        body: "Notifications are working! You're all set.",
+        data: { type: 'test' },
+      },
+      trigger: {
+        seconds: 3,
+      },
+    });
+    return true;
+  } catch (error) {
+    console.error('Test notification error:', error);
+    return false;
+  }
+};
