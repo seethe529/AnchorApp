@@ -7,8 +7,11 @@ if (Platform.OS !== 'web') {
   Notifications.setNotificationHandler({
     handleNotification: async (notification) => {
       // Only show notifications when app is in background
-      const isScheduled = notification.request.trigger?.type === 'calendar' || 
-                         notification.request.trigger?.type === 'timeInterval';
+      const trigger = notification.request.trigger;
+      const isScheduled =
+        trigger?.type === 'calendar' ||
+        trigger?.type === 'date' ||        // iOS
+        trigger?.type === 'timeInterval';
       
       return {
         shouldShowAlert: isScheduled, // Only show scheduled notifications
@@ -93,20 +96,27 @@ export const scheduleBreathingReminder = async () => {
   // Cancel any existing breathing reminders first
   await cancelReminderType('breathing_reminder');
   
-  // Schedule for every hour (will fire in 1 hour from now)
-  const id = await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "Breathing Break",
-      body: "Take a moment for a quick breathing exercise.",
-      data: { type: 'breathing_reminder' },
-    },
-    trigger: {
-      seconds: 3600, // Every hour
-      repeats: true,
-    },
-  });
+  // iOS doesn't support seconds with repeats, so schedule multiple individual notifications
+  // Schedule 24 notifications (one per hour for the next 24 hours)
+  const ids = [];
+  for (let i = 1; i <= 24; i++) {
+    const triggerDate = new Date();
+    triggerDate.setHours(triggerDate.getHours() + i);
+    triggerDate.setMinutes(0);
+    triggerDate.setSeconds(0);
+    
+    const id = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Breathing Break",
+        body: "Take a moment for a quick breathing exercise.",
+        data: { type: 'breathing_reminder' },
+      },
+      trigger: triggerDate,
+    });
+    ids.push(id);
+  }
   
-  console.log(`✅ Breathing reminder scheduled (ID: ${id}) - Every hour`);
+  console.log(`✅ Breathing reminders scheduled (${ids.length} notifications) - Hourly for next 24h`);
 };
 
 // Generic helper to cancel by type

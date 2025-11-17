@@ -27,8 +27,7 @@ export default function SettingsScreen({ navigation }) {
           notifications: true,
           moodReminders: false,
           breathingReminders: false,
-          hapticFeedback: true,
-          dataSharing: false
+          hapticFeedback: true
         };
         setPreferences(defaults);
         await storage.setItem(STORAGE_KEYS.USER_PREFERENCES, defaults);
@@ -206,12 +205,6 @@ export default function SettingsScreen({ navigation }) {
       title: 'Experience',
       items: [
         { key: 'hapticFeedback', title: 'Haptic Feedback', subtitle: 'Vibration for interactions' }
-      ]
-    },
-    {
-      title: 'Privacy',
-      items: [
-        { key: 'dataSharing', title: 'Anonymous Analytics', subtitle: 'Help improve the app' }
       ]
     }
   ];
