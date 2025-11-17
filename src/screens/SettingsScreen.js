@@ -13,26 +13,7 @@ export default function SettingsScreen({ navigation }) {
 
   useEffect(() => {
     loadPreferences();
-    rehydrateNotifications();
   }, []);
-  
-  const rehydrateNotifications = async () => {
-    const prefs = await storage.getItem(STORAGE_KEYS.USER_PREFERENCES);
-    if (!prefs || !prefs.notifications) return;
-    
-    const granted = await setupNotifications();
-    if (!granted) return;
-    
-    // Reschedule enabled reminders
-    if (prefs.moodReminders) {
-      await scheduleMoodReminder();
-      console.log('🔄 Rehydrated mood reminder');
-    }
-    if (prefs.breathingReminders) {
-      await scheduleBreathingReminder();
-      console.log('🔄 Rehydrated breathing reminder');
-    }
-  };
 
   const loadPreferences = async () => {
     try {
