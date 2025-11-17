@@ -53,24 +53,28 @@ export const setupNotifications = async () => {
 export const scheduleMoodReminder = async () => {
   if (Platform.OS === 'web') return;
   
-  // Cancel any existing mood reminders first
-  await cancelReminderType('mood_reminder');
-  
-  // Schedule for 8:00 PM daily (will fire tomorrow if already past 8pm today)
-  const id = await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "Daily Check-in",
-      body: "How are you feeling today? Take a moment to log your mood.",
-      data: { type: 'mood_reminder' },
-    },
-    trigger: {
-      hour: 20,
-      minute: 0,
-      repeats: true,
-    },
-  });
-  
-  console.log(`✅ Mood reminder scheduled (ID: ${id}) - Daily at 8:00 PM`);
+  try {
+    // Cancel any existing mood reminders first
+    await cancelReminderType('mood_reminder');
+    
+    // Schedule for 8:00 PM daily (will fire tomorrow if already past 8pm today)
+    const id = await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Daily Check-in",
+        body: "How are you feeling today? Take a moment to log your mood.",
+        data: { type: 'mood_reminder' },
+      },
+      trigger: {
+        hour: 20,
+        minute: 0,
+        repeats: true,
+      },
+    });
+    
+    console.log(`✅ Mood reminder scheduled (ID: ${id}) - Daily at 8:00 PM`);
+  } catch (error) {
+    console.error('Failed to schedule mood reminder:', error);
+  }
 };
 
 export const scheduleMedicationReminder = async (medication) => {
@@ -93,30 +97,52 @@ export const scheduleMedicationReminder = async (medication) => {
 export const scheduleBreathingReminder = async () => {
   if (Platform.OS === 'web') return;
   
-  // Cancel any existing breathing reminders first
-  await cancelReminderType('breathing_reminder');
-  
-  // iOS doesn't support seconds with repeats, so schedule multiple individual notifications
-  // Schedule 24 notifications (one per hour for the next 24 hours)
-  const ids = [];
-  for (let i = 1; i <= 24; i++) {
-    const triggerDate = new Date();
-    triggerDate.setHours(triggerDate.getHours() + i);
-    triggerDate.setMinutes(0);
-    triggerDate.setSeconds(0);
+  try {
+    // Cancel any existing breathing reminders first
+    await cancelReminderType('breathing_reminder');
     
-    const id = await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Breathing Break",
-        body: "Take a moment for a quick breathing exercise.",
-        data: { type: 'breathing_reminder' },
-      },
-      trigger: triggerDate,
-    });
-    ids.push(id);
+    // iOS doesn't support seconds with repeats, so schedule multiple individual notifications
+    // Schedule 24 notifications (one per hour for the next 24 hours)
+    const ids = [];
+    for (let i = 1; i <= 24; i++) {
+      const triggerDate = new Date();
+      triggerDate.setHours(triggerDate.getHours() + i);
+      triggerDate.setMinutes(0);
+      triggerDate.setSeconds(0);
+      
+      const id = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Breathing Break",
+          body: "Take a moment for a quick breathing exercise.",
+          data: { type: 'breathing_reminder' },
+        },
+        trigger: triggerDate,
+      });
+      ids.push(id);
+    }
+    
+    console.log(`✅ Breathing reminders scheduled (${ids.length} notifications) - Hourly for next 24h`);
+  } catch (error) {
+    console.error('Failed to schedule breathing reminders:', error);
   }
+};
+
+// Reschedule breathing reminders if running low (called on app foreground)
+export const recheckBreathingReminders = async () => {
+  if (Platform.OS === 'web') return;
   
-  console.log(`✅ Breathing reminders scheduled (${ids.length} notifications) - Hourly for next 24h`);
+  try {
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    const breathingReminders = scheduled.filter(n => n.content.data?.type === 'breathing_reminder');
+    
+    // If less than 12 hours of reminders left, reschedule
+    if (breathingReminders.length < 12) {
+      console.log(`🔄 Only ${breathingReminders.length} breathing reminders left, rescheduling...`);
+      await scheduleBreathingReminder();
+    }
+  } catch (error) {
+    console.error('Failed to recheck breathing reminders:', error);
+  }
 };
 
 // Generic helper to cancel by type

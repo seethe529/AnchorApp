@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, AppState } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,7 +16,7 @@ import ResourcesScreen from './src/screens/ResourcesScreen';
 import BreathingExercise from './src/components/BreathingExercise';
 import BreathingScreen from './src/screens/BreathingScreen';
 import SafetyPlan from './src/components/SafetyPlan';
-import { setupNotifications } from './src/utils/notifications';
+import { setupNotifications, recheckBreathingReminders } from './src/utils/notifications';
 import { storage } from './src/utils/storage';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import ErrorLogger from './src/utils/errorLogger';
@@ -62,6 +62,19 @@ export default function App() {
 
   useEffect(() => {
     initializeApp();
+    
+    // Recheck breathing reminders when app comes to foreground
+    const subscription = AppState.addEventListener('change', async (nextAppState) => {
+      if (nextAppState === 'active') {
+        try {
+          await recheckBreathingReminders();
+        } catch (error) {
+          ErrorLogger.log(error, 'Breathing reminder recheck');
+        }
+      }
+    });
+    
+    return () => subscription.remove();
   }, []);
 
   const initializeApp = async () => {
