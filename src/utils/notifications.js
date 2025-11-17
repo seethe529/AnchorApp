@@ -73,7 +73,7 @@ export const scheduleMedicationReminder = async (medication) => {
   await Notifications.scheduleNotificationAsync({
     content: {
       title: "Medication Reminder",
-      body: `Time to take your ${medication.name}`,
+      body: `Time to take your ${medication.name}.",
       data: { type: 'medication', medicationId: medication.id },
     },
     trigger: {
@@ -93,7 +93,7 @@ export const scheduleBreathingReminder = async () => {
   const id = await Notifications.scheduleNotificationAsync({
     content: {
       title: "Breathing Break",
-      body: "Take a moment for a quick breathing exercise",
+      body: "Take a moment for a quick breathing exercise.",
       data: { type: 'breathing_reminder' },
     },
     trigger: {
