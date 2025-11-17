@@ -114,27 +114,3 @@ export const cancelBreathingReminder = async () => {
     await Notifications.cancelScheduledNotificationAsync(notif.identifier);
   }
 };
-
-export const sendTestNotification = async () => {
-  if (Platform.OS === 'web') {
-    console.log('Notifications not supported on web');
-    return false;
-  }
-  
-  try {
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "🎯 Test Notification",
-        body: "Notifications are working! You're all set.",
-        data: { type: 'test' },
-      },
-      trigger: {
-        seconds: 3,
-      },
-    });
-    return true;
-  } catch (error) {
-    console.error('Test notification error:', error);
-    return false;
-  }
-};
