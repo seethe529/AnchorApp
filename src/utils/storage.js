@@ -88,5 +88,6 @@ export const STORAGE_KEYS = {
   EMERGENCY_CONTACTS: 'emergency_contacts',
   USER_PREFERENCES: 'user_preferences',
   PROGRESS_DATA: 'progress_data',
-  MEDICATION_REMINDERS: 'medication_reminders'
+  MEDICATION_REMINDERS: 'medication_reminders',
+  BREATHING_SESSIONS: 'breathing_sessions'
 };
