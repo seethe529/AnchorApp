@@ -14,6 +14,7 @@ import SettingsScreen from './src/screens/SettingsScreen';
 import DisclaimerScreen from './src/screens/DisclaimerScreen';
 import ResourcesScreen from './src/screens/ResourcesScreen';
 import BreathingExercise from './src/components/BreathingExercise';
+import BreathingScreen from './src/screens/BreathingScreen';
 import SafetyPlan from './src/components/SafetyPlan';
 import { setupNotifications } from './src/utils/notifications';
 import { storage } from './src/utils/storage';
@@ -121,6 +122,11 @@ export default function App() {
           name="Breathing" 
           component={BreathingExercise} 
           options={{ title: 'Breathing Exercise', headerBackTitle: 'Back' }}
+        />
+        <Stack.Screen 
+          name="BreathingMethods" 
+          component={BreathingScreen} 
+          options={{ headerShown: false }}
         />
         <Stack.Screen 
           name="Safety Plan" 

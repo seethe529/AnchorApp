@@ -2,24 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
-import { setupNotifications, scheduleMoodReminder, scheduleBreathingReminder } from '../utils/notifications';
+import { setupNotifications, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder } from '../utils/notifications';
 import Constants from 'expo-constants';
 
 const APP_VERSION = Constants.expoConfig?.version || '1.0.0';
 
 export default function SettingsScreen({ navigation }) {
-  const [preferences, setPreferences] = useState({
-    darkMode: false,
-    notifications: true,
-    moodReminders: true,
-    breathingReminders: false,
-    hapticFeedback: true,
-    dataSharing: false
-  });
+  const [preferences, setPreferences] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadPreferences();
-    setupNotifications();
   }, []);
 
   const loadPreferences = async () => {
@@ -27,9 +20,23 @@ export default function SettingsScreen({ navigation }) {
       const savedPreferences = await storage.getItem(STORAGE_KEYS.USER_PREFERENCES);
       if (savedPreferences) {
         setPreferences(savedPreferences);
+      } else {
+        // Set defaults only if no saved preferences
+        const defaults = {
+          darkMode: false,
+          notifications: true,
+          moodReminders: false,
+          breathingReminders: false,
+          hapticFeedback: true,
+          dataSharing: false
+        };
+        setPreferences(defaults);
+        await storage.setItem(STORAGE_KEYS.USER_PREFERENCES, defaults);
       }
     } catch (error) {
       console.error('Error loading preferences:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -43,15 +50,50 @@ export default function SettingsScreen({ navigation }) {
   };
 
   const togglePreference = async (key) => {
+    // Master notifications toggle
+    if (key === 'notifications') {
+      if (!preferences.notifications) {
+        // Turning ON - check permission
+        const granted = await setupNotifications();
+        if (!granted) {
+          Alert.alert(
+            'Permission Required',
+            'Please enable notifications in your device settings to receive reminders.',
+            [{ text: 'OK' }]
+          );
+          return;
+        }
+      } else {
+        // Turning OFF - cancel all
+        await cancelMoodReminder();
+        await cancelBreathingReminder();
+      }
+    }
+    
     const newPreferences = { ...preferences, [key]: !preferences[key] };
     await savePreferences(newPreferences);
     
-    // Handle notification scheduling
-    if (key === 'moodReminders' && newPreferences.moodReminders) {
-      await scheduleMoodReminder();
+    // Only schedule if master notifications is enabled
+    if (!newPreferences.notifications) return;
+    
+    // Handle mood reminders
+    if (key === 'moodReminders') {
+      if (newPreferences.moodReminders) {
+        await scheduleMoodReminder();
+        Alert.alert('Reminder Set', 'You\'ll receive a daily mood check-in at 8:00 PM');
+      } else {
+        await cancelMoodReminder();
+      }
     }
-    if (key === 'breathingReminders' && newPreferences.breathingReminders) {
-      await scheduleBreathingReminder();
+    
+    // Handle breathing reminders
+    if (key === 'breathingReminders') {
+      if (newPreferences.breathingReminders) {
+        await scheduleBreathingReminder();
+        Alert.alert('Reminder Set', 'You\'ll receive breathing reminders every hour');
+      } else {
+        await cancelBreathingReminder();
+      }
     }
   };
 
@@ -167,6 +209,14 @@ export default function SettingsScreen({ navigation }) {
       ]
     }
   ];
+
+  if (isLoading || !preferences) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={{ color: '#666' }}>Loading settings...</Text>
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={styles.container}>
