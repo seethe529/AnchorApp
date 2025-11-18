@@ -117,9 +117,20 @@ export default function BreathingScreen({ navigation }) {
   const renderMethod = ({ item, index }) => (
     <View style={[styles.methodContainer, { width }]}>
       <View style={styles.header}>
-        <Text style={[styles.methodName, { color: theme.text }]}>{item.name}</Text>
+        <Text 
+          style={[styles.methodName, { color: theme.text }]}
+          accessibilityRole="header"
+          accessibilityLabel={`${item.name} breathing exercise`}
+        >
+          {item.name}
+        </Text>
         <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{item.subtitle}</Text>
-        <Text style={[styles.description, { color: theme.textSecondary }]}>{item.description}</Text>
+        <Text 
+          style={[styles.description, { color: theme.textSecondary }]}
+          accessibilityLabel={`Description: ${item.description}`}
+        >
+          {item.description}
+        </Text>
       </View>
 
       <View style={styles.circleContainer}>
@@ -131,6 +142,11 @@ export default function BreathingScreen({ navigation }) {
               transform: [{ scale: scaleAnim }],
             },
           ]}
+          accessible={true}
+          accessibilityLabel={isActive ? `${currentPhase.phase}, ${countdown} seconds remaining` : `${item.name} breathing circle, ready to start`}
+          accessibilityHint={isActive ? currentPhase.instruction : `Tap start button to begin ${item.name} breathing exercise`}
+          accessibilityLiveRegion="polite"
+          accessibilityValue={{ text: isActive ? `${countdown}` : undefined }}
         >
           <Text style={styles.phaseText}>{isActive ? currentPhase.phase : 'Ready'}</Text>
           {isActive && <Text style={styles.countdownText}>{countdown}</Text>}
@@ -138,12 +154,22 @@ export default function BreathingScreen({ navigation }) {
       </View>
 
       <View style={styles.instructionContainer}>
-        <Text style={[styles.instruction, { color: theme.textSecondary }]}>
+        <Text 
+          style={[styles.instruction, { color: theme.textSecondary }]}
+          accessible={isActive}
+          accessibilityLabel={isActive ? `Instruction: ${currentPhase.instruction}` : undefined}
+          accessibilityLiveRegion="polite"
+        >
           {isActive ? currentPhase.instruction : ' '}
         </Text>
       </View>
 
-      <View style={styles.patternContainer}>
+      <View 
+        style={styles.patternContainer}
+        accessible={true}
+        accessibilityRole="text"
+        accessibilityLabel={`Breathing pattern: ${item.pattern.map(phase => `${phase.phase} for ${phase.duration} seconds`).join(', then ')}`}
+      >
         {item.pattern.map((phase, idx) => (
           <Text key={idx} style={[styles.patternText, { color: theme.textTertiary }]}>
             {phase.phase} {phase.duration}s
@@ -153,7 +179,12 @@ export default function BreathingScreen({ navigation }) {
       </View>
 
       <View style={styles.cyclesContainer}>
-        <Text style={styles.cyclesText}>
+        <Text 
+          style={styles.cyclesText}
+          accessible={isActive || completedCycles > 0}
+          accessibilityLabel={isActive || completedCycles > 0 ? `You have completed ${completedCycles} breathing cycles` : undefined}
+          accessibilityLiveRegion="polite"
+        >
           {isActive || completedCycles > 0 ? `Cycles completed: ${completedCycles}` : ' '}
         </Text>
       </View>
@@ -170,7 +201,11 @@ export default function BreathingScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <Text style={[styles.swipeHint, { color: theme.textSecondary }]}>
+      <Text 
+        style={[styles.swipeHint, { color: theme.textSecondary }]}
+        accessibilityLabel={`Swipe left or right to change breathing method. Currently showing ${index + 1} of ${breathingMethods.length} methods.`}
+        accessibilityHint="Use swipe gestures to navigate between different breathing exercises"
+      >
         {index > 0 ? '← ' : ''}
         Swipe to change method
         {index < breathingMethods.length - 1 ? ' →' : ''}
@@ -204,8 +239,13 @@ export default function BreathingScreen({ navigation }) {
         </TouchableOpacity>
       </SafeAreaView>
 
-      <View style={styles.pagination}>
-        {breathingMethods.map((_, index) => (
+      <View 
+        style={styles.pagination}
+        accessible={true}
+        accessibilityRole="text"
+        accessibilityLabel={`Page ${currentIndex + 1} of ${breathingMethods.length}. Current method: ${currentMethod.name}. Swipe left or right to change breathing methods.`}
+      >
+        {breathingMethods.map((method, index) => (
           <View
             key={index}
             style={[
@@ -213,6 +253,7 @@ export default function BreathingScreen({ navigation }) {
               index === currentIndex && styles.dotActive,
               { backgroundColor: index === currentIndex ? currentMethod.color : '#ccc' }
             ]}
+            accessible={false}
           />
         ))}
       </View>
