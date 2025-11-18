@@ -7,13 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-- Git branching strategy (main, develop, feature branches)
-- Comprehensive documentation for contributors
+### Planned
+- Additional DBT/CBT techniques (Radical Acceptance, Self-Validation, Pros & Cons)
+- Enhanced AI conversation capabilities
+- Apple Watch companion app
+- Multi-language support (Spanish priority)
 
-## [1.1.0] - 2025-11-17 (Build 13 - In Development)
+## [1.1.0] - 2025-01-XX (Build 14 - Current)
 
-**Status:** In Development (Build 13)
+**Status:** In Development (Build 14)
+
+### Added (Build 14)
+- **Global Dark Mode:**
+  - Complete ThemeContext implementation
+  - All screens updated to support both light and dark themes
+  - Consistent color palette following Apple Human Interface Guidelines
+  - Theme toggle in Settings under "Appearance"
+  - Theme preference persists across app restarts
+  - Charts and progress visualizations adapt to theme
+
+### Changed (Build 14)
+- **UI/UX Improvements:**
+  - Breathing exercises use theme-appropriate colors
+  - Crisis screen uses consistent trauma-informed green colors
+  - All navigation elements adapt to current theme
+  - Improved accessibility in both light and dark modes
+
+### Technical (Build 14)
+- Created comprehensive ThemeContext for global theme management
+- Updated all screens to use dynamic theme colors
+- Improved color accessibility compliance in both modes
+
+## [1.1.0] - 2025-01-XX (Build 13 - Superseded)
+
+**Status:** Development build (never released - superseded by Build 14)
 
 ### Added (Build 13)
 - **Global Dark Mode:**
@@ -41,9 +68,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated all screens to use theme colors dynamically
 - Improved color accessibility in both light and dark modes
 
-## [1.1.0] - 2025-11-17 (Build 12 - TestFlight)
+## [1.1.0] - 2025-01-XX (Build 12 - TestFlight)
 
-**Status:** Submitted to TestFlight (Build 12)
+**Status:** Submitted to TestFlight (Build 12 - January 2025)
 
 ### Fixed (Build 12)
 - **iOS Notification Fixes:**

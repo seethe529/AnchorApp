@@ -63,42 +63,65 @@ npm run android # for Android
 
 ## Technology Stack
 
-- **Framework**: React Native with Expo
-- **Navigation**: React Navigation
-- **State Management**: React Hooks
+- **Framework**: React Native with Expo SDK 54
+- **Navigation**: React Navigation v6
+- **State Management**: React Hooks + Context API (ThemeContext)
 - **UI Components**: Custom components with React Native
 - **Icons**: Expo Vector Icons
+- **Storage**: AsyncStorage + Expo Secure Store
+- **Notifications**: Expo Notifications
+- **AI Integration**: OpenAI GPT-4 API
+- **Charts**: React Native Chart Kit
 
 ## Key Components
 
-- `src/data/techniques.js` - Comprehensive DBT/CBT technique database
+### Data Layer
+- `src/data/techniques.js` - 30+ DBT/CBT techniques database
 - `src/data/citations.js` - Medical citations from authoritative sources
-- `src/screens/AIAgentScreen.js` - Intelligent support agent
+- `src/data/dailyReminders.js` - 150+ trauma-informed daily reminders
+- `src/data/breathingMethods.js` - 5 breathing exercise patterns
+
+### Screens
+- `src/screens/HomeScreen.js` - Dashboard with quick actions
 - `src/screens/ToolsScreen.js` - Categorized technique browser with citations
-- `src/screens/ResourcesScreen.js` - Dedicated resources and citations screen
+- `src/screens/AIAgentScreen.js` - Intelligent support agent
+- `src/screens/BreathingScreen.js` - Swipeable breathing exercises
 - `src/screens/CrisisScreen.js` - Emergency support resources
+- `src/screens/ProgressScreen.js` - Analytics and mood tracking
+- `src/screens/SettingsScreen.js` - App configuration and theme toggle
+- `src/screens/ResourcesScreen.js` - Medical citations and sources
 - `src/screens/DisclaimerScreen.js` - Medical disclaimer on first launch
 
-## Recent Updates (Build 13)
+### Context & Utils
+- `src/context/ThemeContext.js` - Global dark/light theme management
+- `src/utils/notifications.js` - Notification scheduling and management
+- `src/utils/storage.js` - AsyncStorage wrapper with error handling
+- `src/services/openai.js` - OpenAI API integration
 
-### Dark Mode (Build 13)
-- ✅ Global dark mode support
+## Recent Updates (Build 14)
+
+### Dark Mode (Build 14)
+- ✅ Global dark mode support with ThemeContext
 - ✅ Toggle in Settings under "Appearance"
 - ✅ All screens adapt to light/dark theme
-- ✅ Trauma-informed color palette
+- ✅ Trauma-informed color palette following Apple HIG
 - ✅ Theme persists across app restarts
+- ✅ Charts and progress screens adapt to dark mode
 
-### Enhanced Notifications (Build 13)
+### Enhanced Notifications (Build 12-14)
+- ✅ Fixed iOS notification scheduling issues
 - ✅ 25 randomized breathing reminder messages
 - ✅ DBT/CBT-inspired reminder content
 - ✅ Hourly breathing reminders (24 individual notifications)
 - ✅ Auto-reschedule when less than 12 hours remain
 - ✅ Daily mood check-in reminders at 8:00 PM
+- ✅ AppState listener for automatic reminder refresh
 
 ### Breathing Exercises (Build 10)
-- ✅ 5 swipeable breathing methods
+- ✅ 5 swipeable breathing methods (Box, 4-7-8, Resonant, Physiological Sigh, Triangle)
 - ✅ Animated breathing circle with haptic feedback
 - ✅ Session tracking and history
+- ✅ Horizontal swipe navigation between methods
 
 ### Medical Citations (Build 9)
 - ✅ Comprehensive citations on every technique
@@ -108,15 +131,19 @@ npm run android # for Android
 
 ## Future Enhancements
 
-- Enhanced AI conversation capabilities
-- Personalized technique recommendations based on usage
-- Push notifications for reminders
-- Integration with wearable devices
-- Multi-language support
+### Version 1.2.0
+- Enhanced AI conversation capabilities with longer context
+- Personalized technique recommendations based on usage patterns
+- Apple Watch companion app
+- Data backup to iCloud
+- Customizable reminder times
 
-## Contributing
-
-This app is designed to help save lives. Contributions focused on improving mental health support are welcome.
+### Version 2.0.0
+- Multi-language support (Spanish, French, German priority)
+- Wearable device integration (heart rate monitoring)
+- Advanced analytics and insights
+- Peer support matching (optional, privacy-focused)
+- Professional therapist directory integration
 
 ## Contributing
 
@@ -126,6 +153,8 @@ This app is designed to help save lives. Contributions focused on improving ment
 - Submit pull requests for improvements
 - Help with documentation and testing
 - Share feedback from users
+- See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines
+- Check [ROADMAP.md](ROADMAP.md) for planned features
 
 ## License
 

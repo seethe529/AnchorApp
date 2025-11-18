@@ -49,9 +49,10 @@ src/screens/
 ├── HomeScreen.js           # Dashboard with quick actions
 ├── ToolsScreen.js          # DBT/CBT technique browser
 ├── AIAgentScreen.js        # Conversational AI support
+├── BreathingScreen.js      # Swipeable breathing exercises
 ├── CrisisScreen.js         # Emergency resources
 ├── ProgressScreen.js       # Analytics and mood tracking
-├── SettingsScreen.js       # App configuration
+├── SettingsScreen.js       # App configuration with theme toggle
 ├── ResourcesScreen.js      # Medical citations and sources
 └── DisclaimerScreen.js     # First-launch medical disclaimer
 ```
@@ -60,10 +61,16 @@ src/screens/
 ```
 src/components/
 ├── MoodTracker.js          # 5-point mood logging with notes
-├── BreathingExercise.js    # Interactive breathing guide
+├── BreathingCircle.js      # Animated breathing guide component
 ├── SafetyPlan.js           # Crisis safety planning tool
 ├── ErrorBoundary.js        # Crash recovery
 └── OfflineIndicator.js     # Network status banner
+```
+
+### Context & State Management
+```
+src/context/
+└── ThemeContext.js         # Global dark/light theme management
 ```
 
 ## Key Technical Features
@@ -81,7 +88,10 @@ STORAGE_KEYS = {
   TECHNIQUE_USAGE: 'technique_usage',
   SAFETY_PLAN: 'safety_plan',
   SETTINGS: 'settings',
-  CONVERSATION_HISTORY: 'conversation_history'
+  CONVERSATION_HISTORY: 'conversation_history',
+  THEME_PREFERENCE: 'theme_preference',
+  BREATHING_SESSIONS: 'breathing_sessions',
+  NOTIFICATION_SETTINGS: 'notification_settings'
 }
 ```
 
@@ -114,7 +124,43 @@ STORAGE_KEYS = {
 - Graceful API failure handling
 - Storage error recovery
 
-### 6. AI Support Architecture
+### 6. Dark Mode Implementation
+
+**ThemeContext:**
+```javascript
+- Light and dark theme definitions
+- Global theme state management
+- Theme persistence across app restarts
+- Dynamic color switching for all components
+```
+
+**Features:**
+- Toggle in Settings under "Appearance"
+- All screens adapt to current theme
+- Trauma-informed color palette
+- Charts and visualizations theme-aware
+- Accessibility compliant in both modes
+
+### 7. Breathing Exercises Architecture
+
+**Features:**
+- 5 breathing methods: Box, 4-7-8, Resonant, Physiological Sigh, Triangle
+- Horizontal swipe navigation between methods
+- Animated breathing circle with smooth transitions
+- Haptic feedback on phase changes
+- Session tracking and history storage
+- Theme-aware visual design
+
+**Technical Implementation:**
+```javascript
+- FlatList with horizontal pagination
+- Animated API for breathing circle
+- Expo Haptics for tactile feedback
+- AsyncStorage for session history
+- Timer-based phase transitions
+```
+
+### 8. AI Support Architecture
 
 **System Prompt:**
 ```javascript
@@ -132,7 +178,23 @@ STORAGE_KEYS = {
 - Offline detection
 - Quick help buttons for common needs
 
-### 7. Medical Citations (Apple Guideline 1.4.1)
+### 9. Enhanced Notification System
+
+**Features:**
+- Master notification toggle with permission gating
+- Daily mood check-in reminders (8:00 PM)
+- Hourly breathing exercise reminders (24 individual notifications)
+- Auto-reschedule when less than 12 hours remain
+- AppState listener for automatic refresh
+- 25 randomized breathing reminder messages
+
+**iOS-Specific Fixes:**
+- Schedule 24 individual hourly notifications (iOS doesn't support seconds with repeats)
+- Notifications fire on the hour (:00 minutes/seconds)
+- Proper deduplication and cancellation
+- Error logging for debugging
+
+### 10. Medical Citations (Apple Guideline 1.4.1)
 - Citations from Harvard Medical School, Mayo Clinic, APA, VA
 - Clickable source links on every technique
 - Dedicated Resources & Citations screen
@@ -201,6 +263,12 @@ Displays response with auto-scroll
 
 ## Build & Deployment
 
+### Current Build Status
+- **Current Version:** 1.1.0
+- **Current Build:** 14 (in development)
+- **Last Released:** Build 10 (App Store)
+- **Last TestFlight:** Build 12
+
 ### EAS Build Configuration
 ```javascript
 // eas.json
@@ -208,7 +276,7 @@ Displays response with auto-scroll
   "build": {
     "production": {
       "ios": {
-        "buildNumber": "9",
+        "buildNumber": "14",
         "bundleIdentifier": "com.anchor.ptsd-support"
       }
     }
@@ -220,12 +288,12 @@ Displays response with auto-scroll
 ```javascript
 // app.config.js
 {
-  version: "1.0.0",
-  buildNumber: "9",
+  version: "1.1.0",
+  buildNumber: "14",
   supportsTablet: false,  // iPhone only
   permissions: [
     "NSLocationWhenInUseUsageDescription",  // Crisis center finder
-    "NSUserNotificationsUsageDescription"   // Mood reminders
+    "NSUserNotificationsUsageDescription"   // Mood and breathing reminders
   ]
 }
 ```
@@ -365,6 +433,6 @@ Anchor is open source (MIT License) to help others build mental health apps. The
 
 ---
 
-**Last Updated:** January 13, 2025 (Build 9)
-**Status:** Live on App Store
+**Last Updated:** January 2025 (Build 14)
+**Status:** Build 10 live on App Store, Build 14 in development
 **License:** MIT

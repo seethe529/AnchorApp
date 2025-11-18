@@ -1,10 +1,35 @@
 # Anchor App - Development Backlog
 
+## Build 14 - Dark Mode Implementation
+
+**Priority:** High  
+**Estimated Effort:** 4-6 hours  
+**Status:** ✅ COMPLETED (Build 14 - November 2025)
+
+### Description
+Implemented comprehensive dark mode support with global theme management.
+
+### Implementation
+- Created ThemeContext for global theme state management
+- Updated all screens to use dynamic theme colors
+- Added theme toggle in Settings under "Appearance"
+- Theme preference persists across app restarts
+- Charts and progress visualizations adapt to theme
+- Trauma-informed color palette following Apple HIG
+
+### Files Modified
+- **NEW:** `src/context/ThemeContext.js` - Global theme management
+- **MODIFIED:** All screen files to use theme colors
+- **MODIFIED:** `src/screens/SettingsScreen.js` - Added theme toggle
+- **MODIFIED:** `app.config.js` - Bumped to Build 14
+
+---
+
 ## Build 12 - iOS Notification Fixes
 
 **Priority:** Critical  
 **Estimated Effort:** 2-3 hours  
-**Status:** ✅ COMPLETED (Build 12 - November 17, 2025)
+**Status:** ✅ COMPLETED (Build 12 - November 2025)
 
 ### Description
 Fixed iOS notification scheduling issues. iOS doesn't support `seconds` with `repeats: true` for timeInterval triggers.
@@ -31,7 +56,7 @@ Fixed iOS notification scheduling issues. iOS doesn't support `seconds` with `re
 
 **Priority:** High  
 **Estimated Effort:** 4-6 hours  
-**Status:** ✅ COMPLETED (Build 10 - November 17, 2025)
+**Status:** ✅ COMPLETED (Build 10 - November 2025)
 
 #### Description
 Dedicated full-screen breathing exercise experience with swipeable carousel of different breathing methods. Each method includes animated visual guide, timer, and use-case description.
@@ -100,7 +125,7 @@ Dedicated full-screen breathing exercise experience with swipeable carousel of d
 
 **Priority:** High  
 **Estimated Effort:** 2-3 hours  
-**Status:** ✅ COMPLETED (Build 10 - November 17, 2025)
+**Status:** ✅ COMPLETED (Build 10 - November 2025)
 
 **Implementation:**
 - Master toggle enforcement
@@ -153,7 +178,7 @@ Notifications are currently broken - scheduling functions exist in `src/utils/no
 
 ---
 
-## Future Enhancements (v1.1+)
+## Future Enhancements (v1.2+)
 
 ### Enhanced AI Conversation
 - Longer conversation history (100+ messages)
@@ -236,10 +261,11 @@ Notifications are currently broken - scheduling functions exist in `src/utils/no
 
 ## Notes
 
-- **Build 12 Status:** Submitted to TestFlight (November 17, 2025)
-- **Build 10 Status:** Released to App Store (November 17, 2025)
-- **Focus:** iOS notification fixes + breathing exercises
-- **Next:** Test notifications on physical device via TestFlight
+- **Build 14 Status:** In Development (November 2025)
+- **Build 12 Status:** Submitted to TestFlight (November 2025)
+- **Build 10 Status:** Released to App Store (November 2025)
+- **Focus:** Dark mode implementation + theme management
+- **Next:** Complete Build 14 testing and prepare for release
 
 ### Known Limitations
 - **Expo Go:** Scheduled notifications (daily/hourly) don't work in Expo Go, only immediate notifications. This is an Expo Go limitation, NOT a code issue.
@@ -251,4 +277,4 @@ Notifications are currently broken - scheduling functions exist in `src/utils/no
 
 ---
 
-Last Updated: November 17, 2025
+Last Updated: January 2025

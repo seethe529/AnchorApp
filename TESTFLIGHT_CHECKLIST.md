@@ -1,22 +1,59 @@
-# TestFlight Testing Checklist - Build 5
+# TestFlight Testing Checklist - Build 14
 
-**Build Number:** 5  
-**Version:** 1.0.0  
-**Date:** November 11, 2025  
-**Status:** Ready for Testing
+**Build Number:** 14  
+**Version:** 1.1.0  
+**Date:** January 2025  
+**Status:** In Development
 
 ---
 
 ## Pre-Testing Setup
 
-- [ ] Wait for Apple to process Build 5 (5-10 minutes)
+- [ ] Wait for Apple to process Build 14 (5-10 minutes)
 - [ ] Add yourself as Internal Tester in App Store Connect
 - [ ] Install TestFlight app on iPhone
-- [ ] Accept invite and install Anchor Build 5
+- [ ] Accept invite and install Anchor Build 14
 
 ---
 
-## Critical Tests (Apple Rejection Issues)
+## New Features Tests (Build 14)
+
+### Dark Mode Implementation
+- [ ] Go to Settings tab
+- [ ] Tap "Appearance" section
+- [ ] **Verify:** Theme toggle shows "Light" or "Dark"
+- [ ] Toggle to Dark mode
+- [ ] **Verify:** All screens immediately switch to dark theme
+- [ ] Navigate through all tabs
+- [ ] **Verify:** All screens use dark theme colors consistently
+- [ ] Close and reopen app
+- [ ] **Verify:** Dark theme persists across app restarts
+- [ ] Check Progress screen charts
+- [ ] **Verify:** Charts adapt to dark theme
+- [ ] Toggle back to Light mode
+- [ ] **Verify:** All screens switch back to light theme
+
+### Enhanced Notifications (Build 12-14)
+- [ ] Go to Settings > Notifications
+- [ ] Enable "Daily Mood Reminder"
+- [ ] **Verify:** Notification scheduled for 8:00 PM
+- [ ] Enable "Breathing Reminders"
+- [ ] **Verify:** Hourly reminders scheduled
+- [ ] Check notification content variety
+- [ ] **Verify:** Messages are randomized and DBT/CBT-inspired
+
+### Breathing Exercises (Build 10)
+- [ ] Go to Home > "Breathing Exercises"
+- [ ] **Verify:** 5 breathing methods available
+- [ ] Swipe between methods horizontally
+- [ ] **Verify:** Smooth transitions between Box, 4-7-8, Resonant, Physiological Sigh, Triangle
+- [ ] Start a breathing session
+- [ ] **Verify:** Animated circle expands/contracts with timing
+- [ ] **Verify:** Haptic feedback on phase changes
+- [ ] Complete a session
+- [ ] **Verify:** Session tracked and saved
+
+## Critical Tests (Previous Issues Fixed)
 
 ### ✅ Issue 1: Location Permission
 - [ ] Go to Crisis tab
@@ -92,7 +129,7 @@
 - [ ] All toggles work
 - [ ] Tap "Export Data"
 - [ ] **Verify:** Share sheet opens with JSON data
-- [ ] Check app version displays correctly (1.0.0)
+- [ ] Check app version displays correctly (1.1.0)
 - [ ] **Verify:** No "coming soon" features
 
 ---
@@ -177,7 +214,7 @@
 
 **Tester:** _______________  
 **Date:** _______________  
-**Build:** 5  
+**Build:** 14  
 **Result:** ☐ PASS  ☐ FAIL (see issues above)
 
 ---
@@ -186,12 +223,12 @@
 
 If all tests pass:
 1. Go to App Store Connect
-2. Select Build 5 for version 1.0.0
+2. Select Build 14 for version 1.1.0
 3. Submit for App Store Review
 4. Monitor email for Apple's response
 
 If issues found:
 1. Document issues above
 2. Fix issues in code
-3. Increment to Build 6
+3. Increment to Build 15
 4. Rebuild and retest

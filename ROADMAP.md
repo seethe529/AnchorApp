@@ -2,11 +2,19 @@
 
 This document tracks planned features, enhancements, and ideas for future versions of Anchor.
 
+**Current Status:** Build 14 in development, Build 10 live on App Store
+
 ---
 
-## Version 1.1.0 (Next Release)
+## Version 1.1.0 (Current Development)
 
-### High Priority
+### ✅ Completed Features
+- **Dark Mode (Build 14):** Global theme support with ThemeContext
+- **Enhanced Notifications (Build 12):** Fixed iOS scheduling, 25 randomized messages
+- **Breathing Exercises (Build 10):** 5 swipeable methods with animations
+- **Medical Citations (Build 9):** Comprehensive citations from authoritative sources
+
+### High Priority (Remaining)
 
 #### 🛠️ Additional DBT/CBT Techniques
 
@@ -63,10 +71,10 @@ This document tracks planned features, enhancements, and ideas for future versio
 
 ### Medium Priority
 - [ ] Add onboarding tutorial for first-time users
-- [ ] Dark mode support
 - [ ] Data backup to iCloud
-- [ ] Push notifications for daily reminders
 - [ ] Customizable reminder times
+- [ ] Enhanced AI conversation context (100+ messages)
+- [ ] Technique effectiveness recommendations
 
 ### Low Priority
 - [ ] Export progress reports as PDF
@@ -178,12 +186,18 @@ This document tracks planned features, enhancements, and ideas for future versio
 
 ## Completed Features
 
-### Version 1.0.0 (Released January 9, 2025)
-- ✅ 17 DBT/CBT techniques across 6 categories
-- ✅ AI Support with OpenAI integration
+### Version 1.1.0 (Builds 9-14)
+- ✅ **Dark Mode (Build 14):** Complete theme system with persistence
+- ✅ **Enhanced Notifications (Build 12):** iOS-compatible scheduling, auto-reschedule
+- ✅ **Breathing Exercises (Build 10):** 5 swipeable methods with haptic feedback
+- ✅ **Medical Citations (Build 9):** Harvard, Mayo Clinic, APA, VA sources
+
+### Version 1.0.0 (Released January 2025)
+- ✅ 30+ DBT/CBT techniques across 6 categories
+- ✅ AI Support with OpenAI GPT-4 integration
 - ✅ Mood tracking and progress analytics
 - ✅ Safety plan with secure storage
-- ✅ Crisis resources
+- ✅ Crisis resources with location services
 - ✅ Offline functionality
 - ✅ Data export feature
 - ✅ Accessibility support (VoiceOver)
@@ -211,5 +225,5 @@ This document tracks planned features, enhancements, and ideas for future versio
 
 ---
 
-**Last Updated:** January 9, 2025  
-**Next Review:** After v1.0.0 approval and first month of user feedback
+**Last Updated:** January 2025 (Build 14)  
+**Next Review:** After v1.1.0 release and user feedback analysis
