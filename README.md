@@ -79,20 +79,25 @@ npm run android # for Android
 - `src/screens/CrisisScreen.js` - Emergency support resources
 - `src/screens/DisclaimerScreen.js` - Medical disclaimer on first launch
 
-## Recent Updates (Build 9)
+## Recent Updates (Build 12)
 
-### Medical Citations (Apple Guideline 1.4.1 Compliance)
+### Notification System (Build 12)
+- ✅ Fixed iOS notification scheduling
+- ✅ Hourly breathing reminders (24 individual notifications)
+- ✅ Auto-reschedule when less than 12 hours remain
+- ✅ Daily mood check-in reminders at 8:00 PM
+- ✅ Notifications fire on the hour (:00 minutes/seconds)
+
+### Breathing Exercises (Build 10)
+- ✅ 5 swipeable breathing methods
+- ✅ Animated breathing circle with haptic feedback
+- ✅ Session tracking and history
+
+### Medical Citations (Build 9)
 - ✅ Comprehensive citations on every technique
-- ✅ Sources from Harvard Medical School, Mayo Clinic, APA, VA National Center for PTSD, University of Rochester Medical Center, Behavioural Tech, NAMI
+- ✅ Sources from Harvard Medical School, Mayo Clinic, APA, VA, etc.
 - ✅ Clickable "View Source" links
 - ✅ Dedicated Resources & Citations screen
-- ✅ All URLs verified and working
-
-### UI/UX Improvements
-- ✅ Improved technique detail page layout (Apple HIG compliant)
-- ✅ Better spacing and typography
-- ✅ Auto-scroll to top when opening techniques
-- ✅ Feedback moved to bottom for better reading flow
 
 ## Future Enhancements
 

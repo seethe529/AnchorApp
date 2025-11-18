@@ -1,12 +1,37 @@
 # Anchor App - Development Backlog
 
-## Build 10 - Planned Features
+## Build 12 - iOS Notification Fixes
+
+**Priority:** Critical  
+**Estimated Effort:** 2-3 hours  
+**Status:** ✅ COMPLETED (Build 12 - November 17, 2025)
+
+### Description
+Fixed iOS notification scheduling issues. iOS doesn't support `seconds` with `repeats: true` for timeInterval triggers.
+
+### Implementation
+- Schedule 24 individual hourly notifications instead of repeating timeInterval
+- Auto-reschedule when less than 12 hours of reminders remain
+- AppState listener to recheck on app foreground
+- Set notifications to fire on the hour (:00 minutes/seconds)
+- Added error logging to all notification functions
+- Removed non-functional "Anonymous Analytics" toggle
+
+### Files Modified
+- `src/utils/notifications.js` - Fixed breathing reminder scheduling, added recheckBreathingReminders()
+- `App.js` - Added AppState listener for auto-reschedule
+- `src/screens/SettingsScreen.js` - Removed analytics toggle
+- `app.config.js` - Bumped to Build 12
+
+---
+
+## Build 10 - Completed Features
 
 ### 1. Swipeable Breathing Exercise Screen
 
 **Priority:** High  
 **Estimated Effort:** 4-6 hours  
-**Status:** ✅ COMPLETED
+**Status:** ✅ COMPLETED (Build 10 - November 17, 2025)
 
 #### Description
 Dedicated full-screen breathing exercise experience with swipeable carousel of different breathing methods. Each method includes animated visual guide, timer, and use-case description.
@@ -75,15 +100,15 @@ Dedicated full-screen breathing exercise experience with swipeable carousel of d
 
 **Priority:** High  
 **Estimated Effort:** 2-3 hours  
-**Status:** ✅ COMPLETED
+**Status:** ✅ COMPLETED (Build 10 - November 17, 2025)
 
 **Implementation:**
 - Master toggle enforcement
 - Permission gating with user-friendly prompts
 - Deduplication (cancels before scheduling)
-- Rehydration on app restart
 - Proper repeating schedules (mood: daily 8pm, breathing: hourly)
 - Debug logging for verification
+- Fixed immediate notification firing on toggle
 
 #### Description
 Notifications are currently broken - scheduling functions exist in `src/utils/notifications.js` but aren't being called when users toggle notifications on in SettingsScreen.
@@ -211,11 +236,10 @@ Notifications are currently broken - scheduling functions exist in `src/utils/no
 
 ## Notes
 
-- **Build 10 Focus:** Breathing exercises + Notifications
-- **Timeline:** Week of Jan 13, 2025
-- **Notifications:** ✅ Completed (Jan 17)
-- **Breathing Exercises:** ✅ Completed (Jan 13)
-- **Status:** Ready for merge to develop
+- **Build 12 Status:** Submitted to TestFlight (November 17, 2025)
+- **Build 10 Status:** Released to App Store (November 17, 2025)
+- **Focus:** iOS notification fixes + breathing exercises
+- **Next:** Test notifications on physical device via TestFlight
 
 ### Known Limitations
 - **Expo Go:** Scheduled notifications (daily/hourly) don't work in Expo Go, only immediate notifications. This is an Expo Go limitation, NOT a code issue.
@@ -227,4 +251,4 @@ Notifications are currently broken - scheduling functions exist in `src/utils/no
 
 ---
 
-Last Updated: November 2025
+Last Updated: November 17, 2025
