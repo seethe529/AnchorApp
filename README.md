@@ -98,15 +98,24 @@ npm run android # for Android
 - `src/utils/storage.js` - AsyncStorage wrapper with error handling
 - `src/services/openai.js` - OpenAI API integration
 
-## Recent Updates (Build 14)
+## Recent Updates (Build 14 - Ready for App Store)
 
-### Dark Mode (Build 14)
-- ✅ Global dark mode support with ThemeContext
-- ✅ Toggle in Settings under "Appearance"
-- ✅ All screens adapt to light/dark theme
-- ✅ Trauma-informed color palette following Apple HIG
-- ✅ Theme persists across app restarts
-- ✅ Charts and progress screens adapt to dark mode
+### Dark Mode (Build 14) ✅ COMPLETE
+- ✅ Global dark mode support with comprehensive ThemeContext
+- ✅ Theme toggle in Settings under "Appearance" section
+- ✅ All screens seamlessly adapt to light/dark themes
+- ✅ Trauma-informed color palette following Apple Human Interface Guidelines
+- ✅ Theme preference persists across app restarts
+- ✅ Charts and progress screens dynamically adapt to current theme
+- ✅ Enhanced accessibility compliance in both modes
+
+### Enhanced AI Support (Build 14) ✅ COMPLETE
+- ✅ Upgraded to GPT-4o-mini model (improved performance, cost-efficient)
+- ✅ "Anchor" AI personality with trauma-informed responses
+- ✅ Adaptive behavior based on user emotional state
+- ✅ Enhanced crisis detection and safety resource provision
+- ✅ Personalized DBT/CBT technique suggestions
+- ✅ Gentle, validating communication designed for PTSD support
 
 ### Enhanced Notifications (Build 12-14)
 - ✅ Fixed iOS notification scheduling issues

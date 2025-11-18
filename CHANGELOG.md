@@ -7,36 +7,73 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Planned
+### Planned (Future Builds)
 - Additional DBT/CBT techniques (Radical Acceptance, Self-Validation, Pros & Cons)
-- Enhanced AI conversation capabilities
-- Apple Watch companion app
-- Multi-language support (Spanish priority)
+- Apple Watch companion app with heart rate monitoring
+- Multi-language support (Spanish, French, German priority)
+- Advanced analytics and personalized insights
+- Peer support matching (optional, privacy-focused)
 
 ## [1.1.0] - 2025-01-XX (Build 14 - Current)
 
-**Status:** In Development (Build 14)
+**Status:** Ready for App Store Submission (Build 14)
 
 ### Added (Build 14)
 - **Global Dark Mode:**
-  - Complete ThemeContext implementation
-  - All screens updated to support both light and dark themes
-  - Consistent color palette following Apple Human Interface Guidelines
-  - Theme toggle in Settings under "Appearance"
-  - Theme preference persists across app restarts
-  - Charts and progress visualizations adapt to theme
+  - Complete ThemeContext implementation with light and dark themes
+  - All screens updated to support both themes seamlessly
+  - Consistent trauma-informed color palette following Apple Human Interface Guidelines
+  - Theme toggle in Settings under "Appearance" section
+  - Theme preference persists across app restarts using AsyncStorage
+  - Charts and progress visualizations adapt dynamically to current theme
+  - Improved accessibility compliance in both light and dark modes
+
+- **Enhanced AI Support ("Anchor" Personality):**
+  - Upgraded to GPT-4o-mini model for improved performance and cost efficiency
+  - Comprehensive trauma-informed AI personality with adaptive responses
+  - Specialized responses for different emotional states (overwhelmed, anxious, dissociating)
+  - Enhanced crisis detection and safety resource provision
+  - Personalized DBT/CBT technique suggestions based on user input
+  - Gentle, validating communication style designed for PTSD support
+
+- **Swipeable Breathing Exercises (Build 10 - Included):**
+  - 5 evidence-based breathing methods: Box Breathing, 4-7-8, Resonant Breathing, Physiological Sigh, Triangle Breathing
+  - Animated breathing circle with smooth visual guidance
+  - Haptic feedback on breathing phase transitions
+  - Session tracking and history storage
+  - Horizontal swipe navigation between different methods
+  - Individual method descriptions and benefits
+
+- **Enhanced Notification System:**
+  - 25 randomized DBT/CBT-inspired breathing reminder messages
+  - Hourly breathing reminders (24 individual notifications scheduled)
+  - Daily mood check-in reminders at 8:00 PM
+  - Auto-reschedule when less than 12 hours of reminders remain
+  - AppState listener for automatic reminder refresh on app foreground
+  - Trauma-informed messaging throughout all notifications
 
 ### Changed (Build 14)
 - **UI/UX Improvements:**
-  - Breathing exercises use theme-appropriate colors
-  - Crisis screen uses consistent trauma-informed green colors
-  - All navigation elements adapt to current theme
-  - Improved accessibility in both light and dark modes
+  - All breathing exercises now use theme-appropriate colors
+  - Crisis screen updated with consistent trauma-informed green colors
+  - Navigation elements adapt seamlessly to current theme
+  - Improved visual hierarchy and spacing throughout app
+  - Enhanced accessibility features for both light and dark modes
+
+- **AI Support Enhancements:**
+  - More natural, conversational AI responses
+  - Better context awareness and emotional intelligence
+  - Improved crisis resource delivery and safety prioritization
+  - Enhanced technique recommendations based on user emotional state
 
 ### Technical (Build 14)
 - Created comprehensive ThemeContext for global theme management
-- Updated all screens to use dynamic theme colors
-- Improved color accessibility compliance in both modes
+- Updated all screens to use dynamic theme colors with proper contrast ratios
+- Upgraded OpenAI integration to GPT-4o-mini for better performance
+- Enhanced AI system prompt with trauma-informed response patterns
+- Improved notification scheduling reliability on iOS
+- Better error handling and fallback responses throughout app
+- Optimized performance for theme switching and breathing animations
 
 ## [1.1.0] - 2025-01-XX (Build 13 - Superseded)
 
