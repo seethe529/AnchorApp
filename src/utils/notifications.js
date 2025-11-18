@@ -175,9 +175,14 @@ export const recheckBreathingReminders = async () => {
     const scheduled = await Notifications.getAllScheduledNotificationsAsync();
     const breathingReminders = scheduled.filter(n => n.content.data?.type === 'breathing_reminder');
     
-    // If less than 12 hours of reminders left, reschedule
-    if (breathingReminders.length < 12) {
-      console.log(`🔄 Only ${breathingReminders.length} breathing reminders left, rescheduling...`);
+    // Check if any old notifications exist (they won't have the new message format)
+    const hasOldNotifications = breathingReminders.some(n => 
+      !BREATHING_REMINDER_MESSAGES.includes(n.content.body)
+    );
+    
+    // If we have old notifications or less than 12 hours left, reschedule
+    if (hasOldNotifications || breathingReminders.length < 12) {
+      console.log(`🔄 ${hasOldNotifications ? 'Old notifications detected' : `Only ${breathingReminders.length} reminders left`}, rescheduling...`);
       await scheduleBreathingReminder();
     }
   } catch (error) {
