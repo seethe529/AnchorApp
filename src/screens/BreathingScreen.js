@@ -135,18 +135,27 @@ export default function BreathingScreen({ navigation }) {
 
   const renderMethod = ({ item, index }) => (
     <View style={[styles.methodContainer, { width }]}>
-      <View style={styles.header}>
+      <View 
+        style={styles.header}
+        accessible={true}
+        accessibilityRole="header"
+        accessibilityLabel={`${item.name} breathing exercise. ${item.subtitle}. ${item.description}`}
+      >
         <Text 
           style={[styles.methodName, { color: theme.text }]}
-          accessibilityRole="header"
-          accessibilityLabel={`${item.name} breathing exercise`}
+          accessibilityElementsHidden={true}
         >
           {item.name}
         </Text>
-        <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{item.subtitle}</Text>
+        <Text 
+          style={[styles.subtitle, { color: theme.textSecondary }]}
+          accessibilityElementsHidden={true}
+        >
+          {item.subtitle}
+        </Text>
         <Text 
           style={[styles.description, { color: theme.textSecondary }]}
-          accessibilityLabel={`Description: ${item.description}`}
+          accessibilityElementsHidden={true}
         >
           {item.description}
         </Text>
@@ -187,52 +196,60 @@ export default function BreathingScreen({ navigation }) {
         </Animated.View>
       </View>
 
-      <View style={styles.instructionContainer}>
-        <Text 
-          style={[styles.instruction, { color: theme.textSecondary }]}
-          accessible={isActive}
-          accessibilityLabel={isActive ? `Instruction: ${currentPhase.instruction}` : undefined}
-          accessibilityLiveRegion="polite"
-        >
-          {isActive ? currentPhase.instruction : ' '}
-        </Text>
-      </View>
-
       <View 
-        style={styles.patternContainer}
+        style={styles.infoContainer}
         accessible={true}
         accessibilityRole="text"
-        accessibilityLabel={`Breathing pattern: ${item.pattern.map(phase => `${phase.phase} for ${phase.duration} seconds`).join(', then ')}`}
+        accessibilityLabel={`
+          ${isActive ? `Current instruction: ${currentPhase.instruction}. ` : ''}
+          Breathing pattern: ${item.pattern.map(phase => `${phase.phase} for ${phase.duration} seconds`).join(', then ')}.
+          ${isActive || completedCycles > 0 ? ` You have completed ${completedCycles} breathing cycles.` : ''}
+        `}
+        accessibilityLiveRegion="polite"
       >
-        {item.pattern.map((phase, idx) => (
-          <Text key={idx} style={[styles.patternText, { color: theme.textTertiary }]}>
-            {phase.phase} {phase.duration}s
-            {idx < item.pattern.length - 1 ? ' • ' : ''}
+        <View style={styles.instructionContainer}>
+          <Text 
+            style={[styles.instruction, { color: theme.textSecondary }]}
+            accessibilityElementsHidden={true}
+          >
+            {isActive ? currentPhase.instruction : ' '}
           </Text>
-        ))}
-      </View>
+        </View>
 
-      <View style={styles.cyclesContainer}>
-        <Text 
-          style={styles.cyclesText}
-          accessible={isActive || completedCycles > 0}
-          accessibilityLabel={isActive || completedCycles > 0 ? `You have completed ${completedCycles} breathing cycles` : undefined}
-          accessibilityLiveRegion="polite"
-        >
-          {isActive || completedCycles > 0 ? `Cycles completed: ${completedCycles}` : ' '}
-        </Text>
+        <View style={styles.patternContainer}>
+          {item.pattern.map((phase, idx) => (
+            <Text 
+              key={idx} 
+              style={[styles.patternText, { color: theme.textTertiary }]}
+              accessibilityElementsHidden={true}
+            >
+              {phase.phase} {phase.duration}s
+              {idx < item.pattern.length - 1 ? ' • ' : ''}
+            </Text>
+          ))}
+        </View>
+
+        <View style={styles.cyclesContainer}>
+          <Text 
+            style={styles.cyclesText}
+            accessibilityElementsHidden={true}
+          >
+            {isActive || completedCycles > 0 ? `Cycles completed: ${completedCycles}` : ' '}
+          </Text>
+        </View>
       </View>
 
       <View style={styles.controls}>
         <TouchableOpacity
           style={[styles.button, isActive && styles.buttonActive]}
           onPress={toggleActive}
-          accessibilityLabel={isActive ? 'Stop breathing exercise' : 'Start breathing exercise'}
+          accessibilityLabel={`${isActive ? 'Stop' : 'Start'} ${item.name} breathing exercise. Method ${index + 1} of ${breathingMethods.length}.`}
           accessibilityRole="button"
+          accessibilityHint={`Double tap to ${isActive ? 'stop' : 'start'}. ${index > 0 ? 'Swipe up for previous method. ' : ''}${index < breathingMethods.length - 1 ? 'Swipe down for next method.' : ''}`}
           accessibilityActions={[
             { name: 'activate', label: isActive ? 'Stop breathing exercise' : 'Start breathing exercise' },
-            ...(index > 0 ? [{ name: 'decrement', label: 'Previous breathing method' }] : []),
-            ...(index < breathingMethods.length - 1 ? [{ name: 'increment', label: 'Next breathing method' }] : [])
+            ...(index > 0 ? [{ name: 'decrement', label: `Previous method: ${breathingMethods[index - 1].name}` }] : []),
+            ...(index < breathingMethods.length - 1 ? [{ name: 'increment', label: `Next method: ${breathingMethods[index + 1].name}` }] : [])
           ]}
           onAccessibilityAction={(event) => {
             switch (event.nativeEvent.actionName) {
@@ -255,8 +272,8 @@ export default function BreathingScreen({ navigation }) {
 
       <Text 
         style={[styles.swipeHint, { color: theme.textSecondary }]}
-        accessibilityLabel={`Swipe left or right to change breathing method. Currently showing ${index + 1} of ${breathingMethods.length} methods.`}
-        accessibilityHint="Use swipe gestures to navigate between different breathing exercises"
+        accessible={false}
+        importantForAccessibility="no"
       >
         {index > 0 ? '← ' : ''}
         Swipe to change method
@@ -436,6 +453,10 @@ const styles = StyleSheet.create({
     color: '#2E8B57',
     fontWeight: '600',
     textAlign: 'center',
+  },
+  infoContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
   },
   controls: {
     flexDirection: 'row',
