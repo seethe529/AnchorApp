@@ -11,9 +11,66 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Git branching strategy (main, develop, feature branches)
 - Comprehensive documentation for contributors
 
-## [1.0.0] - 2025-01-13 (Build 9 - Submitted for Review)
+## [1.1.0] - 2025-11-17 (Build 12 - TestFlight)
 
-**Status:** Submitted to App Store (Build 9)
+**Status:** Submitted to TestFlight (Build 12)
+
+### Fixed (Build 12)
+- **iOS Notification Fixes:**
+  - Fixed breathing reminders to work on iOS (schedule 24 individual hourly notifications)
+  - Added auto-reschedule when less than 12 hours of reminders remain
+  - Added AppState listener to recheck reminders when app comes to foreground
+  - Set notifications to fire on the hour (:00 minutes/seconds)
+  - Ensures continuous hourly reminders without overwhelming notification queue
+
+### Removed (Build 12)
+- Removed non-functional "Anonymous Analytics" toggle from Settings
+
+### Technical (Build 12)
+- Added try-catch error logging to all notification functions
+- Added recheckBreathingReminders() utility function
+- Improved notification handler to properly detect iOS date triggers
+
+## [1.1.0] - 2025-11-17 (Build 11 - Internal)
+
+**Status:** Internal build (not submitted)
+
+### Fixed (Build 11)
+- Initial attempt at iOS notification fixes (superseded by Build 12)
+
+## [1.1.0] - 2025-11-17 (Build 10 - App Store)
+
+**Status:** Released to App Store (Build 10)
+
+### Added (Build 10)
+- **Swipeable Breathing Exercises:**
+  - 5 breathing methods: Box Breathing, 4-7-8, Resonant Breathing, Physiological Sigh, Triangle Breathing
+  - Animated breathing circle with smooth transitions
+  - Haptic feedback on phase changes
+  - Cycle tracking and session logging
+  - Horizontal swipe navigation between methods
+  - Session history stored in AsyncStorage
+
+- **Notification System:**
+  - Master notification toggle with permission gating
+  - Daily mood check-in reminders (8:00 PM)
+  - Hourly breathing exercise reminders
+  - Proper notification scheduling with deduplication
+
+### Fixed (Build 10)
+- Fixed notification toggle flickering in Settings
+- Fixed notifications firing immediately on toggle
+- Added cancelReminderType() helper for proper deduplication
+- Updated notification handler to only show scheduled notifications
+- Removed notification rehydration that caused duplicate notifications
+
+### Changed (Build 10)
+- Updated Home screen "Breathing Exercise" to "Breathing Exercises" (plural)
+- Improved notification grammar with proper punctuation
+
+## [1.0.0] - 2025-01-13 (Build 9 - App Store)
+
+**Status:** Released to App Store (Build 9 - January 13, 2025)
 
 ### Added (Build 9)
 - **Medical Citations (Apple Guideline 1.4.1 Compliance):**
