@@ -33,10 +33,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2025-11-17 (Build 11 - Internal)
 
-**Status:** Internal build (not submitted)
+**Status:** Built with EAS but never submitted to App Store Connect (superseded by Build 12)
 
 ### Fixed (Build 11)
-- Initial attempt at iOS notification fixes (superseded by Build 12)
+- Initial attempt at iOS notification fixes
+- Removed non-functional analytics toggle
+- Added error logging
+
+### Note
+- Build 11 was completed but additional changes were needed
+- Never uploaded to TestFlight or App Store Connect
+- Changes rolled into Build 12 instead
 
 ## [1.1.0] - 2025-11-17 (Build 10 - App Store)
 
