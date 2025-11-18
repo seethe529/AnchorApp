@@ -1,5 +1,42 @@
 import { Platform } from 'react-native';
 
+const BREATHING_REMINDER_MESSAGES = [
+  // DBT – Mindfulness
+  "Take one mindful breath and return to center.",
+  "Pause. Notice one thing you can see, one thing you can feel.",
+  "Breathe slowly — move into your Wise Mind.",
+  "Let yourself arrive in this moment. One breath.",
+  "Come back to your breath. Let the next inhale be softer.",
+
+  // DBT – Distress Tolerance
+  "A slow breath helps you ride the wave, not fight it.",
+  "Ground yourself: press your feet into the floor and inhale gently.",
+  "You don't need to fix anything right now. Just breathe.",
+  "Let your breathing be your anchor for the next 5 seconds.",
+  "One breath at a time. That's enough in this moment.",
+
+  // DBT – Self-Soothing
+  "Place a hand on your chest and breathe slowly — let your body soften.",
+  "You deserve calm. Let your next breath be kinder than the last.",
+  "Notice warmth in your body as you exhale.",
+  "Soften your shoulders and allow one deeper breath.",
+  "Let your exhale fall longer than your inhale.",
+
+  // CBT – Emotion Regulation
+  "Name the emotion you're feeling — then take one slow breath.",
+  "A thought is just a thought. Breathe and watch it pass.",
+  "You can observe this moment without judging it.",
+  "A calm breath can shift the whole chain of thoughts.",
+  "You are not your thoughts — breathe and pause the cycle.",
+
+  // CBT – Grounding & Reframing
+  "Slow down your breathing — you are safe right now.",
+  "Take a breath and remind yourself: 'This feeling will pass.'",
+  "Notice tension in your body and release it on the next exhale.",
+  "A calmer breath can help your mind find a calmer perspective.",
+  "Breathe slowly. You are allowed to take up space and rest."
+];
+
 let Notifications;
 if (Platform.OS !== 'web') {
   Notifications = require('expo-notifications');
@@ -110,10 +147,13 @@ export const scheduleBreathingReminder = async () => {
       triggerDate.setMinutes(0);
       triggerDate.setSeconds(0);
       
+      // Select random message
+      const randomMessage = BREATHING_REMINDER_MESSAGES[Math.floor(Math.random() * BREATHING_REMINDER_MESSAGES.length)];
+      
       const id = await Notifications.scheduleNotificationAsync({
         content: {
           title: "Breathing Break",
-          body: "Take a moment for a quick breathing exercise.",
+          body: randomMessage,
           data: { type: 'breathing_reminder' },
         },
         trigger: triggerDate,

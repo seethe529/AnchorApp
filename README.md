@@ -79,14 +79,21 @@ npm run android # for Android
 - `src/screens/CrisisScreen.js` - Emergency support resources
 - `src/screens/DisclaimerScreen.js` - Medical disclaimer on first launch
 
-## Recent Updates (Build 12)
+## Recent Updates (Build 13)
 
-### Notification System (Build 12)
-- ✅ Fixed iOS notification scheduling
+### Dark Mode (Build 13)
+- ✅ Global dark mode support
+- ✅ Toggle in Settings under "Appearance"
+- ✅ All screens adapt to light/dark theme
+- ✅ Trauma-informed color palette
+- ✅ Theme persists across app restarts
+
+### Enhanced Notifications (Build 13)
+- ✅ 25 randomized breathing reminder messages
+- ✅ DBT/CBT-inspired reminder content
 - ✅ Hourly breathing reminders (24 individual notifications)
 - ✅ Auto-reschedule when less than 12 hours remain
 - ✅ Daily mood check-in reminders at 8:00 PM
-- ✅ Notifications fire on the hour (:00 minutes/seconds)
 
 ### Breathing Exercises (Build 10)
 - ✅ 5 swipeable breathing methods

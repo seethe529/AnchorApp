@@ -21,11 +21,13 @@ import { storage } from './src/utils/storage';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import ErrorLogger from './src/utils/errorLogger';
 import OfflineIndicator from './src/components/OfflineIndicator';
+import { ThemeProvider, useTheme } from './src/context/ThemeContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 function MainTabs() {
+  const { theme } = useTheme();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -39,11 +41,11 @@ function MainTabs() {
           else if (route.name === 'Settings') iconName = focused ? 'settings' : 'settings-outline';
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#2E8B57',
-        tabBarInactiveTintColor: 'gray',
-        headerStyle: { backgroundColor: '#2E8B57' },
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.textSecondary,
+        headerStyle: { backgroundColor: theme.primary },
         headerTintColor: 'white',
-        tabBarStyle: { paddingBottom: 25, paddingTop: 5, height: 85, paddingHorizontal: 10 }
+        tabBarStyle: { paddingBottom: 25, paddingTop: 5, height: 85, paddingHorizontal: 10, backgroundColor: theme.card, borderTopColor: theme.border }
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
@@ -56,7 +58,8 @@ function MainTabs() {
   );
 }
 
-export default function App() {
+function AppContent() {
+  const { theme } = useTheme();
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -100,9 +103,9 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#2E8B57" />
-        <Text style={styles.loadingText}>Loading Anchor...</Text>
+      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
+        <ActivityIndicator size="large" color={theme.primary} />
+        <Text style={[styles.loadingText, { color: theme.textSecondary }]}>Loading Anchor...</Text>
       </View>
     );
   }
@@ -114,7 +117,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerStyle: { backgroundColor: '#2E8B57' },
+          headerStyle: { backgroundColor: theme.primary },
           headerTintColor: 'white',
           headerTitleStyle: { fontWeight: 'bold' }
         }}
@@ -158,16 +161,22 @@ export default function App() {
   );
 }
 
+export default function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+}
+
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5F5F5',
   },
   loadingText: {
     marginTop: 15,
     fontSize: 16,
-    color: '#666',
   },
 });

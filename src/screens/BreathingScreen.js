@@ -5,10 +5,12 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { breathingMethods } from '../data/breathingMethods';
 import { storage, STORAGE_KEYS } from '../utils/storage';
+import { useTheme } from '../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
 
 export default function BreathingScreen({ navigation }) {
+  const { theme } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
@@ -115,9 +117,9 @@ export default function BreathingScreen({ navigation }) {
   const renderMethod = ({ item, index }) => (
     <View style={[styles.methodContainer, { width }]}>
       <View style={styles.header}>
-        <Text style={styles.methodName}>{item.name}</Text>
-        <Text style={styles.subtitle}>{item.subtitle}</Text>
-        <Text style={styles.description}>{item.description}</Text>
+        <Text style={[styles.methodName, { color: theme.text }]}>{item.name}</Text>
+        <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{item.subtitle}</Text>
+        <Text style={[styles.description, { color: theme.textSecondary }]}>{item.description}</Text>
       </View>
 
       <View style={styles.circleContainer}>
@@ -136,14 +138,14 @@ export default function BreathingScreen({ navigation }) {
       </View>
 
       <View style={styles.instructionContainer}>
-        <Text style={styles.instruction}>
+        <Text style={[styles.instruction, { color: theme.textSecondary }]}>
           {isActive ? currentPhase.instruction : ' '}
         </Text>
       </View>
 
       <View style={styles.patternContainer}>
         {item.pattern.map((phase, idx) => (
-          <Text key={idx} style={styles.patternText}>
+          <Text key={idx} style={[styles.patternText, { color: theme.textTertiary }]}>
             {phase.phase} {phase.duration}s
             {idx < item.pattern.length - 1 ? ' • ' : ''}
           </Text>
@@ -168,7 +170,7 @@ export default function BreathingScreen({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.swipeHint}>
+      <Text style={[styles.swipeHint, { color: theme.textSecondary }]}>
         {index > 0 ? '← ' : ''}
         Swipe to change method
         {index < breathingMethods.length - 1 ? ' →' : ''}
@@ -177,7 +179,7 @@ export default function BreathingScreen({ navigation }) {
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <FlatList
         ref={flatListRef}
         data={breathingMethods}
@@ -221,7 +223,6 @@ export default function BreathingScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
   },
   headerBar: {
     position: 'absolute',
@@ -259,20 +260,17 @@ const styles = StyleSheet.create({
   methodName: {
     fontSize: 28,
     fontWeight: Platform.OS === 'ios' ? '700' : 'bold',
-    color: '#000',
     marginBottom: 4,
     letterSpacing: 0.4,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 17,
-    color: '#666',
     marginBottom: 12,
     fontWeight: '400',
   },
   description: {
     fontSize: 15,
-    color: '#666',
     textAlign: 'center',
     paddingHorizontal: 32,
     lineHeight: 22,
@@ -314,7 +312,6 @@ const styles = StyleSheet.create({
   },
   instruction: {
     fontSize: 16,
-    color: '#666',
     textAlign: 'center',
     fontStyle: 'italic',
   },
@@ -326,7 +323,6 @@ const styles = StyleSheet.create({
   },
   patternText: {
     fontSize: 14,
-    color: '#888',
   },
   cyclesContainer: {
     height: 24,
@@ -370,7 +366,6 @@ const styles = StyleSheet.create({
   },
   swipeHint: {
     fontSize: 13,
-    color: '#8E8E93',
     marginTop: 20,
     fontWeight: '400',
   },

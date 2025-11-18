@@ -4,10 +4,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { setupNotifications, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder } from '../utils/notifications';
 import Constants from 'expo-constants';
+import { useTheme } from '../context/ThemeContext';
 
 const APP_VERSION = Constants.expoConfig?.version || '1.0.0';
 
 export default function SettingsScreen({ navigation }) {
+  const { theme, isDark, toggleTheme } = useTheme();
   const [preferences, setPreferences] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -49,6 +51,12 @@ export default function SettingsScreen({ navigation }) {
   };
 
   const togglePreference = async (key) => {
+    // Dark mode toggle
+    if (key === 'darkMode') {
+      await toggleTheme();
+      return;
+    }
+    
     // Master notifications toggle
     if (key === 'notifications') {
       if (!preferences.notifications) {
@@ -194,6 +202,12 @@ export default function SettingsScreen({ navigation }) {
 
   const settingSections = [
     {
+      title: 'Appearance',
+      items: [
+        { key: 'darkMode', title: 'Dark Mode', subtitle: 'Reduce eye strain at night' }
+      ]
+    },
+    {
       title: 'Notifications',
       items: [
         { key: 'notifications', title: 'Enable Notifications', subtitle: 'Receive app notifications' },
@@ -218,35 +232,35 @@ export default function SettingsScreen({ navigation }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+      <Text style={[styles.title, { color: theme.primary }]}>Settings</Text>
       
       {settingSections.map((section, sectionIndex) => (
-        <View key={sectionIndex} style={styles.section}>
-          <Text style={styles.sectionTitle}>{section.title}</Text>
+        <View key={sectionIndex} style={[styles.section, { backgroundColor: theme.card }]}>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{section.title}</Text>
           {section.items.map((item, itemIndex) => (
             <View key={itemIndex} style={styles.settingItem}>
               <View style={styles.settingInfo}>
-                <Text style={styles.settingTitle}>{item.title}</Text>
-                <Text style={styles.settingSubtitle}>{item.subtitle}</Text>
+                <Text style={[styles.settingTitle, { color: theme.text }]}>{item.title}</Text>
+                <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>{item.subtitle}</Text>
               </View>
               <Switch
-                value={preferences[item.key]}
+                value={item.key === 'darkMode' ? isDark : preferences[item.key]}
                 onValueChange={() => togglePreference(item.key)}
                 trackColor={{ false: '#767577', true: '#2E8B57' }}
-                thumbColor={preferences[item.key] ? '#ffffff' : '#f4f3f4'}
+                thumbColor={(item.key === 'darkMode' ? isDark : preferences[item.key]) ? '#ffffff' : '#f4f3f4'}
                 accessibilityLabel={`${item.title} toggle`}
                 accessibilityHint={item.subtitle}
                 accessibilityRole="switch"
-                accessibilityState={{ checked: preferences[item.key] }}
+                accessibilityState={{ checked: item.key === 'darkMode' ? isDark : preferences[item.key] }}
               />
             </View>
           ))}
         </View>
       ))}
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Data Management</Text>
+      <View style={[styles.section, { backgroundColor: theme.card }]}>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Data Management</Text>
         
         <TouchableOpacity 
           style={styles.actionButton} 
@@ -255,12 +269,12 @@ export default function SettingsScreen({ navigation }) {
           accessibilityHint="Share your data with healthcare provider"
           accessibilityRole="button"
         >
-          <Ionicons name="download" size={24} color="#2E8B57" />
+          <Ionicons name="download" size={24} color={theme.primary} />
           <View style={styles.actionInfo}>
-            <Text style={styles.actionTitle}>Export Data</Text>
-            <Text style={styles.actionSubtitle}>Share with healthcare provider</Text>
+            <Text style={[styles.actionTitle, { color: theme.text }]}>Export Data</Text>
+            <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>Share with healthcare provider</Text>
           </View>
-          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+          <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
         </TouchableOpacity>
 
         <TouchableOpacity 
@@ -270,17 +284,17 @@ export default function SettingsScreen({ navigation }) {
           accessibilityHint="Warning: Permanently deletes all your data"
           accessibilityRole="button"
         >
-          <Ionicons name="trash" size={24} color="#F44336" />
+          <Ionicons name="trash" size={24} color={theme.error} />
           <View style={styles.actionInfo}>
-            <Text style={[styles.actionTitle, { color: '#F44336' }]}>Clear All Data</Text>
-            <Text style={styles.actionSubtitle}>Permanently delete all data</Text>
+            <Text style={[styles.actionTitle, { color: theme.error }]}>Clear All Data</Text>
+            <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>Permanently delete all data</Text>
           </View>
-          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+          <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Information</Text>
+      <View style={[styles.section, { backgroundColor: theme.card }]}>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Information</Text>
         
         <TouchableOpacity 
           style={styles.actionButton} 
@@ -289,26 +303,26 @@ export default function SettingsScreen({ navigation }) {
           accessibilityHint="View medical sources and citations for techniques"
           accessibilityRole="button"
         >
-          <Ionicons name="book" size={24} color="#2E8B57" />
+          <Ionicons name="book" size={24} color={theme.primary} />
           <View style={styles.actionInfo}>
-            <Text style={styles.actionTitle}>Resources & Citations</Text>
-            <Text style={styles.actionSubtitle}>Medical sources and references</Text>
+            <Text style={[styles.actionTitle, { color: theme.text }]}>Resources & Citations</Text>
+            <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>Medical sources and references</Text>
           </View>
-          <Ionicons name="chevron-forward" size={24} color="#ccc" />
+          <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>About</Text>
+      <View style={[styles.section, { backgroundColor: theme.card }]}>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>About</Text>
         <View style={styles.infoItem}>
-          <Text style={styles.infoLabel}>Version:</Text>
-          <Text style={styles.infoValue}>{APP_VERSION}</Text>
+          <Text style={[styles.infoLabel, { color: theme.textSecondary }]}>Version:</Text>
+          <Text style={[styles.infoValue, { color: theme.text }]}>{APP_VERSION}</Text>
         </View>
         <View style={styles.infoItem}>
-          <Text style={styles.infoLabel}>Platform:</Text>
-          <Text style={styles.infoValue}>{Platform.OS === 'ios' ? 'iOS' : Platform.OS === 'android' ? 'Android' : 'Web'}</Text>
+          <Text style={[styles.infoLabel, { color: theme.textSecondary }]}>Platform:</Text>
+          <Text style={[styles.infoValue, { color: theme.text }]}>{Platform.OS === 'ios' ? 'iOS' : Platform.OS === 'android' ? 'Android' : 'Web'}</Text>
         </View>
-        <Text style={styles.disclaimer}>
+        <Text style={[styles.disclaimer, { color: theme.textTertiary }]}>
           This app is not a replacement for professional mental health treatment. 
           If you're experiencing a mental health crisis, please contact emergency services immediately.
         </Text>
@@ -318,20 +332,20 @@ export default function SettingsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F5F5' },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#2E8B57', textAlign: 'center', marginVertical: 20 },
-  section: { backgroundColor: 'white', margin: 15, padding: 15, borderRadius: 10, elevation: 2 },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', color: '#333', marginBottom: 15 },
+  container: { flex: 1 },
+  title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginVertical: 20 },
+  section: { margin: 15, padding: 15, borderRadius: 10, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2 },
+  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
   settingItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12 },
   settingInfo: { flex: 1 },
-  settingTitle: { fontSize: 16, fontWeight: '500', color: '#333' },
-  settingSubtitle: { fontSize: 14, color: '#666', marginTop: 2 },
+  settingTitle: { fontSize: 16, fontWeight: '500' },
+  settingSubtitle: { fontSize: 14, marginTop: 2 },
   actionButton: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12 },
   actionInfo: { flex: 1, marginLeft: 15 },
-  actionTitle: { fontSize: 16, fontWeight: '500', color: '#333' },
-  actionSubtitle: { fontSize: 14, color: '#666', marginTop: 2 },
+  actionTitle: { fontSize: 16, fontWeight: '500' },
+  actionSubtitle: { fontSize: 14, marginTop: 2 },
   infoItem: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
-  infoLabel: { fontSize: 16, color: '#666' },
-  infoValue: { fontSize: 16, fontWeight: '500', color: '#333' },
-  disclaimer: { fontSize: 12, color: '#999', marginTop: 15, lineHeight: 18, fontStyle: 'italic' }
+  infoLabel: { fontSize: 16 },
+  infoValue: { fontSize: 16, fontWeight: '500' },
+  disclaimer: { fontSize: 12, marginTop: 15, lineHeight: 18, fontStyle: 'italic' }
 });

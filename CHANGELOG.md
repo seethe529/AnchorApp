@@ -11,6 +11,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Git branching strategy (main, develop, feature branches)
 - Comprehensive documentation for contributors
 
+## [1.1.0] - 2025-11-17 (Build 13 - In Development)
+
+**Status:** In Development (Build 13)
+
+### Added (Build 13)
+- **Global Dark Mode:**
+  - Theme context with light and dark themes
+  - Dark mode toggle in Settings under "Appearance"
+  - All screens updated to support both themes
+  - Consistent color palette following Apple HIG
+  - Theme persists across app restarts
+
+- **Enhanced Breathing Reminders:**
+  - 25 randomized DBT/CBT-inspired reminder messages
+  - Messages rotate to provide variety and engagement
+  - Trauma-informed language throughout
+
+### Changed (Build 13)
+- **UI/UX Improvements:**
+  - Breathing exercises now use dark theme by default
+  - Physiological Sigh color changed from red to calming teal
+  - Crisis screen colors changed to consistent green (trauma-informed design)
+  - All navigation elements adapt to theme
+  - Charts in Progress screen adapt to dark mode
+
+### Technical (Build 13)
+- Created ThemeContext for global theme management
+- Updated all screens to use theme colors dynamically
+- Improved color accessibility in both light and dark modes
+
 ## [1.1.0] - 2025-11-17 (Build 12 - TestFlight)
 
 **Status:** Submitted to TestFlight (Build 12)
