@@ -5,8 +5,10 @@ import { suggestTechniques } from '../data/techniques';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { sendMessageToOpenAI } from '../services/openai';
 import ErrorLogger from '../utils/errorLogger';
+import { useTheme } from '../context/ThemeContext';
 
 export default function AIAgentScreen({ navigation }) {
+  const { theme } = useTheme();
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState([
     { type: 'ai', text: 'Hi, I\'m here to support you through difficult moments. How are you feeling right now?' }
@@ -118,13 +120,13 @@ export default function AIAgentScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView 
-      style={styles.container} 
+      style={[styles.container, { backgroundColor: theme.background }]} 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
     >
       <View style={{ flex: 1 }} accessible={false}>
-      <View style={styles.quickActionsContainer} accessibilityRole="menu">
-        <Text style={styles.quickActionsTitle} accessibilityRole="header">Quick Help:</Text>
+      <View style={[styles.quickActionsContainer, { backgroundColor: theme.card, borderBottomColor: theme.border }]} accessibilityRole="menu">
+        <Text style={[styles.quickActionsTitle, { color: theme.text }]} accessibilityRole="header">Quick Help:</Text>
         <ScrollView 
           horizontal 
           showsHorizontalScrollIndicator={false} 
@@ -134,7 +136,7 @@ export default function AIAgentScreen({ navigation }) {
           {quickActions.map((action, index) => (
             <TouchableOpacity
               key={index}
-              style={styles.quickActionButton}
+              style={[styles.quickActionButton, { backgroundColor: theme.primary + '20' }]}
               onPress={async () => {
                 setMessage(action.text);
                 setTimeout(() => sendMessage(), 0);
@@ -143,8 +145,8 @@ export default function AIAgentScreen({ navigation }) {
               accessibilityHint="Sends this message to AI support"
               accessibilityRole="button"
             >
-              <Ionicons name={action.icon} size={16} color="#2E8B57" />
-              <Text style={styles.quickActionText}>{action.text}</Text>
+              <Ionicons name={action.icon} size={16} color={theme.primary} />
+              <Text style={[styles.quickActionText, { color: theme.primary }]}>{action.text}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -163,12 +165,12 @@ export default function AIAgentScreen({ navigation }) {
         {conversation.map((msg, index) => (
           <View 
             key={index} 
-            style={[styles.message, msg.type === 'user' ? styles.userMessage : styles.aiMessage]}
+            style={[styles.message, msg.type === 'user' ? [styles.userMessage, { backgroundColor: theme.primary }] : [styles.aiMessage, { backgroundColor: theme.card }]]}
             accessible={true}
             accessibilityLabel={`${msg.type === 'user' ? 'You said' : 'AI responded'}: ${msg.text}`}
             accessibilityRole="text"
           >
-            <Text style={[styles.messageText, msg.type === 'user' ? styles.userText : styles.aiText]}>
+            <Text style={[styles.messageText, msg.type === 'user' ? styles.userText : { color: theme.text }]}>
               {msg.text}
             </Text>
           </View>
@@ -176,34 +178,35 @@ export default function AIAgentScreen({ navigation }) {
         
         {isTyping && (
           <View 
-            style={[styles.message, styles.aiMessage]}
+            style={[styles.message, styles.aiMessage, { backgroundColor: theme.card }]}
             accessible={true}
             accessibilityLabel="AI is typing"
             accessibilityRole="text"
           >
-            <Text style={styles.typingText}>AI is typing...</Text>
+            <Text style={[styles.typingText, { color: theme.textTertiary }]}>AI is typing...</Text>
           </View>
         )}
       </ScrollView>
 
       {suggestions.length > 0 && (
-        <View style={styles.suggestions}>
-          <Text style={styles.suggestionsTitle}>Suggested techniques:</Text>
+        <View style={[styles.suggestions, { backgroundColor: theme.card, borderTopColor: theme.border }]}>
+          <Text style={[styles.suggestionsTitle, { color: theme.text }]}>Suggested techniques:</Text>
           {suggestions.map((suggestion, index) => (
-            <TouchableOpacity key={index} style={styles.suggestionCard} onPress={() => applySuggestion(suggestion)}>
-              <Text style={styles.suggestionName}>{suggestion.name}</Text>
-              <Text style={styles.suggestionCategory}>{suggestion.category}</Text>
+            <TouchableOpacity key={index} style={[styles.suggestionCard, { backgroundColor: theme.primary + '20' }]} onPress={() => applySuggestion(suggestion)}>
+              <Text style={[styles.suggestionName, { color: theme.text }]}>{suggestion.name}</Text>
+              <Text style={[styles.suggestionCategory, { color: theme.textSecondary }]}>{suggestion.category}</Text>
             </TouchableOpacity>
           ))}
         </View>
       )}
 
-      <View style={styles.inputContainer} accessible={false}>
+      <View style={[styles.inputContainer, { backgroundColor: theme.card, borderTopColor: theme.border }]} accessible={false}>
         <TextInput
-          style={styles.textInput}
+          style={[styles.textInput, { borderColor: theme.border, backgroundColor: theme.background, color: theme.text }]}
           value={message}
           onChangeText={handleInputChange}
           placeholder="How are you feeling? Describe what's happening..."
+          placeholderTextColor={theme.textTertiary}
           multiline
           maxLength={500}
           returnKeyType="done"
@@ -214,7 +217,7 @@ export default function AIAgentScreen({ navigation }) {
           accessibilityRole="none"
         />
         <TouchableOpacity 
-          style={[styles.sendButton, !message.trim() && styles.sendButtonDisabled]} 
+          style={[styles.sendButton, { backgroundColor: theme.primary }, !message.trim() && styles.sendButtonDisabled]} 
           onPress={sendMessage}
           disabled={!message.trim()}
           accessible={true}
@@ -232,28 +235,28 @@ export default function AIAgentScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F5F5' },
+  container: { flex: 1 },
   conversation: { flex: 1 },
   conversationContent: { paddingBottom: 30, paddingHorizontal: 15, paddingTop: 10 },
-  quickActionsContainer: { paddingVertical: 12, paddingHorizontal: 15, backgroundColor: 'white', borderBottomWidth: 1, borderBottomColor: '#E0E0E0' },
-  quickActionsTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10, color: '#333' },
+  quickActionsContainer: { paddingVertical: 12, paddingHorizontal: 15, borderBottomWidth: 1 },
+  quickActionsTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
   quickActionsScroll: { flexDirection: 'row' },
-  quickActionButton: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#F0F8F0', padding: 12, borderRadius: 8, marginRight: 10 },
-  quickActionText: { fontSize: 14, color: '#2E8B57', marginLeft: 10, flex: 1 },
+  quickActionButton: { flexDirection: 'row', alignItems: 'center', padding: 12, borderRadius: 8, marginRight: 10 },
+  quickActionText: { fontSize: 14, marginLeft: 10, flex: 1 },
   message: { marginVertical: 5, padding: 12, borderRadius: 15, maxWidth: '80%' },
-  userMessage: { alignSelf: 'flex-end', backgroundColor: '#2E8B57' },
-  aiMessage: { alignSelf: 'flex-start', backgroundColor: 'white', elevation: 1 },
+  userMessage: { alignSelf: 'flex-end' },
+  aiMessage: { alignSelf: 'flex-start', elevation: 1 },
   messageText: { fontSize: 16, lineHeight: 22 },
   userText: { color: 'white' },
-  aiText: { color: '#333' },
-  typingText: { fontStyle: 'italic', color: '#999' },
-  suggestions: { backgroundColor: 'white', padding: 15, borderTopWidth: 1, borderTopColor: '#E0E0E0' },
+  aiText: {},
+  typingText: { fontStyle: 'italic' },
+  suggestions: { padding: 15, borderTopWidth: 1 },
   suggestionsTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
-  suggestionCard: { backgroundColor: '#F0F8F0', padding: 10, borderRadius: 8, marginBottom: 8 },
+  suggestionCard: { padding: 10, borderRadius: 8, marginBottom: 8 },
   suggestionName: { fontSize: 14, fontWeight: '500' },
-  suggestionCategory: { fontSize: 12, color: '#666', textTransform: 'capitalize' },
-  inputContainer: { flexDirection: 'row', padding: 15, backgroundColor: 'white', alignItems: 'flex-end', borderTopWidth: 1, borderTopColor: '#eee' },
-  textInput: { flex: 1, borderWidth: 1, borderColor: '#E0E0E0', borderRadius: 20, paddingHorizontal: 15, paddingVertical: 10, marginRight: 10, maxHeight: 100, fontSize: 16 },
-  sendButton: { backgroundColor: '#2E8B57', padding: 12, borderRadius: 20 },
+  suggestionCategory: { fontSize: 12, textTransform: 'capitalize' },
+  inputContainer: { flexDirection: 'row', padding: 15, alignItems: 'flex-end', borderTopWidth: 1 },
+  textInput: { flex: 1, borderWidth: 1, borderRadius: 20, paddingHorizontal: 15, paddingVertical: 10, marginRight: 10, maxHeight: 100, fontSize: 16 },
+  sendButton: { padding: 12, borderRadius: 20 },
   sendButtonDisabled: { backgroundColor: '#ccc' }
 });

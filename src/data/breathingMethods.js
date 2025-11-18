@@ -52,7 +52,7 @@ export const breathingMethods = [
       { phase: 'Breathe Out', duration: 6, instruction: 'Long, slow exhale' }
     ],
     totalCycleDuration: 10,
-    color: '#E74C3C',
+    color: '#20B2AA',
     icon: 'flash-outline'
   },
   {

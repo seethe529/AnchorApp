@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Linking, Alert, P
 import { Ionicons } from '@expo/vector-icons';
 import { secureStorage, STORAGE_KEYS } from '../utils/storage';
 import SafetyPlan from '../components/SafetyPlan';
+import { useTheme } from '../context/ThemeContext';
 
 let Location;
 if (Platform.OS !== 'web') {
@@ -10,6 +11,7 @@ if (Platform.OS !== 'web') {
 }
 
 export default function CrisisScreen({ navigation }) {
+  const { theme } = useTheme();
   const [userLocation, setUserLocation] = useState(null);
   const [emergencyContacts, setEmergencyContacts] = useState([]);
   const [showSafetyPlan, setShowSafetyPlan] = useState(false);
@@ -145,12 +147,12 @@ export default function CrisisScreen({ navigation }) {
 
   if (showSafetyPlan) {
     return (
-      <View style={styles.container}>
-        <View style={styles.safetyPlanHeader}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.safetyPlanHeader, { backgroundColor: theme.primary }]}>
           <TouchableOpacity onPress={() => setShowSafetyPlan(false)}>
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text style={styles.safetyPlanTitle}>Safety Plan</Text>
+          <Text style={[styles.safetyPlanTitle, { color: 'white' }]}>Safety Plan</Text>
         </View>
         <SafetyPlan />
       </View>
@@ -158,18 +160,18 @@ export default function CrisisScreen({ navigation }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.warningBanner}>
-        <Ionicons name="warning" size={24} color="#DC143C" />
-        <Text style={styles.warningText}>Immediate danger? Call 911</Text>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.warningBanner, { backgroundColor: theme.primary + '20' }]}>
+        <Ionicons name="warning" size={24} color={theme.primary} />
+        <Text style={[styles.warningText, { color: theme.primary }]}>Immediate danger? Call 911</Text>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Immediate Help</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Immediate Help</Text>
         {immediateHelp.map((item, index) => (
           <TouchableOpacity 
             key={index} 
-            style={styles.emergencyCard} 
+            style={[styles.emergencyCard, { backgroundColor: theme.primary }]} 
             onPress={item.action}
             accessibilityLabel={item.title}
             accessibilityHint={item.description}
@@ -182,59 +184,59 @@ export default function CrisisScreen({ navigation }) {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Crisis Resources</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Crisis Resources</Text>
         {crisisResources
           .sort((a, b) => a.priority - b.priority)
           .map((resource, index) => (
           <TouchableOpacity 
             key={index} 
-            style={styles.resourceCard} 
+            style={[styles.resourceCard, { backgroundColor: theme.card }]} 
             onPress={() => callNumber(resource)}
             accessibilityLabel={`${resource.name}, ${resource.isText ? 'Text' : 'Call'} ${resource.number}`}
             accessibilityHint={resource.description}
             accessibilityRole="button"
           >
             <View style={styles.resourceInfo}>
-              <Ionicons name={resource.icon} size={24} color="#DC143C" />
+              <Ionicons name={resource.icon} size={24} color={theme.primary} />
               <View style={styles.resourceText}>
-                <Text style={styles.resourceName}>{resource.name}</Text>
+                <Text style={[styles.resourceName, { color: theme.text }]}>{resource.name}</Text>
                 <Text style={styles.resourceNumber}>
                   {resource.isText ? `Text ${resource.number}` : resource.number}
                 </Text>
-                <Text style={styles.resourceDescription}>{resource.description}</Text>
+                <Text style={[styles.resourceDescription, { color: theme.textSecondary }]}>{resource.description}</Text>
               </View>
             </View>
-            <Ionicons name={resource.isText ? 'chatbubble' : 'call'} size={20} color="#DC143C" />
+            <Ionicons name={resource.isText ? 'chatbubble' : 'call'} size={20} color={theme.primary} />
           </TouchableOpacity>
         ))}
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Local Resources</Text>
-        <TouchableOpacity style={styles.localCard} onPress={findNearbyResources}>
-          <Ionicons name="location" size={24} color="#2E8B57" />
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Local Resources</Text>
+        <TouchableOpacity style={[styles.localCard, { backgroundColor: theme.card }]} onPress={findNearbyResources}>
+          <Ionicons name="location" size={24} color={theme.primary} />
           <View style={styles.resourceText}>
-            <Text style={styles.localName}>Find Local Crisis Centers</Text>
-            <Text style={styles.localDescription}>Locate nearby mental health facilities</Text>
+            <Text style={[styles.localName, { color: theme.text }]}>Find Local Crisis Centers</Text>
+            <Text style={[styles.localDescription, { color: theme.textSecondary }]}>Locate nearby mental health facilities</Text>
           </View>
-          <Ionicons name="chevron-forward" size={20} color="#2E8B57" />
+          <Ionicons name="chevron-forward" size={20} color={theme.primary} />
         </TouchableOpacity>
         
-        <TouchableOpacity style={styles.localCard} onPress={findNearestHospital}>
-          <Ionicons name="medical" size={24} color="#2E8B57" />
+        <TouchableOpacity style={[styles.localCard, { backgroundColor: theme.card }]} onPress={findNearestHospital}>
+          <Ionicons name="medical" size={24} color={theme.primary} />
           <View style={styles.resourceText}>
-            <Text style={styles.localName}>Hospital Emergency Room</Text>
-            <Text style={styles.localDescription}>Nearest emergency medical care</Text>
+            <Text style={[styles.localName, { color: theme.text }]}>Hospital Emergency Room</Text>
+            <Text style={[styles.localDescription, { color: theme.textSecondary }]}>Nearest emergency medical care</Text>
           </View>
-          <Ionicons name="chevron-forward" size={20} color="#2E8B57" />
+          <Ionicons name="chevron-forward" size={20} color={theme.primary} />
         </TouchableOpacity>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Crisis Actions</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Crisis Actions</Text>
         
         <TouchableOpacity 
-          style={styles.safetyPlanButton} 
+          style={[styles.safetyPlanButton, { backgroundColor: theme.primary }]} 
           onPress={() => setShowSafetyPlan(true)}
           accessibilityLabel="View My Safety Plan"
           accessibilityHint="Opens your personal safety plan"
@@ -253,19 +255,19 @@ export default function CrisisScreen({ navigation }) {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Safety Reminders</Text>
-        <View style={styles.safetyPlan}>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Safety Reminders</Text>
+        <View style={[styles.safetyPlan, { backgroundColor: theme.card }]}>
           {safetyPlan.map((step, index) => (
             <View key={index} style={styles.safetyStep}>
-              <Text style={styles.stepNumber}>{index + 1}</Text>
-              <Text style={styles.stepText}>{step}</Text>
+              <Text style={[styles.stepNumber, { backgroundColor: theme.primary }]}>{index + 1}</Text>
+              <Text style={[styles.stepText, { color: theme.text }]}>{step}</Text>
             </View>
           ))}
         </View>
       </View>
 
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
+      <View style={[styles.footer, { backgroundColor: theme.primary }]}>
+        <Text style={[styles.footerText, { color: 'white' }]}>
           You are not alone. Help is available 24/7. Your life has value and meaning.
         </Text>
       </View>
@@ -274,33 +276,33 @@ export default function CrisisScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F5F5' },
-  warningBanner: { backgroundColor: '#FFE4E1', padding: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-  warningText: { marginLeft: 10, fontSize: 16, fontWeight: 'bold', color: '#DC143C' },
-  safetyPlanHeader: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#2E8B57', padding: 15 },
-  safetyPlanTitle: { fontSize: 20, fontWeight: 'bold', color: 'white', marginLeft: 15 },
+  container: { flex: 1 },
+  warningBanner: { padding: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+  warningText: { marginLeft: 10, fontSize: 16, fontWeight: 'bold' },
+  safetyPlanHeader: { flexDirection: 'row', alignItems: 'center', padding: 15 },
+  safetyPlanTitle: { fontSize: 20, fontWeight: 'bold', marginLeft: 15 },
   section: { padding: 20 },
-  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 15, color: '#333' },
-  emergencyCard: { backgroundColor: '#DC143C', padding: 15, borderRadius: 10, marginBottom: 10, elevation: 3 },
+  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 15 },
+  emergencyCard: { padding: 15, borderRadius: 10, marginBottom: 10, elevation: 3 },
   emergencyTitle: { fontSize: 18, fontWeight: 'bold', color: 'white', marginBottom: 5 },
   emergencyDescription: { fontSize: 14, color: 'white' },
-  resourceCard: { backgroundColor: 'white', padding: 15, borderRadius: 10, marginBottom: 10, flexDirection: 'row', alignItems: 'center', elevation: 2 },
-  localCard: { backgroundColor: 'white', padding: 15, borderRadius: 10, marginBottom: 10, flexDirection: 'row', alignItems: 'center', elevation: 1 },
+  resourceCard: { padding: 15, borderRadius: 10, marginBottom: 10, flexDirection: 'row', alignItems: 'center', elevation: 2 },
+  localCard: { padding: 15, borderRadius: 10, marginBottom: 10, flexDirection: 'row', alignItems: 'center', elevation: 1 },
   resourceInfo: { flexDirection: 'row', alignItems: 'center', flex: 1 },
   resourceText: { marginLeft: 15, flex: 1 },
-  resourceName: { fontSize: 16, fontWeight: 'bold', color: '#333', marginBottom: 2 },
-  resourceNumber: { fontSize: 16, fontWeight: 'bold', color: '#DC143C', marginBottom: 2 },
-  resourceDescription: { fontSize: 14, color: '#666' },
-  localName: { fontSize: 16, fontWeight: '500', color: '#333', marginBottom: 2 },
-  localDescription: { fontSize: 14, color: '#666' },
-  safetyPlanButton: { backgroundColor: '#2E8B57', padding: 15, borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
+  resourceName: { fontSize: 16, fontWeight: 'bold', marginBottom: 2 },
+  resourceNumber: { fontSize: 16, fontWeight: 'bold', color: '#2E8B57', marginBottom: 2 },
+  resourceDescription: { fontSize: 14 },
+  localName: { fontSize: 16, fontWeight: '500', marginBottom: 2 },
+  localDescription: { fontSize: 14 },
+  safetyPlanButton: { padding: 15, borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
   safetyPlanButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold', marginLeft: 10 },
   alertButton: { backgroundColor: '#FF6B35', padding: 15, borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
   alertButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold', marginLeft: 10 },
-  safetyPlan: { backgroundColor: 'white', padding: 15, borderRadius: 10, elevation: 1 },
+  safetyPlan: { padding: 15, borderRadius: 10, elevation: 1 },
   safetyStep: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 15 },
-  stepNumber: { backgroundColor: '#2E8B57', color: 'white', width: 25, height: 25, borderRadius: 12.5, textAlign: 'center', lineHeight: 25, fontWeight: 'bold', marginRight: 15 },
-  stepText: { flex: 1, fontSize: 16, lineHeight: 24, color: '#333' },
-  footer: { backgroundColor: '#2E8B57', padding: 20, margin: 20, borderRadius: 10, elevation: 2 },
-  footerText: { fontSize: 16, color: 'white', textAlign: 'center', lineHeight: 24, fontStyle: 'italic' }
+  stepNumber: { color: 'white', width: 25, height: 25, borderRadius: 12.5, textAlign: 'center', lineHeight: 25, fontWeight: 'bold', marginRight: 15 },
+  stepText: { flex: 1, fontSize: 16, lineHeight: 24 },
+  footer: { padding: 20, margin: 20, borderRadius: 10, elevation: 2 },
+  footerText: { fontSize: 16, textAlign: 'center', lineHeight: 24, fontStyle: 'italic' }
 });

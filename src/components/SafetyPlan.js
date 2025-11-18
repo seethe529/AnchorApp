@@ -3,8 +3,10 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert 
 import { useIsFocused } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { secureStorage, STORAGE_KEYS } from '../utils/storage';
+import { useTheme } from '../context/ThemeContext';
 
 export default function SafetyPlan() {
+  const { theme } = useTheme();
   const isFocused = useIsFocused();
   const [plan, setPlan] = useState({
     warningSigns: '',
@@ -58,18 +60,18 @@ export default function SafetyPlan() {
 
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>Loading safety plan...</Text>
+      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
+        <Text style={{ color: theme.text }}>Loading safety plan...</Text>
       </View>
     );
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Personal Safety Plan</Text>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.card }]}>
+        <Text style={[styles.title, { color: theme.primary }]}>Personal Safety Plan</Text>
         <TouchableOpacity
-          style={styles.editButton}
+          style={[styles.editButton, { backgroundColor: theme.primary }]}
           onPress={() => isEditing ? saveSafetyPlan() : setIsEditing(true)}
           accessibilityLabel={isEditing ? 'Save safety plan' : 'Edit safety plan'}
           accessibilityHint={isEditing ? 'Saves your changes to the safety plan' : 'Allows you to edit your safety plan'}
@@ -80,16 +82,17 @@ export default function SafetyPlan() {
       </View>
 
       {sections.map((section) => (
-        <View key={section.key} style={styles.section}>
+        <View key={section.key} style={[styles.section, { backgroundColor: theme.card }]}>
           <View style={styles.sectionHeader}>
-            <Ionicons name={section.icon} size={24} color="#2E8B57" />
-            <Text style={styles.sectionTitle}>{section.title}</Text>
+            <Ionicons name={section.icon} size={24} color={theme.primary} />
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>{section.title}</Text>
           </View>
           
           {isEditing ? (
             <TextInput
-              style={styles.input}
+              style={[styles.input, { borderColor: theme.border, color: theme.text, backgroundColor: theme.background }]}
               placeholder={section.placeholder}
+              placeholderTextColor={theme.textTertiary}
               value={plan[section.key]}
               onChangeText={(text) => setPlan(prev => ({ ...prev, [section.key]: text }))}
               multiline
@@ -98,17 +101,17 @@ export default function SafetyPlan() {
               accessibilityHint={section.placeholder}
             />
           ) : (
-            <Text style={styles.content} accessible={true} accessibilityLabel={`${section.title}: ${plan[section.key] || 'No content added yet'}`}>
+            <Text style={[styles.content, { color: theme.textSecondary }]} accessible={true} accessibilityLabel={`${section.title}: ${plan[section.key] || 'No content added yet'}`}>
               {plan[section.key] || 'Tap edit to add content'}
             </Text>
           )}
         </View>
       ))}
 
-      <View style={styles.emergencySection}>
-        <Text style={styles.emergencyTitle}>Emergency Contacts</Text>
+      <View style={[styles.emergencySection, { backgroundColor: 'rgba(46, 139, 87, 0.15)' }]}>
+        <Text style={[styles.emergencyTitle, { color: theme.primary }]}>Emergency Contacts</Text>
         <TouchableOpacity 
-          style={styles.emergencyButton}
+          style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
           accessibilityLabel="National Suicide Prevention Lifeline, 988"
           accessibilityHint="Call for immediate crisis support"
           accessibilityRole="button"
@@ -116,7 +119,7 @@ export default function SafetyPlan() {
           <Text style={styles.emergencyText}>National Suicide Prevention Lifeline: 988</Text>
         </TouchableOpacity>
         <TouchableOpacity 
-          style={styles.emergencyButton}
+          style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
           accessibilityLabel="Crisis Text Line, Text HOME to 741741"
           accessibilityHint="Send a text message for crisis support"
           accessibilityRole="button"
@@ -124,7 +127,7 @@ export default function SafetyPlan() {
           <Text style={styles.emergencyText}>Crisis Text Line: Text HOME to 741741</Text>
         </TouchableOpacity>
         <TouchableOpacity 
-          style={styles.emergencyButton}
+          style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
           accessibilityLabel="Veterans Crisis Line, 1-800-273-8255"
           accessibilityHint="Call for veteran-specific crisis support"
           accessibilityRole="button"
@@ -137,18 +140,18 @@ export default function SafetyPlan() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F5F5' },
+  container: { flex: 1 },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, backgroundColor: 'white' },
-  title: { fontSize: 24, fontWeight: 'bold', color: '#2E8B57' },
-  editButton: { backgroundColor: '#2E8B57', padding: 10, borderRadius: 20 },
-  section: { backgroundColor: 'white', margin: 10, padding: 15, borderRadius: 10 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20 },
+  title: { fontSize: 24, fontWeight: 'bold' },
+  editButton: { padding: 10, borderRadius: 20 },
+  section: { margin: 10, padding: 15, borderRadius: 10 },
   sectionHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginLeft: 10, color: '#333' },
-  input: { borderWidth: 1, borderColor: '#ddd', borderRadius: 8, padding: 12, minHeight: 80, textAlignVertical: 'top' },
-  content: { fontSize: 16, lineHeight: 24, color: '#555' },
-  emergencySection: { backgroundColor: '#FFE5E5', margin: 10, padding: 15, borderRadius: 10 },
-  emergencyTitle: { fontSize: 18, fontWeight: 'bold', color: '#D32F2F', marginBottom: 10 },
-  emergencyButton: { backgroundColor: '#D32F2F', padding: 12, borderRadius: 8, marginBottom: 8 },
+  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginLeft: 10 },
+  input: { borderWidth: 1, borderRadius: 8, padding: 12, minHeight: 80, textAlignVertical: 'top' },
+  content: { fontSize: 16, lineHeight: 24 },
+  emergencySection: { margin: 10, padding: 15, borderRadius: 10 },
+  emergencyTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
+  emergencyButton: { padding: 12, borderRadius: 8, marginBottom: 8 },
   emergencyText: { color: 'white', fontSize: 16, textAlign: 'center' }
 });

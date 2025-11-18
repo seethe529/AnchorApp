@@ -4,8 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 import MoodTracker from '../components/MoodTracker';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { getRandomReminder } from '../data/dailyReminders';
+import { useTheme } from '../context/ThemeContext';
 
 export default function HomeScreen({ navigation }) {
+  const { theme } = useTheme();
   const [showMoodTracker, setShowMoodTracker] = useState(false);
   const [todayMoodLogged, setTodayMoodLogged] = useState(false);
   const [recentMood, setRecentMood] = useState(null);
@@ -67,16 +69,16 @@ export default function HomeScreen({ navigation }) {
   return (
     <ScrollView 
       ref={scrollViewRef}
-      style={styles.container} 
+      style={[styles.container, { backgroundColor: theme.background }]} 
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={{ paddingBottom: keyboardHeight > 0 ? keyboardHeight + 20 : 20 }}
     >
-      <View style={styles.header}>
-        <Text style={styles.title}>Welcome to Anchor</Text>
-        <Text style={styles.subtitle}>Your PTSD support companion</Text>
+      <View style={[styles.header, { backgroundColor: theme.card }]}>
+        <Text style={[styles.title, { color: theme.primary }]}>Welcome to Anchor</Text>
+        <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Your PTSD support companion</Text>
         {todayMoodLogged && recentMood && (
-          <View style={styles.moodStatus}>
-            <Text style={styles.moodStatusText}>Today's mood: {recentMood.moodName}</Text>
+          <View style={[styles.moodStatus, { backgroundColor: theme.primary + '20' }]}>
+            <Text style={[styles.moodStatusText, { color: theme.primary }]}>Today's mood: {recentMood.moodName}</Text>
           </View>
         )}
       </View>
@@ -86,32 +88,32 @@ export default function HomeScreen({ navigation }) {
       )}
       
       <View style={styles.quickActions}>
-        <Text style={styles.sectionTitle}>Quick Actions</Text>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Quick Actions</Text>
         <View style={styles.actionGrid}>
           {quickActions.map((action, index) => (
             <TouchableOpacity 
               key={index} 
-              style={styles.actionCard} 
+              style={[styles.actionCard, { backgroundColor: theme.card }]} 
               onPress={action.action}
               accessibilityLabel={action.title}
               accessibilityHint={`Navigate to ${action.title}`}
               accessibilityRole="button"
             >
-              <Ionicons name={action.icon} size={32} color={action.color || '#2E8B57'} />
-              <Text style={styles.actionText}>{action.title}</Text>
+              <Ionicons name={action.icon} size={32} color={action.color || theme.primary} />
+              <Text style={[styles.actionText, { color: theme.text }]}>{action.title}</Text>
             </TouchableOpacity>
           ))}
         </View>
       </View>
 
-      <View style={styles.dailyTip}>
-        <Text style={styles.sectionTitle}>Daily Reminder</Text>
-        <Text style={styles.tipText}>"{dailyReminder}"</Text>
+      <View style={[styles.dailyTip, { backgroundColor: theme.card }]}>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Daily Reminder</Text>
+        <Text style={[styles.tipText, { color: theme.textSecondary }]}>"{dailyReminder}"</Text>
       </View>
 
       {todayMoodLogged && (
         <TouchableOpacity 
-          style={styles.moodButton}
+          style={[styles.moodButton, { backgroundColor: theme.primary }]}
           onPress={() => setShowMoodTracker(!showMoodTracker)}
           accessibilityLabel={showMoodTracker ? 'Hide Mood Tracker' : 'Log Another Mood Entry'}
           accessibilityHint={showMoodTracker ? 'Hides the mood tracking form' : 'Opens mood tracking form to log your current mood'}
@@ -131,19 +133,19 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F5F5' },
-  header: { padding: 20, alignItems: 'center', backgroundColor: 'white', marginBottom: 20 },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#2E8B57', marginBottom: 5 },
-  subtitle: { fontSize: 16, color: '#666' },
-  moodStatus: { marginTop: 10, padding: 8, backgroundColor: '#E8F5E8', borderRadius: 15 },
-  moodStatusText: { fontSize: 14, color: '#2E8B57', fontWeight: '500' },
+  container: { flex: 1 },
+  header: { padding: 20, alignItems: 'center', marginBottom: 20 },
+  title: { fontSize: 28, fontWeight: 'bold', marginBottom: 5 },
+  subtitle: { fontSize: 16 },
+  moodStatus: { marginTop: 10, padding: 8, borderRadius: 15 },
+  moodStatusText: { fontSize: 14, fontWeight: '500' },
   quickActions: { padding: 20 },
-  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 15, color: '#333' },
+  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 15 },
   actionGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
-  actionCard: { width: '48%', backgroundColor: 'white', padding: 15, borderRadius: 10, alignItems: 'center', marginBottom: 15, elevation: 2 },
+  actionCard: { width: '48%', padding: 15, borderRadius: 10, alignItems: 'center', marginBottom: 15, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2 },
   actionText: { marginTop: 8, fontSize: 12, fontWeight: '500', textAlign: 'center', numberOfLines: 2 },
-  dailyTip: { padding: 20, backgroundColor: 'white', margin: 20, borderRadius: 10 },
-  tipText: { fontSize: 16, lineHeight: 24, color: '#555', fontStyle: 'italic' },
-  moodButton: { backgroundColor: '#2E8B57', margin: 20, padding: 15, borderRadius: 10, alignItems: 'center' },
+  dailyTip: { padding: 20, margin: 20, borderRadius: 10 },
+  tipText: { fontSize: 16, lineHeight: 24, fontStyle: 'italic' },
+  moodButton: { margin: 20, padding: 15, borderRadius: 10, alignItems: 'center' },
   moodButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' }
 });
