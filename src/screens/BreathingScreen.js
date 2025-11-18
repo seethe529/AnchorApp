@@ -351,6 +351,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 8,
     zIndex: 10,
+    height: 100,
   },
   backButton: {
     flexDirection: 'row',
@@ -369,7 +370,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingTop: 80,
+    paddingTop: 110,
   },
   header: {
     alignItems: 'center',
@@ -490,6 +491,7 @@ const styles = StyleSheet.create({
   swipeHint: {
     fontSize: 13,
     marginTop: 20,
+    marginBottom: 20,
     fontWeight: '400',
   },
   pagination: {
