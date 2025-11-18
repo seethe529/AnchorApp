@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, TouchableOpacity, FlatList, Dimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, Animated, TouchableOpacity, FlatList, Dimensions, Platform, AccessibilityInfo } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
@@ -65,10 +65,16 @@ export default function BreathingScreen({ navigation }) {
     const nextPhaseIndex = currentPhaseIndex + 1;
     if (nextPhaseIndex >= currentMethod.pattern.length) {
       setCurrentPhaseIndex(0);
-      setCompletedCycles(prev => prev + 1);
+      const newCycles = completedCycles + 1;
+      setCompletedCycles(newCycles);
+      // Announce cycle completion for blind users
+      AccessibilityInfo.announceForAccessibility(`Cycle ${newCycles} completed`);
       logBreathingSession();
     } else {
       setCurrentPhaseIndex(nextPhaseIndex);
+      // Announce phase change for blind users
+      const nextPhase = currentMethod.pattern[nextPhaseIndex];
+      AccessibilityInfo.announceForAccessibility(`${nextPhase.phase}, ${nextPhase.instruction}`);
     }
   };
 
@@ -101,6 +107,19 @@ export default function BreathingScreen({ navigation }) {
       await storage.setItem(STORAGE_KEYS.BREATHING_SESSIONS, sessions);
     } catch (error) {
       console.error('Error logging breathing session:', error);
+    }
+  };
+
+  const navigateToMethod = (index) => {
+    if (index >= 0 && index < breathingMethods.length) {
+      flatListRef.current?.scrollToIndex({ index, animated: true });
+      setCurrentIndex(index);
+      setIsActive(false);
+      setCurrentPhaseIndex(0);
+      setCompletedCycles(0);
+      scaleAnim.setValue(1);
+      // Announce method change for blind users
+      AccessibilityInfo.announceForAccessibility(`Switched to ${breathingMethods[index].name} breathing exercise`);
     }
   };
 
@@ -147,9 +166,24 @@ export default function BreathingScreen({ navigation }) {
           accessibilityHint={isActive ? currentPhase.instruction : `Tap start button to begin ${item.name} breathing exercise`}
           accessibilityLiveRegion="polite"
           accessibilityValue={{ text: isActive ? `${countdown}` : undefined }}
+          importantForAccessibility="yes"
         >
-          <Text style={styles.phaseText}>{isActive ? currentPhase.phase : 'Ready'}</Text>
-          {isActive && <Text style={styles.countdownText}>{countdown}</Text>}
+          <Text 
+            style={styles.phaseText}
+            accessibilityElementsHidden={true}
+            importantForAccessibility="no"
+          >
+            {isActive ? currentPhase.phase : 'Ready'}
+          </Text>
+          {isActive && (
+            <Text 
+              style={styles.countdownText}
+              accessibilityElementsHidden={true}
+              importantForAccessibility="no"
+            >
+              {countdown}
+            </Text>
+          )}
         </Animated.View>
       </View>
 
@@ -195,6 +229,24 @@ export default function BreathingScreen({ navigation }) {
           onPress={toggleActive}
           accessibilityLabel={isActive ? 'Stop breathing exercise' : 'Start breathing exercise'}
           accessibilityRole="button"
+          accessibilityActions={[
+            { name: 'activate', label: isActive ? 'Stop breathing exercise' : 'Start breathing exercise' },
+            ...(index > 0 ? [{ name: 'decrement', label: 'Previous breathing method' }] : []),
+            ...(index < breathingMethods.length - 1 ? [{ name: 'increment', label: 'Next breathing method' }] : [])
+          ]}
+          onAccessibilityAction={(event) => {
+            switch (event.nativeEvent.actionName) {
+              case 'activate':
+                toggleActive();
+                break;
+              case 'increment':
+                navigateToMethod(index + 1);
+                break;
+              case 'decrement':
+                navigateToMethod(index - 1);
+                break;
+            }
+          }}
         >
           <Ionicons name={isActive ? 'pause' : 'play'} size={24} color="white" />
           <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
@@ -225,6 +277,13 @@ export default function BreathingScreen({ navigation }) {
         showsHorizontalScrollIndicator={false}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={{ itemVisiblePercentThreshold: 50 }}
+        accessible={false}
+        accessibilityElementsHidden={false}
+        getItemLayout={(data, index) => ({
+          length: width,
+          offset: width * index,
+          index,
+        })}
       />
       
       <SafeAreaView style={styles.headerBar} edges={['top']}>
@@ -243,7 +302,8 @@ export default function BreathingScreen({ navigation }) {
         style={styles.pagination}
         accessible={true}
         accessibilityRole="text"
-        accessibilityLabel={`Page ${currentIndex + 1} of ${breathingMethods.length}. Current method: ${currentMethod.name}. Swipe left or right to change breathing methods.`}
+        accessibilityLabel={`Page ${currentIndex + 1} of ${breathingMethods.length}. Current method: ${currentMethod.name}. Use accessibility actions on the start button to navigate between methods.`}
+        importantForAccessibility="no-hide-descendants"
       >
         {breathingMethods.map((method, index) => (
           <View
@@ -254,6 +314,7 @@ export default function BreathingScreen({ navigation }) {
               { backgroundColor: index === currentIndex ? currentMethod.color : '#ccc' }
             ]}
             accessible={false}
+            importantForAccessibility="no"
           />
         ))}
       </View>
