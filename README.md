@@ -16,7 +16,7 @@ A mobile application designed to provide comprehensive support for veterans and 
 - **Interpersonal Skills**: DEAR MAN, GIVE
 - **Mindfulness**: Observe, Describe, Participate
 - **Cognitive Techniques**: Thought Records, Behavioral Activation, Exposure
-- **All techniques include citations** from authoritative sources (Harvard Medical School, Mayo Clinic, APA, VA, etc.)
+- **All 19 techniques include citations** from authoritative sources (Harvard Medical School, Mayo Clinic, APA, VA, etc.)
 
 ### 🤖 AI Support Agent
 - Real-time technique suggestions based on user input

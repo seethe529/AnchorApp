@@ -41,8 +41,8 @@
 - Emergency crisis button
 - Clean, accessible interface
 
-### 🛠️ DBT/CBT Tools (30+ Techniques)
-- **Grounding**: 5-4-3-2-1, Box Breathing, Progressive Muscle Relaxation
+### 🛠️ DBT/CBT Tools (19 Evidence-Based Techniques)
+- **Grounding**: 5-4-3-2-1, Box Breathing, 4-7-8 Breathing, Resonant Breathing, Physiological Sigh, Triangle Breathing, Progressive Muscle Relaxation
 - **Distress Tolerance**: TIPP, ACCEPTS, Self-Soothe
 - **Emotion Regulation**: PLEASE, Opposite Action, Check the Facts
 - **Interpersonal Skills**: DEAR MAN, GIVE
@@ -114,7 +114,7 @@
 Anchor is a comprehensive PTSD support app designed specifically for veterans and individuals dealing with trauma, anxiety, and overwhelming moments. Built with evidence-based DBT and CBT techniques, Anchor provides immediate access to grounding exercises, breathing techniques, crisis support, and an AI-powered companion trained in trauma-informed care.
 
 **Key Features:**
-• 30+ evidence-based DBT/CBT techniques with medical citations
+• 19 evidence-based DBT/CBT techniques with medical citations
 • AI support agent "Anchor" for personalized guidance
 • 5 breathing exercise methods with guided animations
 • Crisis support with immediate access to hotlines and resources
