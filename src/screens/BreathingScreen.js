@@ -135,31 +135,6 @@ export default function BreathingScreen({ navigation }) {
 
   const renderMethod = ({ item, index }) => (
     <View style={[styles.methodContainer, { width }]}>
-      <View 
-        style={styles.header}
-        accessible={true}
-        accessibilityRole="header"
-        accessibilityLabel={`${item.name} breathing exercise. ${item.subtitle}. ${item.description}`}
-      >
-        <Text 
-          style={[styles.methodName, { color: theme.text }]}
-          accessibilityElementsHidden={true}
-        >
-          {item.name}
-        </Text>
-        <Text 
-          style={[styles.subtitle, { color: theme.textSecondary }]}
-          accessibilityElementsHidden={true}
-        >
-          {item.subtitle}
-        </Text>
-        <Text 
-          style={[styles.description, { color: theme.textSecondary }]}
-          accessibilityElementsHidden={true}
-        >
-          {item.description}
-        </Text>
-      </View>
 
       <View style={styles.circleContainer}>
         <Animated.View
@@ -313,6 +288,32 @@ export default function BreathingScreen({ navigation }) {
           <Ionicons name="chevron-back" size={32} color="#2E8B57" />
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
+
+        <View 
+          style={styles.methodHeader}
+          accessible={true}
+          accessibilityRole="header"
+          accessibilityLabel={`${currentMethod.name} breathing exercise. ${currentMethod.subtitle}. ${currentMethod.description}`}
+        >
+          <Text 
+            style={[styles.methodName, { color: theme.text }]}
+            accessibilityElementsHidden={true}
+          >
+            {currentMethod.name}
+          </Text>
+          <Text 
+            style={[styles.subtitle, { color: theme.textSecondary }]}
+            accessibilityElementsHidden={true}
+          >
+            {currentMethod.subtitle}
+          </Text>
+          <Text 
+            style={[styles.description, { color: theme.textSecondary }]}
+            accessibilityElementsHidden={true}
+          >
+            {currentMethod.description}
+          </Text>
+        </View>
       </SafeAreaView>
 
       <View 
@@ -348,10 +349,10 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    paddingHorizontal: 8,
-    paddingVertical: 8,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 16,
     zIndex: 10,
-    height: 100,
   },
   backButton: {
     flexDirection: 'row',
@@ -370,11 +371,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 20,
-    paddingTop: 110,
+    paddingTop: 40,
   },
-  header: {
+  methodHeader: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginTop: 16,
     width: '100%',
   },
   methodName: {
