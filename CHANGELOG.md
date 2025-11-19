@@ -2,6 +2,31 @@
 
 All notable changes to the Anchor PTSD Support App will be documented in this file.
 
+## [1.1.0] - Build 16 - 2025-11-19 - APP STORE READY
+
+### Added
+- Working AI Agent with OpenAI GPT-4o-mini integration
+- Proper environment variable configuration for production builds
+- Comprehensive App Store submission documentation
+
+### Fixed
+- AI Agent now responds properly with trauma-informed guidance
+- OpenAI API key properly loaded in production builds
+- All notification systems working reliably
+- Breathing screen layout perfected with no overlapping elements
+
+### Technical
+- Moved to paid EAS organization for priority builds
+- Environment variables configured via EAS secrets
+- Build process optimized for App Store submission
+- All features tested and verified working
+
+### Status
+- ✅ Ready for App Store submission
+- ✅ All core features functional
+- ✅ Accessibility compliance verified
+- ✅ Privacy and security requirements met
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
