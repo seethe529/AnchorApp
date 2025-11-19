@@ -94,42 +94,35 @@ export const scheduleMoodReminder = async () => {
     // Cancel any existing mood reminders first
     await cancelReminderType('mood_reminder');
     
-    // Schedule for 8:00 PM daily (will fire tomorrow if already past 8pm today)
-    const id = await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Daily Check-in",
-        body: "How are you feeling today? Take a moment to log your mood.",
-        data: { type: 'mood_reminder' },
-      },
-      trigger: {
-        hour: 20,
-        minute: 0,
-        repeats: true,
-      },
-    });
+    // Schedule next 7 days of mood reminders at 8:00 PM
+    const ids = [];
+    for (let i = 0; i < 7; i++) {
+      const triggerDate = new Date();
+      triggerDate.setDate(triggerDate.getDate() + i);
+      triggerDate.setHours(20, 0, 0, 0); // 8:00 PM
+      
+      // Skip if the time has already passed today
+      if (i === 0 && triggerDate <= new Date()) {
+        triggerDate.setDate(triggerDate.getDate() + 1);
+      }
+      
+      const id = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: "Daily Check-in",
+          body: "How are you feeling today? Take a moment to log your mood.",
+          data: { type: 'mood_reminder' },
+        },
+        trigger: { date: triggerDate },
+      });
+      ids.push(id);
+    }
     
-    console.log(`✅ Mood reminder scheduled (ID: ${id}) - Daily at 8:00 PM`);
+    console.log(`✅ Mood reminders scheduled (${ids.length} notifications) - Daily at 8:00 PM for next 7 days`);
   } catch (error) {
     console.error('Failed to schedule mood reminder:', error);
   }
 };
 
-export const scheduleMedicationReminder = async (medication) => {
-  if (Platform.OS === 'web') return;
-  
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "Medication Reminder",
-      body: `Time to take your ${medication.name}.`,
-      data: { type: 'medication', medicationId: medication.id },
-    },
-    trigger: {
-      hour: medication.hour,
-      minute: medication.minute,
-      repeats: true,
-    },
-  });
-};
 
 export const scheduleBreathingReminder = async () => {
   if (Platform.OS === 'web') return;
@@ -156,7 +149,7 @@ export const scheduleBreathingReminder = async () => {
           body: randomMessage,
           data: { type: 'breathing_reminder' },
         },
-        trigger: triggerDate,
+        trigger: { date: triggerDate },
       });
       ids.push(id);
     }
@@ -167,13 +160,14 @@ export const scheduleBreathingReminder = async () => {
   }
 };
 
-// Reschedule breathing reminders if running low (called on app foreground)
+// Reschedule reminders if running low (called on app foreground)
 export const recheckBreathingReminders = async () => {
   if (Platform.OS === 'web') return;
   
   try {
     const scheduled = await Notifications.getAllScheduledNotificationsAsync();
     const breathingReminders = scheduled.filter(n => n.content.data?.type === 'breathing_reminder');
+    const moodReminders = scheduled.filter(n => n.content.data?.type === 'mood_reminder');
     
     // Check if any old notifications exist (they won't have the new message format)
     const hasOldNotifications = breathingReminders.some(n => 
@@ -185,8 +179,14 @@ export const recheckBreathingReminders = async () => {
       console.log(`🔄 ${hasOldNotifications ? 'Old notifications detected' : `Only ${breathingReminders.length} reminders left`}, rescheduling...`);
       await scheduleBreathingReminder();
     }
+    
+    // Reschedule mood reminders if less than 3 days left
+    if (moodReminders.length < 3) {
+      console.log(`🔄 Only ${moodReminders.length} mood reminders left, rescheduling...`);
+      await scheduleMoodReminder();
+    }
   } catch (error) {
-    console.error('Failed to recheck breathing reminders:', error);
+    console.error('Failed to recheck reminders:', error);
   }
 };
 
