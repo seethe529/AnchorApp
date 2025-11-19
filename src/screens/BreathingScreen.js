@@ -135,6 +135,36 @@ export default function BreathingScreen({ navigation }) {
 
   const renderMethod = ({ item, index }) => (
     <View style={[styles.methodContainer, { width }]}>
+      
+      <SafeAreaView edges={['top']} style={styles.headerContainer}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          accessibilityLabel="Go back"
+          accessibilityRole="button"
+        >
+          <Ionicons name="chevron-back" size={32} color="#2E8B57" />
+          <Text style={styles.backText}>Back</Text>
+        </TouchableOpacity>
+        
+        <Text 
+          style={[styles.title, { color: theme.text }]}
+          accessible={true}
+          accessibilityRole="header"
+        >
+          {item.name}
+        </Text>
+        <Text 
+          style={[styles.subtitle, { color: theme.textSecondary }]}
+        >
+          {item.subtitle}
+        </Text>
+        <Text 
+          style={[styles.description, { color: theme.textSecondary }]}
+        >
+          {item.description}
+        </Text>
+      </SafeAreaView>
 
       <View style={styles.circleContainer}>
         <Animated.View
@@ -171,17 +201,7 @@ export default function BreathingScreen({ navigation }) {
         </Animated.View>
       </View>
 
-      <View 
-        style={styles.infoContainer}
-        accessible={true}
-        accessibilityRole="text"
-        accessibilityLabel={`
-          ${isActive ? `Current instruction: ${currentPhase.instruction}. ` : ''}
-          Breathing pattern: ${item.pattern.map(phase => `${phase.phase} for ${phase.duration} seconds`).join(', then ')}.
-          ${isActive || completedCycles > 0 ? ` You have completed ${completedCycles} breathing cycles.` : ''}
-        `}
-        accessibilityLiveRegion="polite"
-      >
+      <View style={styles.footerContainer}>
         <View style={styles.instructionContainer}>
           <Text 
             style={[styles.instruction, { color: theme.textSecondary }]}
@@ -212,9 +232,7 @@ export default function BreathingScreen({ navigation }) {
             {isActive || completedCycles > 0 ? `Cycles completed: ${completedCycles}` : ' '}
           </Text>
         </View>
-      </View>
 
-      <View style={styles.controls}>
         <TouchableOpacity
           style={[styles.button, isActive && styles.buttonActive]}
           onPress={toggleActive}
@@ -243,17 +261,30 @@ export default function BreathingScreen({ navigation }) {
           <Ionicons name={isActive ? 'pause' : 'play'} size={24} color="white" />
           <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
         </TouchableOpacity>
-      </View>
 
-      <Text 
-        style={[styles.swipeHint, { color: theme.textSecondary }]}
-        accessible={false}
-        importantForAccessibility="no"
-      >
-        {index > 0 ? '← ' : ''}
-        Swipe to change method
-        {index < breathingMethods.length - 1 ? ' →' : ''}
-      </Text>
+        <View style={{ height: 20 }} />
+
+        <View 
+          style={styles.pagination}
+          accessible={true}
+          accessibilityRole="text"
+          accessibilityLabel={`Page ${index + 1} of ${breathingMethods.length}. Current method: ${item.name}. Use accessibility actions on the start button to navigate between methods.`}
+          importantForAccessibility="no-hide-descendants"
+        >
+          {breathingMethods.map((method, methodIndex) => (
+            <View
+              key={methodIndex}
+              style={[
+                styles.dot,
+                methodIndex === currentIndex && styles.dotActive,
+                { backgroundColor: methodIndex === currentIndex ? item.color : '#ccc' }
+              ]}
+              accessible={false}
+              importantForAccessibility="no"
+            />
+          ))}
+        </View>
+      </View>
     </View>
   );
 
@@ -277,65 +308,6 @@ export default function BreathingScreen({ navigation }) {
           index,
         })}
       />
-      
-      <SafeAreaView style={styles.headerBar} edges={['top']}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-          accessibilityLabel="Go back"
-          accessibilityRole="button"
-        >
-          <Ionicons name="chevron-back" size={32} color="#2E8B57" />
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
-
-        <View 
-          style={styles.methodHeader}
-          accessible={true}
-          accessibilityRole="header"
-          accessibilityLabel={`${currentMethod.name} breathing exercise. ${currentMethod.subtitle}. ${currentMethod.description}`}
-        >
-          <Text 
-            style={[styles.methodName, { color: theme.text }]}
-            accessibilityElementsHidden={true}
-          >
-            {currentMethod.name}
-          </Text>
-          <Text 
-            style={[styles.subtitle, { color: theme.textSecondary }]}
-            accessibilityElementsHidden={true}
-          >
-            {currentMethod.subtitle}
-          </Text>
-          <Text 
-            style={[styles.description, { color: theme.textSecondary }]}
-            accessibilityElementsHidden={true}
-          >
-            {currentMethod.description}
-          </Text>
-        </View>
-      </SafeAreaView>
-
-      <View 
-        style={styles.pagination}
-        accessible={true}
-        accessibilityRole="text"
-        accessibilityLabel={`Page ${currentIndex + 1} of ${breathingMethods.length}. Current method: ${currentMethod.name}. Use accessibility actions on the start button to navigate between methods.`}
-        importantForAccessibility="no-hide-descendants"
-      >
-        {breathingMethods.map((method, index) => (
-          <View
-            key={index}
-            style={[
-              styles.dot,
-              index === currentIndex && styles.dotActive,
-              { backgroundColor: index === currentIndex ? currentMethod.color : '#ccc' }
-            ]}
-            accessible={false}
-            importantForAccessibility="no"
-          />
-        ))}
-      </View>
     </View>
   );
 }
@@ -344,15 +316,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerBar: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: 16,
-    paddingTop: 8,
+  methodContainer: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  headerContainer: {
+    paddingTop: 12,
+    paddingHorizontal: 20,
     paddingBottom: 16,
-    zIndex: 10,
   },
   backButton: {
     flexDirection: 'row',
@@ -360,25 +331,14 @@ const styles = StyleSheet.create({
     padding: 8,
     minWidth: 44,
     minHeight: 44,
+    marginBottom: 8,
   },
   backText: {
     fontSize: 17,
     color: '#2E8B57',
     marginLeft: 4,
   },
-  methodContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 40,
-  },
-  methodHeader: {
-    alignItems: 'center',
-    marginTop: 16,
-    width: '100%',
-  },
-  methodName: {
+  title: {
     fontSize: 28,
     fontWeight: Platform.OS === 'ios' ? '700' : 'bold',
     marginBottom: 4,
@@ -389,6 +349,7 @@ const styles = StyleSheet.create({
     fontSize: 17,
     marginBottom: 12,
     fontWeight: '400',
+    textAlign: 'center',
   },
   description: {
     fontSize: 15,
@@ -397,10 +358,14 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   circleContainer: {
-    height: 250,
-    justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 30,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  footerContainer: {
+    paddingHorizontal: 20,
+    paddingBottom: 60,
+    alignItems: 'center',
   },
   breathingCircle: {
     width: 150,
@@ -429,7 +394,8 @@ const styles = StyleSheet.create({
   instructionContainer: {
     height: 44,
     justifyContent: 'center',
-    marginBottom: 20,
+    marginTop: 6,
+    marginBottom: 24,
   },
   instruction: {
     fontSize: 16,
@@ -456,14 +422,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
   },
-  infoContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  controls: {
-    flexDirection: 'row',
-    marginTop: 20,
-  },
+
+
   button: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -489,17 +449,13 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginLeft: 8,
   },
-  swipeHint: {
-    fontSize: 13,
-    marginTop: 20,
-    marginBottom: 20,
-    fontWeight: '400',
-  },
+
   pagination: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingBottom: 30,
+    marginTop: 24,
+    paddingBottom: 10,
   },
   dot: {
     width: 8,
