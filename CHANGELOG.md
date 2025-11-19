@@ -2,7 +2,19 @@
 
 All notable changes to the Anchor PTSD Support App will be documented in this file.
 
-## [1.1.0] - Build 16 - 2025-11-19 - APP STORE READY
+## [1.1.0] - Build 17 - 2025-11-19 - APP STORE READY
+
+### Added
+- 4 additional breathing methods to techniques database (4-7-8, Resonant, Physiological Sigh, Triangle)
+- Complete integration between breathing exercises and techniques system
+- Expanded to 19 total evidence-based techniques
+
+### Technical
+- All breathing methods now available in both dedicated breathing screen and techniques database
+- Enhanced AI agent keyword matching with breathing technique suggestions
+- Comprehensive technique coverage across all DBT/CBT categories
+
+## [1.1.0] - Build 16 - 2025-11-19 - AI AGENT FIXED
 
 ### Added
 - Working AI Agent with OpenAI GPT-4o-mini integration

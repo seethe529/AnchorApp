@@ -1,11 +1,19 @@
-# Build 16 - App Store Submission Ready
+# Build 17 - App Store Submission Ready
 
 **Version**: 1.1.0  
-**Build Number**: 16  
+**Build Number**: 17  
 **Submission Date**: November 19, 2025  
 **Status**: Ready for App Store Review
 
-## Build 16 Improvements
+## Build 17 Improvements
+
+### 🛠️ Expanded Techniques Database
+- ✅ Added 4 additional breathing methods to techniques database
+- ✅ Now includes 4-7-8 Breathing, Resonant Breathing, Physiological Sigh, Triangle Breathing
+- ✅ Total of 19 evidence-based techniques with examples and keywords
+- ✅ Complete integration between breathing screen and techniques database
+
+## Build 16 Improvements (Included)
 
 ### 🤖 AI Agent - FIXED
 - ✅ OpenAI API key properly configured via EAS environment variables
