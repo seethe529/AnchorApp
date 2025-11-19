@@ -41,7 +41,7 @@ export default {
     extra: {
       openaiApiKey: process.env.OPENAI_API_KEY || "",
       eas: {
-        projectId: "4609714b-3491-4121-8a80-0a47549079d1"
+        projectId: "9236cf4b-f063-48b4-9928-ed9f29fe5385"
       }
     }
   }
