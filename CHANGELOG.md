@@ -9,10 +9,15 @@ All notable changes to the Anchor PTSD Support App will be documented in this fi
 - Complete integration between breathing exercises and techniques system
 - Expanded to 19 total evidence-based techniques
 
+### Fixed
+- Notification rescheduling loop with 30-second cooldown mechanism
+- Improved app performance by preventing rapid successive notification calls
+
 ### Technical
 - All breathing methods now available in both dedicated breathing screen and techniques database
 - Enhanced AI agent keyword matching with breathing technique suggestions
 - Comprehensive technique coverage across all DBT/CBT categories
+- Optimized notification system for better battery usage
 
 ## [1.1.0] - Build 16 - 2025-11-19 - AI AGENT FIXED
 
