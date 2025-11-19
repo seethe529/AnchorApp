@@ -161,8 +161,18 @@ export const scheduleBreathingReminder = async () => {
 };
 
 // Reschedule reminders if running low (called on app foreground)
+let lastRecheckTime = 0;
+const RECHECK_COOLDOWN = 30000; // 30 seconds
+
 export const recheckBreathingReminders = async () => {
   if (Platform.OS === 'web') return;
+  
+  // Prevent rapid successive calls
+  const now = Date.now();
+  if (now - lastRecheckTime < RECHECK_COOLDOWN) {
+    return;
+  }
+  lastRecheckTime = now;
   
   try {
     const scheduled = await Notifications.getAllScheduledNotificationsAsync();
