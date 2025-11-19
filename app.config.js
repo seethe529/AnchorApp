@@ -2,6 +2,7 @@ export default {
   expo: {
     name: "Anchor - PTSD Support",
     slug: "anchor-ptsd-support",
+    owner: "ryan-charles-lingo",
     version: "1.1.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
