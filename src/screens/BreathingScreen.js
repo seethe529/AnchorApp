@@ -136,35 +136,6 @@ export default function BreathingScreen({ navigation }) {
   const renderMethod = ({ item, index }) => (
     <View style={[styles.methodContainer, { width }]}>
       
-      <SafeAreaView edges={['top']} style={styles.headerContainer}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-          accessibilityLabel="Go back"
-          accessibilityRole="button"
-        >
-          <Ionicons name="chevron-back" size={32} color="#2E8B57" />
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
-        
-        <Text 
-          style={[styles.title, { color: theme.text }]}
-          accessible={true}
-          accessibilityRole="header"
-        >
-          {item.name}
-        </Text>
-        <Text 
-          style={[styles.subtitle, { color: theme.textSecondary }]}
-        >
-          {item.subtitle}
-        </Text>
-        <Text 
-          style={[styles.description, { color: theme.textSecondary }]}
-        >
-          {item.description}
-        </Text>
-      </SafeAreaView>
 
       <View style={styles.circleContainer}>
         <Animated.View
@@ -264,32 +235,34 @@ export default function BreathingScreen({ navigation }) {
 
         <View style={{ height: 20 }} />
 
-        <View 
-          style={styles.pagination}
-          accessible={true}
-          accessibilityRole="text"
-          accessibilityLabel={`Page ${index + 1} of ${breathingMethods.length}. Current method: ${item.name}. Use accessibility actions on the start button to navigate between methods.`}
-          importantForAccessibility="no-hide-descendants"
-        >
-          {breathingMethods.map((method, methodIndex) => (
-            <View
-              key={methodIndex}
-              style={[
-                styles.dot,
-                methodIndex === currentIndex && styles.dotActive,
-                { backgroundColor: methodIndex === currentIndex ? item.color : '#ccc' }
-              ]}
-              accessible={false}
-              importantForAccessibility="no"
-            />
-          ))}
-        </View>
+        
       </View>
     </View>
   );
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <SafeAreaView edges={['top']} style={styles.headerContainer}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+          accessibilityLabel="Go back"
+          accessibilityRole="button"
+        >
+          <Ionicons name="chevron-back" size={32} color="#2E8B57" />
+          <Text style={styles.backText}>Back</Text>
+        </TouchableOpacity>
+
+        <Text style={[styles.title, { color: theme.text }]}>
+          {breathingMethods[currentIndex].name}
+        </Text>
+        <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
+          {breathingMethods[currentIndex].subtitle}
+        </Text>
+        <Text style={[styles.description, { color: theme.textSecondary }]}>
+          {breathingMethods[currentIndex].description}
+        </Text>
+      </SafeAreaView>
       <FlatList
         ref={flatListRef}
         data={breathingMethods}
@@ -308,6 +281,18 @@ export default function BreathingScreen({ navigation }) {
           index,
         })}
       />
+      <View style={styles.pagination}>
+        {breathingMethods.map((method, methodIndex) => (
+          <View
+            key={methodIndex}
+            style={[
+              styles.dot,
+              methodIndex === currentIndex && styles.dotActive,
+              { backgroundColor: methodIndex === currentIndex ? breathingMethods[currentIndex].color : '#ccc' }
+            ]}
+          />
+        ))}
+      </View>
     </View>
   );
 }
@@ -318,7 +303,8 @@ const styles = StyleSheet.create({
   },
   methodContainer: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+    paddingTop: 40,
   },
   headerContainer: {
     paddingTop: 12,
@@ -359,8 +345,8 @@ const styles = StyleSheet.create({
   },
   circleContainer: {
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: 60,
+    marginBottom: 60,
   },
   footerContainer: {
     paddingHorizontal: 20,
