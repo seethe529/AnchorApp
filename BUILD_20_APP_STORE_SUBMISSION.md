@@ -1,22 +1,30 @@
-# Build 17 - App Store Submission Ready
+# Build 20 - App Store Submission Ready
 
 **Version**: 1.1.0  
-**Build Number**: 17  
-**Submission Date**: November 19, 2025  
+**Build Number**: 20  
+**Submission Date**: January 2025  
 **Status**: Ready for App Store Review
 
-## Build 17 Improvements
+## Build 20 Improvements
+
+### 🔔 Midnight Auto-Reset Notification System
+- ✅ Complete notification system rewrite with midnight auto-reset architecture
+- ✅ Date-based triggers only (no interval triggers, no AppState listeners)
+- ✅ Silent system notification at midnight regenerates all notifications automatically
+- ✅ 24 hourly breathing reminders with 25 randomized DBT/CBT messages
+- ✅ 7-day mood check-in reminders at 8 PM daily
+- ✅ Opt-in notification permissions (default off, user must enable)
+- ✅ Debug notification viewer in Settings for troubleshooting
+- ✅ DEV_MODE flag for testing (3 notifications/60s) vs production (24/hour)
+- ✅ Zero immediate firing, zero spam, self-perpetuating system
+
+## Build 17-19 Improvements (Included)
 
 ### 🛠️ Expanded Techniques Database
 - ✅ Added 4 additional breathing methods to techniques database
 - ✅ Now includes 4-7-8 Breathing, Resonant Breathing, Physiological Sigh, Triangle Breathing
 - ✅ Total of 19 evidence-based techniques with examples and keywords
 - ✅ Complete integration between breathing screen and techniques database
-
-### 🔧 Notification System Optimization
-- ✅ Fixed notification rescheduling loop with 30-second cooldown
-- ✅ Prevents rapid successive notification scheduling calls
-- ✅ Improved app performance and battery usage
 
 ## Build 16 Improvements (Included)
 
@@ -193,7 +201,7 @@ PTSD, anxiety, DBT, CBT, mental health, veterans, trauma, breathing, mindfulness
 ## Submission Readiness
 
 ### Build Status
-- ✅ Build 16 compiled successfully
+- ✅ Build 20 compiled successfully
 - ✅ All environment variables configured
 - ✅ Apple certificates and provisioning profiles valid
 - ✅ App Store Connect metadata ready
@@ -215,4 +223,4 @@ PTSD, anxiety, DBT, CBT, mental health, veterans, trauma, breathing, mindfulness
 
 ---
 
-**Build 16 represents the culmination of extensive development and testing. This version is production-ready and will provide immediate value to veterans and individuals dealing with PTSD and trauma.**
+**Build 20 represents the culmination of extensive development and testing, featuring a revolutionary midnight auto-reset notification system that ensures reliable, spam-free reminders. This version is production-ready and will provide immediate value to veterans and individuals dealing with PTSD and trauma.**
