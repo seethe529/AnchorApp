@@ -98,7 +98,18 @@ npm run android # for Android
 - `src/utils/storage.js` - AsyncStorage wrapper with error handling
 - `src/services/openai.js` - OpenAI API integration
 
-## Recent Updates (Build 17 - App Store Ready)
+## Recent Updates (Build 20 - Production)
+
+### Build 20 - Midnight Auto-Reset System ✅ COMPLETE
+- ✅ Complete notification system rewrite with midnight auto-reset architecture
+- ✅ Date-based triggers only (no interval triggers, no AppState listeners)
+- ✅ Silent system notification at midnight regenerates all notifications automatically
+- ✅ 24 hourly breathing reminders with 25 randomized DBT/CBT messages
+- ✅ 7-day mood check-in reminders at 8 PM daily
+- ✅ Opt-in notification permissions (default off, user must enable)
+- ✅ Debug notification viewer in Settings for troubleshooting
+- ✅ DEV_MODE flag for testing (3 notifications/60s) vs production (24/hour)
+- ✅ Zero immediate firing, zero spam, self-perpetuating system
 
 ### Build 17 - Final App Store Version ✅ COMPLETE
 - ✅ Expanded to 19 evidence-based techniques (added all breathing methods)
@@ -107,14 +118,6 @@ npm run android # for Android
 - ✅ Optimized notification rescheduling with cooldown prevention
 - ✅ Perfect breathing screen layout with no overlapping elements
 - ✅ All features fully functional and tested
-- ✅ Ready for App Store submission
-
-### Build 16 - AI Agent Fixed ✅ COMPLETE
-- ✅ Working AI Agent with proper OpenAI API integration
-- ✅ Fixed notification system with reliable date-based triggers
-- ✅ Perfect breathing screen layout with no overlapping elements
-- ✅ All features fully functional and tested
-- ✅ Ready for App Store submission
 
 ### Dark Mode (Build 14) ✅ COMPLETE
 - ✅ Global dark mode support with comprehensive ThemeContext
