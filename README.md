@@ -111,7 +111,7 @@ npm run android # for Android
 - ✅ DEV_MODE flag for testing (3 notifications/60s) vs production (24/hour)
 - ✅ Zero immediate firing, zero spam, self-perpetuating system
 
-### Build 17 - Final App Store Version ✅ COMPLETE
+### Build 17-20 - App Store Versions ✅ COMPLETE
 - ✅ Expanded to 19 evidence-based techniques (added all breathing methods)
 - ✅ Working AI Agent with proper OpenAI API integration
 - ✅ Fixed notification system with reliable date-based triggers
