@@ -31,7 +31,7 @@ Anchor is a React Native mobile application built with Expo, designed to provide
 ```
 src/
 ├── data/
-│   ├── techniques.js       # 30+ DBT/CBT techniques database
+│   ├── techniques.js       # 19 DBT/CBT techniques database
 │   ├── citations.js        # Medical citations from authoritative sources
 │   └── dailyReminders.js   # 150+ trauma-informed reminders
 ├── utils/
@@ -178,21 +178,21 @@ STORAGE_KEYS = {
 - Offline detection
 - Quick help buttons for common needs
 
-### 9. Enhanced Notification System
+### 9. Midnight Auto-Reset Notification System (Build 20+)
 
 **Features:**
-- Master notification toggle with permission gating
-- Daily mood check-in reminders (8:00 PM)
-- Hourly breathing exercise reminders (24 individual notifications)
-- Auto-reschedule when less than 12 hours remain
-- AppState listener for automatic refresh
-- 25 randomized breathing reminder messages
+- Opt-in notification permissions (default off)
+- Daily mood check-in reminders (8:00 PM, 7 days)
+- Breathing exercise reminders (90-minute intervals, 16 notifications)
+- Silent midnight reset notification regenerates all notifications automatically
+- 25 randomized DBT/CBT breathing reminder messages
+- Debug notification viewer in Settings
 
-**iOS-Specific Fixes:**
-- Schedule 24 individual hourly notifications (iOS doesn't support seconds with repeats)
-- Notifications fire on the hour (:00 minutes/seconds)
-- Proper deduplication and cancellation
-- Error logging for debugging
+**Technical Implementation:**
+- Date-based triggers only (no interval triggers, no AppState listeners)
+- Self-perpetuating system via midnight reset
+- Zero immediate firing, zero spam
+- DEV_MODE flag for testing (3 notifications/60s) vs production (16/90min)
 
 ### 10. Medical Citations (Apple Guideline 1.4.1)
 - Citations from Harvard Medical School, Mayo Clinic, APA, VA
@@ -265,9 +265,9 @@ Displays response with auto-scroll
 
 ### Current Build Status
 - **Current Version:** 1.1.0
-- **Current Build:** 14 (in development)
-- **Last Released:** Build 10 (App Store)
-- **Last TestFlight:** Build 12
+- **Current Build:** 21 (in development)
+- **Last Released:** Build 17 (App Store)
+- **Last TestFlight:** Build 20
 
 ### EAS Build Configuration
 ```javascript
@@ -276,7 +276,7 @@ Displays response with auto-scroll
   "build": {
     "production": {
       "ios": {
-        "buildNumber": "14",
+        "buildNumber": "21",
         "bundleIdentifier": "com.anchor.ptsd-support"
       }
     }
@@ -289,7 +289,7 @@ Displays response with auto-scroll
 // app.config.js
 {
   version: "1.1.0",
-  buildNumber: "14",
+  buildNumber: "21",
   supportsTablet: false,  // iPhone only
   permissions: [
     "NSLocationWhenInUseUsageDescription",  // Crisis center finder
@@ -433,6 +433,6 @@ Anchor is open source (MIT License) to help others build mental health apps. The
 
 ---
 
-**Last Updated:** November 2025 (Build 14)
-**Status:** Build 10 live on App Store, Build 14 in development
+**Last Updated:** November 2025 (Build 21)
+**Status:** Build 17 live on App Store, Build 21 in development
 **License:** MIT
