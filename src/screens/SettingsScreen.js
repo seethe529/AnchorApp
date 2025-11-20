@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
-import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder } from '../utils/notifications';
+import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled } from '../utils/notifications';
 import Constants from 'expo-constants';
 import { useTheme } from '../context/ThemeContext';
 
@@ -264,7 +264,20 @@ export default function SettingsScreen({ navigation }) {
           <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
         </TouchableOpacity>
 
-
+        <TouchableOpacity 
+          style={styles.actionButton} 
+          onPress={debugListScheduled}
+          accessibilityLabel="Debug Notifications"
+          accessibilityHint="View scheduled notifications in console"
+          accessibilityRole="button"
+        >
+          <Ionicons name="bug" size={24} color={theme.primary} />
+          <View style={styles.actionInfo}>
+            <Text style={[styles.actionTitle, { color: theme.text }]}>Debug Notifications</Text>
+            <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>Log scheduled notifications</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
+        </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.actionButton} 
