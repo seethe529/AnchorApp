@@ -463,7 +463,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 24,
-    paddingBottom: 10,
+    paddingBottom: 40,
   },
   dot: {
     width: 8,
