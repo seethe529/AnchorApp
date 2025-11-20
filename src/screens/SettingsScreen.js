@@ -26,7 +26,7 @@ export default function SettingsScreen({ navigation }) {
         // Set defaults only if no saved preferences
         const defaults = {
           darkMode: false,
-          notifications: true,
+          notifications: false,
           moodReminders: false,
           breathingReminders: false,
           hapticFeedback: true

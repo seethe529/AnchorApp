@@ -70,7 +70,6 @@ function AppContent() {
 
   const initializeApp = async () => {
     try {
-      await requestPermissions();
       await checkDisclaimer();
     } catch (error) {
       ErrorLogger.log(error, 'App initialization');
