@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
-
+import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder } from '../utils/notifications';
 import Constants from 'expo-constants';
 import { useTheme } from '../context/ThemeContext';
-import { requestNotificationPermissions, scheduleDailyReminder, cancelDailyReminder } from '../utils/notifications';
 
 const APP_VERSION = Constants.expoConfig?.version || '1.0.0';
 
@@ -27,6 +26,7 @@ export default function SettingsScreen({ navigation }) {
         // Set defaults only if no saved preferences
         const defaults = {
           darkMode: false,
+          notifications: true,
           moodReminders: false,
           breathingReminders: false,
           hapticFeedback: true
@@ -57,27 +57,44 @@ export default function SettingsScreen({ navigation }) {
       return;
     }
     
-    const newPreferences = { ...preferences, [key]: !preferences[key] };
-    await savePreferences(newPreferences);
-    
-    // Handle daily reminder
-    if (key === 'dailyReminder') {
-      if (newPreferences.dailyReminder) {
-        const granted = await requestNotificationPermissions();
-        if (granted) {
-          await scheduleDailyReminder();
-          Alert.alert('Reminder Set', 'You\'ll receive a gentle check-in at 9:00 AM each day.');
-        } else {
-          Alert.alert('Permission Required', 'Please enable notifications in Settings.');
-          await savePreferences({ ...newPreferences, dailyReminder: false });
+    // Master notifications toggle
+    if (key === 'notifications') {
+      if (!preferences.notifications) {
+        const granted = await requestPermissions();
+        if (!granted) {
+          Alert.alert(
+            'Permission Required',
+            'Please enable notifications in your device settings.',
+            [{ text: 'OK' }]
+          );
+          return;
         }
       } else {
-        await cancelDailyReminder();
-        Alert.alert('Disabled', 'Daily reminders have been turned off.');
+        await cancelMoodReminder();
+        await cancelBreathingReminder();
       }
     }
     
-
+    const newPreferences = { ...preferences, [key]: !preferences[key] };
+    await savePreferences(newPreferences);
+    
+    if (!newPreferences.notifications) return;
+    
+    if (key === 'moodReminders') {
+      if (newPreferences.moodReminders) {
+        await scheduleMoodReminder();
+      } else {
+        await cancelMoodReminder();
+      }
+    }
+    
+    if (key === 'breathingReminders') {
+      if (newPreferences.breathingReminders) {
+        await scheduleBreathingReminder();
+      } else {
+        await cancelBreathingReminder();
+      }
+    }
   };
 
   const clearAllData = () => {
@@ -177,11 +194,12 @@ export default function SettingsScreen({ navigation }) {
         { key: 'darkMode', title: 'Dark Mode', subtitle: 'Reduce eye strain at night' }
       ]
     },
-
     {
-      title: 'Reminders',
+      title: 'Notifications',
       items: [
-        { key: 'dailyReminder', title: 'Daily Check-in', subtitle: 'Gentle reminder at 9:00 AM' }
+        { key: 'notifications', title: 'Enable Notifications', subtitle: 'Receive app notifications' },
+        { key: 'moodReminders', title: 'Daily Mood Check-ins', subtitle: 'Remind me to log my mood' },
+        { key: 'breathingReminders', title: 'Breathing Reminders', subtitle: 'Periodic breathing exercise prompts' }
       ]
     },
     {
