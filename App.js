@@ -16,7 +16,7 @@ import ResourcesScreen from './src/screens/ResourcesScreen';
 import BreathingExercise from './src/components/BreathingExercise';
 import BreathingScreen from './src/screens/BreathingScreen';
 import SafetyPlan from './src/components/SafetyPlan';
-import { setupNotifications, recheckBreathingReminders } from './src/utils/notifications';
+
 import { storage } from './src/utils/storage';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import ErrorLogger from './src/utils/errorLogger';
@@ -66,14 +66,10 @@ function AppContent() {
   useEffect(() => {
     initializeApp();
     
-    // Recheck breathing reminders when app comes to foreground
+    // App state listener for future use
     const subscription = AppState.addEventListener('change', async (nextAppState) => {
       if (nextAppState === 'active') {
-        try {
-          await recheckBreathingReminders();
-        } catch (error) {
-          ErrorLogger.log(error, 'Breathing reminder recheck');
-        }
+        // App became active - future functionality can be added here
       }
     });
     
@@ -82,7 +78,7 @@ function AppContent() {
 
   const initializeApp = async () => {
     try {
-      await setupNotifications();
+      // Notifications removed
       await checkDisclaimer();
     } catch (error) {
       ErrorLogger.log(error, 'App initialization');
