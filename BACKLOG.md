@@ -277,4 +277,4 @@ Notifications are currently broken - scheduling functions exist in `src/utils/no
 
 ---
 
-Last Updated: January 2025
+Last Updated: November 2025

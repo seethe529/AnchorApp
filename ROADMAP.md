@@ -192,7 +192,7 @@ This document tracks planned features, enhancements, and ideas for future versio
 - ✅ **Breathing Exercises (Build 10):** 5 swipeable methods with haptic feedback
 - ✅ **Medical Citations (Build 9):** Harvard, Mayo Clinic, APA, VA sources
 
-### Version 1.0.0 (Released January 2025)
+### Version 1.0.0 (Released November 2025)
 - ✅ 30+ DBT/CBT techniques across 6 categories
 - ✅ AI Support with OpenAI GPT-4 integration
 - ✅ Mood tracking and progress analytics
@@ -225,5 +225,5 @@ This document tracks planned features, enhancements, and ideas for future versio
 
 ---
 
-**Last Updated:** January 2025 (Build 14)  
+**Last Updated:** November 2025 (Build 14)  
 **Next Review:** After v1.1.0 release and user feedback analysis

@@ -149,7 +149,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.1.0] - 2025-01-XX (Build 12 - TestFlight)
 
-**Status:** Submitted to TestFlight (Build 12 - January 2025)
+**Status:** Submitted to TestFlight (Build 12 - November 2025)
 
 ### Fixed (Build 12)
 - **iOS Notification Fixes:**

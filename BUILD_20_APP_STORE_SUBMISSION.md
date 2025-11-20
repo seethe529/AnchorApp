@@ -2,7 +2,7 @@
 
 **Version**: 1.1.0  
 **Build Number**: 20  
-**Submission Date**: January 2025  
+**Submission Date**: November 2025  
 **Status**: Ready for App Store Review
 
 ## Build 20 Improvements
@@ -161,7 +161,7 @@ PTSD, anxiety, DBT, CBT, mental health, veterans, trauma, breathing, mindfulness
 - Secondary: Health & Fitness
 
 ### Age Rating
-- 12+ (Infrequent/Mild Medical/Treatment Information)
+- 16+ (Infrequent/Mild Medical/Treatment Information)
 
 ### Support Information
 - **Support URL**: https://seethe529.github.io/AnchorApp/

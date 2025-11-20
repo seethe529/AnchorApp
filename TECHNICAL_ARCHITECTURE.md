@@ -392,7 +392,7 @@ src/__tests__/
 - **Apple Rejections:** 3 iterations (Builds 1, 5, 7)
 - **Citation Implementation:** Build 8-9
 - **Total Time to Approval:** ~1 month
-- **Final Build:** Build 9 (Approved January 2025)
+- **Final Build:** Build 9 (Approved November 2025)
 
 ## Open Source
 
@@ -433,6 +433,6 @@ Anchor is open source (MIT License) to help others build mental health apps. The
 
 ---
 
-**Last Updated:** January 2025 (Build 14)
+**Last Updated:** November 2025 (Build 14)
 **Status:** Build 10 live on App Store, Build 14 in development
 **License:** MIT

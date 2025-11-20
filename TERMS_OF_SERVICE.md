@@ -1,6 +1,6 @@
 # Terms of Service for Anchor - PTSD Support
 
-**Last Updated:** January 2025
+**Last Updated:** November 2025
 
 ## Acceptance of Terms
 
