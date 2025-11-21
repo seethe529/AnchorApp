@@ -308,8 +308,8 @@ export const scheduleDailyReset = async () => {
     // Schedule silent system notification for midnight
     const id = await Notifications.scheduleNotificationAsync({
       content: {
-        title: "", //System Reset Keep empty so user sees nothing
-        body: "",
+        title: " ", //System Reset Keep empty string so user sees nothing
+        body: " ",
         data: { type: 'system_reset' },
         sound: null,
       },
