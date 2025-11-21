@@ -43,7 +43,7 @@ const BREATHING_REMINDER_MESSAGES = [
 /*************************************************
  * CONFIGURATION
  *************************************************/
-const DEV_MODE = true; // Set to true for testing
+const DEV_MODE = false; // Set to true for testing
 const MOOD_DAYS = DEV_MODE ? 2 : 7;
 const BREATHING_COUNT = DEV_MODE ? 3 : 16;
 const BREATHING_INTERVAL = DEV_MODE ? 60 : 5400; // seconds (90 minutes)
