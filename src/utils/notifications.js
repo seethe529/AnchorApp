@@ -396,7 +396,7 @@ export const exportScheduledNotifications = async () => {
         type: n.content.data?.type || 'unknown',
         title: n.content.title,
         body: n.content.body,
-        triggerDate: n.trigger?.value ? new Date(n.trigger.value * 1000).toISOString() : 'unknown'
+        triggerDate: n.trigger?.date ? new Date(n.trigger.date).toISOString() : (n.trigger?.value ? new Date(n.trigger.value * 1000).toISOString() : 'unknown')
       }))
     };
   } catch (e) {
