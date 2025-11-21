@@ -377,6 +377,11 @@ export const exportScheduledNotifications = async () => {
   try {
     const scheduled = await Notifications.getAllScheduledNotificationsAsync();
     
+    // Debug: log first notification trigger structure
+    if (scheduled.length > 0) {
+      console.log('🔍 [NOTIF] Sample trigger structure:', JSON.stringify(scheduled[0].trigger, null, 2));
+    }
+    
     const byType = {
       mood: scheduled.filter(n => n.content.data?.type === 'mood_reminder'),
       breathing: scheduled.filter(n => n.content.data?.type === 'breathing_reminder'),
