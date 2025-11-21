@@ -377,11 +377,6 @@ export const exportScheduledNotifications = async () => {
   try {
     const scheduled = await Notifications.getAllScheduledNotificationsAsync();
     
-    // Debug: log first notification trigger structure
-    if (scheduled.length > 0) {
-      console.log('🔍 [NOTIF] Sample trigger structure:', JSON.stringify(scheduled[0].trigger, null, 2));
-    }
-    
     const byType = {
       mood: scheduled.filter(n => n.content.data?.type === 'mood_reminder'),
       breathing: scheduled.filter(n => n.content.data?.type === 'breathing_reminder'),
@@ -396,11 +391,13 @@ export const exportScheduledNotifications = async () => {
         breathingReminders: byType.breathing.length,
         midnightReset: byType.reset.length
       },
+      debugTriggerSample: scheduled.length > 0 ? scheduled[0].trigger : null,
       notifications: scheduled.map(n => ({
         id: n.identifier,
         type: n.content.data?.type || 'unknown',
         title: n.content.title,
         body: n.content.body,
+        trigger: n.trigger,
         triggerDate: n.trigger?.date ? new Date(n.trigger.date).toISOString() : (n.trigger?.value ? new Date(n.trigger.value * 1000).toISOString() : 'unknown')
       }))
     };
