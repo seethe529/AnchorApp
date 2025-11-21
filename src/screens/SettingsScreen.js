@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
-import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled } from '../utils/notifications';
+import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled, exportScheduledNotifications } from '../utils/notifications';
 import Constants from 'expo-constants';
 import { useTheme } from '../context/ThemeContext';
 
@@ -202,6 +202,27 @@ export default function SettingsScreen({ navigation }) {
     }
   };
 
+  const exportNotifications = async () => {
+    try {
+      const notifData = await exportScheduledNotifications();
+      
+      if (!notifData) {
+        Alert.alert('Error', 'Unable to export notifications. Platform not supported.');
+        return;
+      }
+
+      const jsonString = JSON.stringify(notifData, null, 2);
+      
+      await Share.share({
+        message: jsonString,
+        title: 'Scheduled Notifications Export'
+      });
+    } catch (error) {
+      console.error('Export notifications error:', error);
+      Alert.alert('Error', 'Failed to export notifications. Please try again.');
+    }
+  };
+
   const settingSections = [
     {
       title: 'Appearance',
@@ -281,15 +302,15 @@ export default function SettingsScreen({ navigation }) {
 
         <TouchableOpacity 
           style={styles.actionButton} 
-          onPress={debugListScheduled}
-          accessibilityLabel="Debug Notifications"
-          accessibilityHint="View scheduled notifications in console"
+          onPress={exportNotifications}
+          accessibilityLabel="Export Notifications"
+          accessibilityHint="Share scheduled notifications data"
           accessibilityRole="button"
         >
-          <Ionicons name="bug" size={24} color={theme.primary} />
+          <Ionicons name="notifications" size={24} color={theme.primary} />
           <View style={styles.actionInfo}>
-            <Text style={[styles.actionTitle, { color: theme.text }]}>Debug Notifications</Text>
-            <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>Log scheduled notifications</Text>
+            <Text style={[styles.actionTitle, { color: theme.text }]}>Export Notifications</Text>
+            <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>View scheduled reminders</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
         </TouchableOpacity>

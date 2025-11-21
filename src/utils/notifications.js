@@ -368,3 +368,39 @@ export const debugListScheduled = async () => {
     console.error('❌ [NOTIF] Failed to list scheduled notifications:', e);
   }
 };
+
+export const exportScheduledNotifications = async () => {
+  if (Platform.OS === 'web' || !Notifications) {
+    return null;
+  }
+
+  try {
+    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
+    
+    const byType = {
+      mood: scheduled.filter(n => n.content.data?.type === 'mood_reminder'),
+      breathing: scheduled.filter(n => n.content.data?.type === 'breathing_reminder'),
+      reset: scheduled.filter(n => n.content.data?.type === 'system_reset'),
+    };
+    
+    return {
+      exportDate: new Date().toISOString(),
+      totalScheduled: scheduled.length,
+      summary: {
+        moodReminders: byType.mood.length,
+        breathingReminders: byType.breathing.length,
+        midnightReset: byType.reset.length
+      },
+      notifications: scheduled.map(n => ({
+        id: n.identifier,
+        type: n.content.data?.type || 'unknown',
+        title: n.content.title,
+        body: n.content.body,
+        triggerDate: n.trigger?.value ? new Date(n.trigger.value * 1000).toISOString() : 'unknown'
+      }))
+    };
+  } catch (e) {
+    console.error('❌ [NOTIF] Failed to export notifications:', e);
+    return null;
+  }
+};
