@@ -387,6 +387,12 @@ export const exportScheduledNotifications = async () => {
       reset: scheduled.filter(n => n.content.data?.type === 'system_reset'),
     };
     
+    // Calculate next midnight for diagnostics
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setDate(midnight.getDate() + 1);
+    midnight.setHours(0, 0, 0, 0);
+    
     return {
       exportDate: new Date().toISOString(),
       totalScheduled: scheduled.length,
@@ -394,6 +400,16 @@ export const exportScheduledNotifications = async () => {
         moodReminders: byType.mood.length,
         breathingReminders: byType.breathing.length,
         midnightReset: byType.reset.length
+      },
+      midnightResetDiagnostics: {
+        expectedMidnight: midnight.toISOString(),
+        resetNotificationsFound: byType.reset.length,
+        resetNotifications: byType.reset.map(n => ({
+          id: n.identifier,
+          title: n.content.title,
+          body: n.content.body,
+          trigger: n.trigger
+        }))
       },
       debugTriggerSample: scheduled.length > 0 ? scheduled[0].trigger : null,
       notifications: scheduled.map(n => ({
