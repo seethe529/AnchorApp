@@ -64,7 +64,7 @@ export default function SettingsScreen({ navigation }) {
         if (!granted) {
           Alert.alert(
             'Permission Required',
-            'Please enable notifications in your device settings.',
+            'Please enable notifications in your device settings to use reminders.',
             [{ text: 'OK' }]
           );
           return;
@@ -72,6 +72,21 @@ export default function SettingsScreen({ navigation }) {
       } else {
         await cancelMoodReminder();
         await cancelBreathingReminder();
+      }
+    }
+    
+    // Check permissions for mood/breathing reminders
+    if (key === 'moodReminders' || key === 'breathingReminders') {
+      if (!preferences[key]) { // Trying to turn ON
+        const granted = await requestPermissions();
+        if (!granted) {
+          Alert.alert(
+            'Notifications Required',
+            'Please enable notifications first to receive reminders.',
+            [{ text: 'OK' }]
+          );
+          return;
+        }
       }
     }
     
