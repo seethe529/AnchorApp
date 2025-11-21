@@ -306,6 +306,8 @@ export const scheduleDailyReset = async () => {
     midnight.setHours(0, 0, 0, 0);
     
     // Schedule silent system notification for midnight (disguised as breathing reminder)
+    console.log(`🌙 [NOTIF] Attempting to schedule reset for: ${midnight.toLocaleString()}`);
+    
     const id = await Notifications.scheduleNotificationAsync({
       content: {
         title: "Quiet Update",
@@ -316,9 +318,11 @@ export const scheduleDailyReset = async () => {
       trigger: { type: 'date', date: midnight },
     });
     
-    console.log(`✅ [NOTIF] Daily reset scheduled for: ${midnight.toLocaleString()} (ID: ${id})`);
+    console.log(`✅ [NOTIF] Daily reset scheduled successfully (ID: ${id})`);
+    console.log(`🔍 [NOTIF] Midnight date object:`, midnight);
   } catch (e) {
     console.error('❌ [NOTIF] Daily reset schedule fail:', e);
+    console.error('❌ [NOTIF] Error details:', JSON.stringify(e, null, 2));
   }
 };
 
