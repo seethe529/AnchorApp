@@ -309,7 +309,7 @@ export const scheduleDailyReset = async () => {
     const id = await Notifications.scheduleNotificationAsync({
       content: {
         title: "Breathing Break",
-        body: "Take a moment to breathe and reset.",
+        body: "A gentle check-in moment.",
         data: { type: 'system_reset' },
         sound: null,
       },
