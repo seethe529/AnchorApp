@@ -308,8 +308,8 @@ export const scheduleDailyReset = async () => {
     // Schedule silent system notification for midnight (disguised as breathing reminder)
     const id = await Notifications.scheduleNotificationAsync({
       content: {
-        title: "Breathing Break",
-        body: "A gentle check-in moment.",
+        title: "Quiet Update",
+        body: "Refreshing your reminders.",
         data: { type: 'system_reset' },
         sound: null,
       },
