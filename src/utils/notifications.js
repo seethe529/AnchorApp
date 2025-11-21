@@ -308,8 +308,8 @@ export const scheduleDailyReset = async () => {
     // Schedule silent system notification for midnight
     const id = await Notifications.scheduleNotificationAsync({
       content: {
-        title: "\u200B", //System Reset - zero-width space so user sees nothing
-        body: "\u200B",
+        title: "System Maintenance",
+        body: "Updating reminders...",
         data: { type: 'system_reset' },
         sound: null,
       },
@@ -398,7 +398,7 @@ export const exportScheduledNotifications = async () => {
         title: n.content.title,
         body: n.content.body,
         trigger: n.trigger,
-        triggerDate: n.trigger?.date ? new Date(n.trigger.date).toISOString() : (n.trigger?.value ? new Date(n.trigger.value * 1000).toISOString() : 'unknown')
+        triggerDate: n.trigger?.seconds ? new Date(Date.now() + (n.trigger.seconds * 1000)).toISOString() : (n.trigger?.date ? new Date(n.trigger.date).toISOString() : (n.trigger?.value ? new Date(n.trigger.value * 1000).toISOString() : 'unknown'))
       }))
     };
   } catch (e) {
