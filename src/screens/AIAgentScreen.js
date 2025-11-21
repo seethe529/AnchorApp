@@ -11,7 +11,7 @@ export default function AIAgentScreen({ navigation }) {
   const { theme } = useTheme();
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState([
-    { type: 'ai', text: 'Hi, I\'m here to support you through difficult moments. How are you feeling right now?' }
+    { type: 'ai', text: 'Hey! I\'m Anchor, your personal support companion. I\'m here to help you navigate difficult moments with evidence-based techniques and compassionate guidance. You\'re not alone in this. How are you feeling right now?' }
   ]);
   const [suggestions, setSuggestions] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
