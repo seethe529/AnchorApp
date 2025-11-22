@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'flex-end',
     marginHorizontal: 12,
-    marginBottom: 12,
+    marginBottom: 100,
     borderRadius: 24,
     ...designTokens.shadows.card,
   },
