@@ -86,6 +86,12 @@ function AppContent() {
   const initializeApp = async () => {
     try {
       await checkDisclaimer();
+      
+      // Initialize last_reset if not set
+      const lastReset = await storage.getItem("last_reset");
+      if (!lastReset) {
+        await storage.setItem("last_reset", new Date().getDate());
+      }
     } catch (error) {
       ErrorLogger.log(error, 'App initialization');
     } finally {
