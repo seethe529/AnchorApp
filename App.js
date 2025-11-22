@@ -22,7 +22,8 @@ import { storage } from './src/utils/storage';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import ErrorLogger from './src/utils/errorLogger';
 import OfflineIndicator from './src/components/OfflineIndicator';
-import { ThemeProvider, useTheme } from './src/context/ThemeContext';
+import { ThemeProvider, useTheme, designTokens } from './src/context/ThemeContext';
+import { BlurView } from 'expo-blur';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -43,10 +44,30 @@ function MainTabs() {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: theme.primary,
-        tabBarInactiveTintColor: theme.textSecondary,
+        tabBarInactiveTintColor: theme.textTertiary,
         headerStyle: { backgroundColor: theme.primary },
         headerTintColor: 'white',
-        tabBarStyle: { paddingBottom: 25, paddingTop: 5, height: 85, paddingHorizontal: 10, backgroundColor: theme.card, borderTopColor: theme.border }
+        tabBarStyle: { 
+          position: 'absolute',
+          paddingBottom: 28,
+          paddingTop: 8,
+          height: 88,
+          paddingHorizontal: 12,
+          backgroundColor: theme.tabBarBackground,
+          borderTopWidth: 0,
+          elevation: 0,
+          shadowColor: theme.shadow,
+          shadowOffset: { width: 0, height: -2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: '500',
+        },
+        tabBarIconStyle: {
+          marginTop: 4,
+        }
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />

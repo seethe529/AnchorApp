@@ -5,7 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { breathingMethods } from '../data/breathingMethods';
 import { storage, STORAGE_KEYS } from '../utils/storage';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme, designTokens } from '../context/ThemeContext';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const { width } = Dimensions.get('window');
 
@@ -140,9 +141,8 @@ export default function BreathingScreen({ navigation }) {
       <View style={styles.circleContainer}>
         <Animated.View
           style={[
-            styles.breathingCircle,
+            styles.breathingCircleWrapper,
             {
-              backgroundColor: item.color,
               transform: [{ scale: scaleAnim }],
             },
           ]}
@@ -153,22 +153,27 @@ export default function BreathingScreen({ navigation }) {
           accessibilityValue={{ text: isActive ? `${countdown}` : undefined }}
           importantForAccessibility="yes"
         >
-          <Text 
-            style={styles.phaseText}
-            accessibilityElementsHidden={true}
-            importantForAccessibility="no"
+          <LinearGradient
+            colors={[item.color, item.color + 'CC']}
+            style={styles.breathingCircle}
           >
-            {isActive ? currentPhase.phase : 'Ready'}
-          </Text>
-          {isActive && (
             <Text 
-              style={styles.countdownText}
+              style={styles.phaseText}
               accessibilityElementsHidden={true}
               importantForAccessibility="no"
             >
-              {countdown}
+              {isActive ? currentPhase.phase : 'Ready'}
             </Text>
-          )}
+            {isActive && (
+              <Text 
+                style={styles.countdownText}
+                accessibilityElementsHidden={true}
+                importantForAccessibility="no"
+              >
+                {countdown}
+              </Text>
+            )}
+          </LinearGradient>
         </Animated.View>
       </View>
 
@@ -211,7 +216,6 @@ export default function BreathingScreen({ navigation }) {
         </View>
 
         <TouchableOpacity
-          style={[styles.button, isActive && styles.buttonActive]}
           onPress={toggleActive}
           accessibilityLabel={`${isActive ? 'Stop' : 'Start'} ${item.name} breathing exercise. Method ${index + 1} of ${breathingMethods.length}.`}
           accessibilityRole="button"
@@ -234,9 +238,15 @@ export default function BreathingScreen({ navigation }) {
                 break;
             }
           }}
+          activeOpacity={0.9}
         >
-          <Ionicons name={isActive ? 'pause' : 'play'} size={24} color="white" />
-          <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
+          <LinearGradient
+            colors={isActive ? ['#E74C3C', '#C0392B'] : [theme.primaryGradientTop, theme.primaryGradientBottom]}
+            style={styles.button}
+          >
+            <Ionicons name={isActive ? 'pause' : 'play'} size={24} color="white" />
+            <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
+          </LinearGradient>
         </TouchableOpacity>
 
         <View style={{ height: 20 }} />
@@ -367,25 +377,27 @@ const styles = StyleSheet.create({
   },
   circleContainer: {
     alignItems: 'center',
-    marginTop: 60,
-    marginBottom: 60,
+    marginTop: 80,
+    marginBottom: 80,
   },
   footerContainer: {
     paddingHorizontal: 20,
     paddingBottom: 60,
     alignItems: 'center',
   },
+  breathingCircleWrapper: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    elevation: 8,
+  },
   breathingCircle: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    width: 180,
+    height: 180,
+    borderRadius: 90,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
   },
   phaseText: {
     fontSize: 16,
@@ -436,20 +448,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2E8B57',
     paddingVertical: 16,
     paddingHorizontal: 48,
-    borderRadius: 12,
-    minHeight: 50,
-    minWidth: 120,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  buttonActive: {
-    backgroundColor: '#E74C3C',
+    borderRadius: designTokens.borderRadius.button,
+    minHeight: 54,
+    minWidth: 140,
+    ...designTokens.shadows.button,
   },
   buttonText: {
     color: 'white',

@@ -3,7 +3,9 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Linking, Alert, P
 import { Ionicons } from '@expo/vector-icons';
 import { secureStorage, STORAGE_KEYS } from '../utils/storage';
 import SafetyPlan from '../components/SafetyPlan';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme, designTokens } from '../context/ThemeContext';
+import { LinearGradient } from 'expo-linear-gradient';
+import Card from '../components/Card';
 
 let Location;
 if (Platform.OS !== 'web') {
@@ -170,15 +172,24 @@ export default function CrisisScreen({ navigation }) {
         <Text style={[styles.sectionTitle, { color: theme.text }]}>Immediate Help</Text>
         {immediateHelp.map((item, index) => (
           <TouchableOpacity 
-            key={index} 
-            style={[styles.emergencyCard, { backgroundColor: theme.primary }]} 
+            key={index}
             onPress={item.action}
             accessibilityLabel={item.title}
             accessibilityHint={item.description}
             accessibilityRole="button"
+            activeOpacity={0.8}
           >
-            <Text style={styles.emergencyTitle}>{item.title}</Text>
-            <Text style={styles.emergencyDescription}>{item.description}</Text>
+            <LinearGradient
+              colors={['#DC3545', '#C82333']}
+              style={styles.emergencyCard}
+            >
+              <Ionicons name="alert-circle" size={28} color="white" />
+              <View style={styles.emergencyContent}>
+                <Text style={styles.emergencyTitle}>{item.title}</Text>
+                <Text style={styles.emergencyDescription}>{item.description}</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={24} color="white" />
+            </LinearGradient>
           </TouchableOpacity>
         ))}
       </View>
@@ -189,67 +200,87 @@ export default function CrisisScreen({ navigation }) {
           .sort((a, b) => a.priority - b.priority)
           .map((resource, index) => (
           <TouchableOpacity 
-            key={index} 
-            style={[styles.resourceCard, { backgroundColor: theme.card }]} 
+            key={index}
             onPress={() => callNumber(resource)}
             accessibilityLabel={`${resource.name}, ${resource.isText ? 'Text' : 'Call'} ${resource.number}`}
             accessibilityHint={resource.description}
             accessibilityRole="button"
+            activeOpacity={0.7}
           >
-            <View style={styles.resourceInfo}>
-              <Ionicons name={resource.icon} size={24} color={theme.primary} />
+            <Card style={styles.resourceCard}>
+              <View style={[styles.iconCircle, { backgroundColor: theme.primary + '15' }]}>
+                <Ionicons name={resource.icon} size={28} color={theme.primary} />
+              </View>
               <View style={styles.resourceText}>
                 <Text style={[styles.resourceName, { color: theme.text }]}>{resource.name}</Text>
-                <Text style={styles.resourceNumber}>
+                <Text style={[styles.resourceNumber, { color: theme.primary }]}>
                   {resource.isText ? `Text ${resource.number}` : resource.number}
                 </Text>
                 <Text style={[styles.resourceDescription, { color: theme.textSecondary }]}>{resource.description}</Text>
               </View>
-            </View>
-            <Ionicons name={resource.isText ? 'chatbubble' : 'call'} size={20} color={theme.primary} />
+              <Ionicons name={resource.isText ? 'chatbubble' : 'call'} size={24} color={theme.primary} />
+            </Card>
           </TouchableOpacity>
         ))}
       </View>
 
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.text }]}>Local Resources</Text>
-        <TouchableOpacity style={[styles.localCard, { backgroundColor: theme.card }]} onPress={findNearbyResources}>
-          <Ionicons name="location" size={24} color={theme.primary} />
-          <View style={styles.resourceText}>
-            <Text style={[styles.localName, { color: theme.text }]}>Find Local Crisis Centers</Text>
-            <Text style={[styles.localDescription, { color: theme.textSecondary }]}>Locate nearby mental health facilities</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={20} color={theme.primary} />
+        <TouchableOpacity onPress={findNearbyResources} activeOpacity={0.7}>
+          <Card style={styles.localCard}>
+            <View style={[styles.iconCircle, { backgroundColor: theme.primary + '15' }]}>
+              <Ionicons name="location" size={28} color={theme.primary} />
+            </View>
+            <View style={styles.resourceText}>
+              <Text style={[styles.localName, { color: theme.text }]}>Find Local Crisis Centers</Text>
+              <Text style={[styles.localDescription, { color: theme.textSecondary }]}>Locate nearby mental health facilities</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={24} color={theme.primary} />
+          </Card>
         </TouchableOpacity>
         
-        <TouchableOpacity style={[styles.localCard, { backgroundColor: theme.card }]} onPress={findNearestHospital}>
-          <Ionicons name="medical" size={24} color={theme.primary} />
-          <View style={styles.resourceText}>
-            <Text style={[styles.localName, { color: theme.text }]}>Hospital Emergency Room</Text>
-            <Text style={[styles.localDescription, { color: theme.textSecondary }]}>Nearest emergency medical care</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={20} color={theme.primary} />
+        <TouchableOpacity onPress={findNearestHospital} activeOpacity={0.7}>
+          <Card style={styles.localCard}>
+            <View style={[styles.iconCircle, { backgroundColor: theme.primary + '15' }]}>
+              <Ionicons name="medical" size={28} color={theme.primary} />
+            </View>
+            <View style={styles.resourceText}>
+              <Text style={[styles.localName, { color: theme.text }]}>Hospital Emergency Room</Text>
+              <Text style={[styles.localDescription, { color: theme.textSecondary }]}>Nearest emergency medical care</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={24} color={theme.primary} />
+          </Card>
         </TouchableOpacity>
       </View>
 
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, { color: theme.text }]}>Crisis Actions</Text>
         
-        <TouchableOpacity 
-          style={[styles.safetyPlanButton, { backgroundColor: theme.primary }]} 
+        <TouchableOpacity
           onPress={() => setShowSafetyPlan(true)}
           accessibilityLabel="View My Safety Plan"
           accessibilityHint="Opens your personal safety plan"
           accessibilityRole="button"
+          activeOpacity={0.9}
         >
-          <Ionicons name="shield-checkmark" size={24} color="white" />
-          <Text style={styles.safetyPlanButtonText}>View My Safety Plan</Text>
+          <LinearGradient
+            colors={[theme.primaryGradientTop, theme.primaryGradientBottom]}
+            style={styles.safetyPlanButton}
+          >
+            <Ionicons name="shield-checkmark" size={24} color="white" />
+            <Text style={styles.safetyPlanButtonText}>View My Safety Plan</Text>
+          </LinearGradient>
         </TouchableOpacity>
 
         {emergencyContacts.length > 0 && (
-          <TouchableOpacity style={styles.alertButton} onPress={sendEmergencyAlert}>
-            <Ionicons name="warning" size={24} color="white" />
-            <Text style={styles.alertButtonText}>Send Emergency Alert</Text>
+          <TouchableOpacity onPress={sendEmergencyAlert} activeOpacity={0.9}>
+            <LinearGradient
+              colors={['#FF6B35', '#E85A2A']}
+              style={styles.alertButton}
+            >
+              <Ionicons name="warning" size={24} color="white" />
+              <Text style={styles.alertButtonText}>Send Emergency Alert</Text>
+            </LinearGradient>
           </TouchableOpacity>
         )}
       </View>
@@ -276,33 +307,165 @@ export default function CrisisScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  warningBanner: { padding: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-  warningText: { marginLeft: 10, fontSize: 16, fontWeight: 'bold' },
-  safetyPlanHeader: { flexDirection: 'row', alignItems: 'center', padding: 15 },
-  safetyPlanTitle: { fontSize: 20, fontWeight: 'bold', marginLeft: 15 },
-  section: { padding: 20 },
-  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 15 },
-  emergencyCard: { padding: 15, borderRadius: 10, marginBottom: 10, elevation: 3 },
-  emergencyTitle: { fontSize: 18, fontWeight: 'bold', color: 'white', marginBottom: 5 },
-  emergencyDescription: { fontSize: 14, color: 'white' },
-  resourceCard: { padding: 15, borderRadius: 10, marginBottom: 10, flexDirection: 'row', alignItems: 'center', elevation: 2 },
-  localCard: { padding: 15, borderRadius: 10, marginBottom: 10, flexDirection: 'row', alignItems: 'center', elevation: 1 },
-  resourceInfo: { flexDirection: 'row', alignItems: 'center', flex: 1 },
-  resourceText: { marginLeft: 15, flex: 1 },
-  resourceName: { fontSize: 16, fontWeight: 'bold', marginBottom: 2 },
-  resourceNumber: { fontSize: 16, fontWeight: 'bold', color: '#2E8B57', marginBottom: 2 },
-  resourceDescription: { fontSize: 14 },
-  localName: { fontSize: 16, fontWeight: '500', marginBottom: 2 },
-  localDescription: { fontSize: 14 },
-  safetyPlanButton: { padding: 15, borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 10 },
-  safetyPlanButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold', marginLeft: 10 },
-  alertButton: { backgroundColor: '#FF6B35', padding: 15, borderRadius: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-  alertButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold', marginLeft: 10 },
-  safetyPlan: { padding: 15, borderRadius: 10, elevation: 1 },
-  safetyStep: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 15 },
-  stepNumber: { color: 'white', width: 25, height: 25, borderRadius: 12.5, textAlign: 'center', lineHeight: 25, fontWeight: 'bold', marginRight: 15 },
-  stepText: { flex: 1, fontSize: 16, lineHeight: 24 },
-  footer: { padding: 20, margin: 20, borderRadius: 10, elevation: 2 },
-  footerText: { fontSize: 16, textAlign: 'center', lineHeight: 24, fontStyle: 'italic' }
+  container: { flex: 1, paddingBottom: 100 },
+  warningBanner: { 
+    padding: 18,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  warningText: { 
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: '700',
+  },
+  safetyPlanHeader: { 
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 15,
+  },
+  safetyPlanTitle: { 
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: 15,
+  },
+  section: { 
+    paddingHorizontal: 20,
+    marginTop: designTokens.spacing.section,
+  },
+  sectionTitle: { 
+    ...designTokens.typography.h2,
+    marginBottom: 16,
+  },
+  emergencyCard: { 
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    borderRadius: designTokens.borderRadius.cardLarge,
+    marginBottom: 12,
+    ...designTokens.shadows.cardStrong,
+  },
+  emergencyContent: {
+    flex: 1,
+    marginLeft: 16,
+  },
+  emergencyTitle: { 
+    fontSize: 18,
+    fontWeight: '700',
+    color: 'white',
+    marginBottom: 4,
+  },
+  emergencyDescription: { 
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.9)',
+  },
+  resourceCard: { 
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 18,
+  },
+  localCard: { 
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 18,
+  },
+  iconCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  resourceText: { 
+    marginLeft: 16,
+    flex: 1,
+  },
+  resourceName: { 
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  resourceNumber: { 
+    fontSize: 16,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  resourceDescription: { 
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  localName: { 
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 4,
+  },
+  localDescription: { 
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  safetyPlanButton: { 
+    paddingVertical: 16,
+    borderRadius: designTokens.borderRadius.button,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+    ...designTokens.shadows.button,
+  },
+  safetyPlanButtonText: { 
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 10,
+  },
+  alertButton: { 
+    paddingVertical: 16,
+    borderRadius: designTokens.borderRadius.button,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...designTokens.shadows.button,
+  },
+  alertButtonText: { 
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 10,
+  },
+  safetyPlan: { 
+    padding: 20,
+    borderRadius: designTokens.borderRadius.card,
+  },
+  safetyStep: { 
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 16,
+  },
+  stepNumber: { 
+    color: 'white',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    textAlign: 'center',
+    lineHeight: 28,
+    fontWeight: '700',
+    marginRight: 16,
+  },
+  stepText: { 
+    flex: 1,
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  footer: { 
+    padding: 24,
+    margin: 20,
+    borderRadius: designTokens.borderRadius.cardLarge,
+    ...designTokens.shadows.card,
+  },
+  footerText: { 
+    fontSize: 16,
+    textAlign: 'center',
+    lineHeight: 24,
+    fontStyle: 'italic',
+  },
 });
