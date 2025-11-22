@@ -56,25 +56,13 @@ if (Platform.OS !== 'web') {
   Notifications = require('expo-notifications');
 
   Notifications.setNotificationHandler({
-    handleNotification: async (notification) => {
-      const isSystemReset = notification.request.content.data?.type === 'system_reset';
-      
+    handleNotification: async () => {
       return {
-        shouldShowAlert: !isSystemReset,
-        shouldPlaySound: !isSystemReset,
+        shouldShowAlert: true,
+        shouldPlaySound: true,
         shouldSetBadge: false,
       };
     },
-  });
-
-  // Listen for notification responses (when user taps notification)
-  Notifications.addNotificationResponseReceivedListener(async (response) => {
-    const type = response.notification.request.content.data?.type;
-    
-    if (type === 'system_reset') {
-      console.log('🌙 [NOTIF] Midnight reset triggered');
-      await handleMidnightReset();
-    }
   });
 
   console.log('📦 [NOTIF] Notification handler set up');
@@ -263,69 +251,6 @@ export const cancelBreathingReminder = async () => {
 };
 
 /*************************************************
- * MIDNIGHT AUTO-RESET SYSTEM
- *************************************************/
-const handleMidnightReset = async () => {
-  console.log('🌙 [NOTIF] handleMidnightReset triggered');
-  
-  try {
-    // Reschedule all notifications
-    await scheduleBreathingReminder();
-    await scheduleMoodReminder();
-    
-    // Schedule next midnight reset
-    await scheduleDailyReset();
-    
-    console.log('✅ [NOTIF] Midnight reset complete');
-  } catch (e) {
-    console.error('❌ [NOTIF] Midnight reset failed:', e);
-  }
-};
-
-export const scheduleDailyReset = async () => {
-  console.log('🌙 [NOTIF] scheduleDailyReset called');
-  
-  if (Platform.OS === 'web' || !Notifications) {
-    console.log('⚠️ [NOTIF] Platform web or Notifications missing — skip daily reset');
-    return;
-  }
-  
-  try {
-    // Cancel any existing reset notifications
-    const scheduled = await Notifications.getAllScheduledNotificationsAsync();
-    const resets = scheduled.filter(n => n.content.data?.type === 'system_reset');
-    for (const n of resets) {
-      await Notifications.cancelScheduledNotificationAsync(n.identifier);
-    }
-    console.log(`🧹 [NOTIF] Cancelled ${resets.length} existing reset notification(s)`);
-    
-    // Calculate next midnight
-    const now = new Date();
-    const midnight = new Date(now);
-    midnight.setDate(midnight.getDate() + 1);
-    midnight.setHours(0, 0, 0, 0);
-    
-    // Schedule silent system notification for midnight (disguised as breathing reminder)
-    console.log(`🌙 [NOTIF] Attempting to schedule reset for: ${midnight.toLocaleString()}`);
-    
-    const id = await Notifications.scheduleNotificationAsync({
-      content: {
-        title: "Quiet Update",
-        body: "Refreshing your reminders.",
-        data: { type: 'system_reset' },
-      },
-      trigger: { type: 'date', date: midnight },
-    });
-    
-    console.log(`✅ [NOTIF] Daily reset scheduled successfully (ID: ${id})`);
-    console.log(`🔍 [NOTIF] Midnight date object:`, midnight);
-  } catch (e) {
-    console.error('❌ [NOTIF] Daily reset schedule fail:', e);
-    console.error('❌ [NOTIF] Error details:', JSON.stringify(e, null, 2));
-  }
-};
-
-/*************************************************
  * CLEAR ALL
  *************************************************/
 export const clearAllNotifications = async () => {
@@ -400,17 +325,7 @@ export const exportScheduledNotifications = async () => {
         breathingReminders: byType.breathing.length,
         midnightReset: byType.reset.length
       },
-      midnightResetDiagnostics: {
-        expectedMidnight: midnight.toISOString(),
-        resetNotificationsFound: byType.reset.length,
-        resetNotifications: byType.reset.map(n => ({
-          id: n.identifier,
-          title: n.content.title,
-          body: n.content.body,
-          trigger: n.trigger
-        })),
-        note: "If resetNotificationsFound is 0, the midnight reset is not scheduling. Check console logs for errors."
-      },
+
       debugTriggerSample: scheduled.length > 0 ? scheduled[0].trigger : null,
       notifications: scheduled.map(n => ({
         id: n.identifier,
