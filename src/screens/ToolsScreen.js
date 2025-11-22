@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
   backButton: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
   techniqueTitle: { fontSize: 20, fontWeight: '600', flex: 1, textAlign: 'center' },
   content: { flex: 1 },
-  contentContainer: { padding: 20, paddingBottom: 120 },
+  contentContainer: { padding: 20, paddingBottom: 140 },
   fullDescription: { fontSize: 16, lineHeight: 26, marginBottom: 24 },
   exampleBox: { padding: 16, borderRadius: 12, marginBottom: 24, borderLeftWidth: 4 },
   exampleTitle: { fontSize: 15, fontWeight: '600', marginBottom: 8 },
