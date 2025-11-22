@@ -313,7 +313,6 @@ export const scheduleDailyReset = async () => {
         title: "Quiet Update",
         body: "Refreshing your reminders.",
         data: { type: 'system_reset' },
-        sound: null,
       },
       trigger: { type: 'date', date: midnight },
     });
@@ -409,7 +408,8 @@ export const exportScheduledNotifications = async () => {
           title: n.content.title,
           body: n.content.body,
           trigger: n.trigger
-        }))
+        })),
+        note: "If resetNotificationsFound is 0, the midnight reset is not scheduling. Check console logs for errors."
       },
       debugTriggerSample: scheduled.length > 0 ? scheduled[0].trigger : null,
       notifications: scheduled.map(n => ({
