@@ -17,7 +17,7 @@ import BreathingExercise from './src/components/BreathingExercise';
 import BreathingScreen from './src/screens/BreathingScreen';
 import SafetyPlan from './src/components/SafetyPlan';
 
-import { scheduleDailyReset } from './src/utils/notifications';
+import { scheduleBreathingReminder, scheduleMoodReminder } from './src/utils/notifications';
 import { storage } from './src/utils/storage';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import ErrorLogger from './src/utils/errorLogger';
@@ -66,7 +66,21 @@ function AppContent() {
 
   useEffect(() => {
     initializeApp();
-    scheduleDailyReset(); // Enable midnight auto-reset
+    
+    // Hourly check for date change to reset notifications
+    const timer = setInterval(async () => {
+      const now = new Date();
+      const last = await storage.getItem("last_reset") || 0;
+
+      if (now.getDate() !== last) {
+        console.log('🌙 [APP] Date changed, resetting notifications');
+        await scheduleBreathingReminder();
+        await scheduleMoodReminder();
+        await storage.setItem("last_reset", now.getDate());
+      }
+    }, 3600000); // every hour
+
+    return () => clearInterval(timer);
   }, []);
 
   const initializeApp = async () => {
