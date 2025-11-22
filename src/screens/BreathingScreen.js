@@ -334,9 +334,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   methodContainer: {
-    flex: 1,
     justifyContent: 'flex-start',
     paddingTop: 40,
+    minHeight: '100%',
   },
   headerContainer: {
     paddingTop: 12,
