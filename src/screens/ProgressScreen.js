@@ -154,7 +154,10 @@ export default function ProgressScreen({ navigation }) {
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+    <ScrollView 
+      style={[styles.container, { backgroundColor: theme.background }]}
+      contentContainerStyle={{ paddingBottom: 120 }}
+    >
       <Text style={[styles.title, { color: theme.primary }]}>Your Progress</Text>
       
       <View style={[styles.chartContainer, { backgroundColor: theme.card }]}>
