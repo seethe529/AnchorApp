@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 60,
+    paddingBottom: 120,
     alignItems: 'center',
   },
   breathingCircleWrapper: {
