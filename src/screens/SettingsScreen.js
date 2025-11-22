@@ -4,7 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled, exportScheduledNotifications } from '../utils/notifications';
 import Constants from 'expo-constants';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme, designTokens } from '../context/ThemeContext';
+import Card from '../components/Card';
 
 const APP_VERSION = Constants.expoConfig?.version || '1.0.0';
 
@@ -370,20 +371,81 @@ export default function SettingsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginVertical: 20 },
-  section: { margin: 15, padding: 15, borderRadius: 10, elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.1, shadowRadius: 2 },
-  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
-  settingItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12 },
-  settingInfo: { flex: 1 },
-  settingTitle: { fontSize: 16, fontWeight: '500' },
-  settingSubtitle: { fontSize: 14, marginTop: 2 },
-  actionButton: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12 },
-  actionInfo: { flex: 1, marginLeft: 15 },
-  actionTitle: { fontSize: 16, fontWeight: '500' },
-  actionSubtitle: { fontSize: 14, marginTop: 2 },
-  infoItem: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
-  infoLabel: { fontSize: 16 },
-  infoValue: { fontSize: 16, fontWeight: '500' },
-  disclaimer: { fontSize: 12, marginTop: 15, lineHeight: 18, fontStyle: 'italic' }
+  container: { 
+    flex: 1,
+    paddingBottom: 100,
+  },
+  title: { 
+    ...designTokens.typography.h1,
+    textAlign: 'center',
+    marginVertical: 24,
+  },
+  section: { 
+    marginHorizontal: 20,
+    marginBottom: designTokens.spacing.section,
+    padding: designTokens.spacing.cardPadding,
+    borderRadius: designTokens.borderRadius.card,
+    ...designTokens.shadows.card,
+  },
+  sectionTitle: { 
+    ...designTokens.typography.h2,
+    marginBottom: 16,
+  },
+  settingItem: { 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 14,
+    minHeight: 60,
+  },
+  settingInfo: { 
+    flex: 1,
+    paddingRight: 16,
+  },
+  settingTitle: { 
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  settingSubtitle: { 
+    fontSize: 14,
+    marginTop: 4,
+    lineHeight: 20,
+  },
+  actionButton: { 
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    minHeight: 60,
+  },
+  actionInfo: { 
+    flex: 1,
+    marginLeft: 16,
+  },
+  actionTitle: { 
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  actionSubtitle: { 
+    fontSize: 14,
+    marginTop: 4,
+    lineHeight: 20,
+  },
+  infoItem: { 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+  },
+  infoLabel: { 
+    fontSize: 16,
+  },
+  infoValue: { 
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  disclaimer: { 
+    fontSize: 13,
+    marginTop: 16,
+    lineHeight: 20,
+    fontStyle: 'italic',
+  },
 });

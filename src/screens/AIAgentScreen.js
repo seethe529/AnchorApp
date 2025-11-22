@@ -5,7 +5,8 @@ import { suggestTechniques } from '../data/techniques';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { sendMessageToOpenAI } from '../services/openai';
 import ErrorLogger from '../utils/errorLogger';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme, designTokens } from '../context/ThemeContext';
+import Card from '../components/Card';
 
 export default function AIAgentScreen({ navigation }) {
   const { theme } = useTheme();
@@ -238,25 +239,84 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   conversation: { flex: 1 },
   conversationContent: { paddingBottom: 30, paddingHorizontal: 15, paddingTop: 10 },
-  quickActionsContainer: { paddingVertical: 12, paddingHorizontal: 15, borderBottomWidth: 1 },
-  quickActionsTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
+  quickActionsContainer: { 
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+  },
+  quickActionsTitle: { 
+    ...designTokens.typography.h2,
+    marginBottom: 12,
+  },
   quickActionsScroll: { flexDirection: 'row' },
-  quickActionButton: { flexDirection: 'row', alignItems: 'center', padding: 12, borderRadius: 8, marginRight: 10 },
-  quickActionText: { fontSize: 14, marginLeft: 10, flex: 1 },
-  message: { marginVertical: 5, padding: 12, borderRadius: 15, maxWidth: '80%' },
-  userMessage: { alignSelf: 'flex-end' },
-  aiMessage: { alignSelf: 'flex-start', elevation: 1 },
+  quickActionButton: { 
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  quickActionText: { 
+    fontSize: 14,
+    fontWeight: '500',
+    marginLeft: 8,
+  },
+  message: { marginVertical: 6, padding: 16, borderRadius: 16, maxWidth: '80%' },
+  userMessage: { alignSelf: 'flex-end', backgroundColor: '#2E845D' },
+  aiMessage: { alignSelf: 'flex-start', ...designTokens.shadows.card },
   messageText: { fontSize: 16, lineHeight: 22 },
   userText: { color: 'white' },
   aiText: {},
   typingText: { fontStyle: 'italic' },
-  suggestions: { padding: 15, borderTopWidth: 1 },
-  suggestionsTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
-  suggestionCard: { padding: 10, borderRadius: 8, marginBottom: 8 },
-  suggestionName: { fontSize: 14, fontWeight: '500' },
-  suggestionCategory: { fontSize: 12, textTransform: 'capitalize' },
-  inputContainer: { flexDirection: 'row', padding: 15, alignItems: 'flex-end', borderTopWidth: 1 },
-  textInput: { flex: 1, borderWidth: 1, borderRadius: 20, paddingHorizontal: 15, paddingVertical: 10, marginRight: 10, maxHeight: 100, fontSize: 16 },
-  sendButton: { padding: 12, borderRadius: 20 },
+  suggestions: { 
+    padding: 16,
+    borderTopWidth: 1,
+  },
+  suggestionsTitle: { 
+    ...designTokens.typography.h2,
+    marginBottom: 12,
+  },
+  suggestionCard: { 
+    padding: 14,
+    borderRadius: 12,
+    marginBottom: 10,
+  },
+  suggestionName: { 
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  suggestionCategory: { 
+    fontSize: 13,
+    textTransform: 'capitalize',
+    marginTop: 2,
+  },
+  inputContainer: { 
+    flexDirection: 'row',
+    padding: 16,
+    alignItems: 'flex-end',
+    marginHorizontal: 12,
+    marginBottom: 12,
+    borderRadius: 24,
+    ...designTokens.shadows.card,
+  },
+  textInput: { 
+    flex: 1,
+    borderWidth: 0,
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginRight: 12,
+    maxHeight: 100,
+    fontSize: 16,
+  },
+  sendButton: { 
+    padding: 14,
+    borderRadius: 24,
+    minWidth: 48,
+    minHeight: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   sendButtonDisabled: { backgroundColor: '#ccc' }
 });
