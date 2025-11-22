@@ -334,9 +334,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   methodContainer: {
-    justifyContent: 'flex-start',
+    flex: 1,
+    justifyContent: 'space-between',
     paddingTop: 40,
-    minHeight: '100%',
   },
   headerContainer: {
     paddingTop: 12,
@@ -382,7 +382,7 @@ const styles = StyleSheet.create({
   },
   footerContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 120,
+    paddingBottom: 40,
     alignItems: 'center',
   },
   breathingCircleWrapper: {
