@@ -311,11 +311,11 @@ export const exportScheduledNotifications = async () => {
       reset: scheduled.filter(n => n.content.data?.type === 'system_reset'),
     };
     
-    // Calculate next midnight for diagnostics
+    // Get last reset date from storage
+    const { storage } = require('./storage');
+    const lastReset = await storage.getItem('last_reset') || 0;
     const now = new Date();
-    const midnight = new Date(now);
-    midnight.setDate(midnight.getDate() + 1);
-    midnight.setHours(0, 0, 0, 0);
+    const currentDate = now.getDate();
     
     return {
       exportDate: new Date().toISOString(),
@@ -325,7 +325,14 @@ export const exportScheduledNotifications = async () => {
         breathingReminders: byType.breathing.length,
         midnightReset: byType.reset.length
       },
-
+      hourlyDateCheckSystem: {
+        enabled: true,
+        checkInterval: '3600000ms (1 hour)',
+        lastResetDate: lastReset,
+        currentDate: currentDate,
+        willResetToday: lastReset !== currentDate,
+        note: 'App checks every hour if date changed. If changed, notifications are rescheduled automatically.'
+      },
       debugTriggerSample: scheduled.length > 0 ? scheduled[0].trigger : null,
       notifications: scheduled.map(n => ({
         id: n.identifier,
