@@ -78,6 +78,7 @@ export default function HomeScreen({ navigation }) {
         ref={scrollViewRef}
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ paddingBottom: keyboardHeight > 0 ? keyboardHeight + 120 : 120 }}
+        contentInsetAdjustmentBehavior="automatic"
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
@@ -209,13 +210,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 12,
   },
   actionCard: { 
-    width: '48%',
+    width: '47%',
     alignItems: 'center',
     paddingVertical: 20,
     paddingHorizontal: 12,
+    marginBottom: 12,
   },
   iconContainer: {
     width: 56,

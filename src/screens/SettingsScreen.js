@@ -256,7 +256,10 @@ export default function SettingsScreen({ navigation }) {
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+    <ScrollView 
+      style={[styles.container, { backgroundColor: theme.background }]}
+      contentContainerStyle={{ paddingBottom: 120 }}
+    >
       <Text style={[styles.title, { color: theme.primary }]}>Settings</Text>
       
       {settingSections.map((section, sectionIndex) => (
@@ -373,7 +376,6 @@ export default function SettingsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { 
     flex: 1,
-    paddingBottom: 100,
   },
   title: { 
     ...designTokens.typography.h1,

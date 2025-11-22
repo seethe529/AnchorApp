@@ -162,7 +162,10 @@ export default function CrisisScreen({ navigation }) {
   }
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+    <ScrollView 
+      style={[styles.container, { backgroundColor: theme.background }]}
+      contentContainerStyle={{ paddingBottom: 120 }}
+    >
       <View style={[styles.warningBanner, { backgroundColor: theme.primary + '20' }]}>
         <Ionicons name="warning" size={24} color={theme.primary} />
         <Text style={[styles.warningText, { color: theme.primary }]}>Immediate danger? Call 911</Text>
@@ -307,7 +310,7 @@ export default function CrisisScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingBottom: 100 },
+  container: { flex: 1 },
   warningBanner: { 
     padding: 18,
     flexDirection: 'row',
