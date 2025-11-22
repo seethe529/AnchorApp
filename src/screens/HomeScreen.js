@@ -212,11 +212,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   actionCard: { 
-    width: '47%',
+    width: '48%',
     alignItems: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 12,
-    marginBottom: 12,
+    paddingVertical: 18,
+    paddingHorizontal: 8,
+    marginBottom: 14,
   },
   iconContainer: {
     width: 56,
@@ -227,10 +227,11 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   actionText: { 
-    marginTop: 4,
-    fontSize: 13,
+    marginTop: 8,
+    fontSize: 12,
     fontWeight: '600',
     textAlign: 'center',
+    lineHeight: 16,
   },
   dailyTipContainer: {
     paddingHorizontal: 20,
