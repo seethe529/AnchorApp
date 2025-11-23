@@ -161,7 +161,7 @@ export default function AIAgentScreen({ navigation }) {
 
       <ScrollView 
         ref={scrollViewRef}
-        style={[styles.conversation, { marginBottom: 168 }]}
+        style={[styles.conversation, { marginBottom: 64 + insets.bottom + 80 }]}
         contentContainerStyle={[
           styles.conversationContent,
           { paddingBottom: 20, paddingTop: 24, paddingHorizontal: 20 }
@@ -205,7 +205,7 @@ export default function AIAgentScreen({ navigation }) {
             position: 'absolute',
             left: 0,
             right: 0,
-            bottom: 168,
+            bottom: 64 + insets.bottom + 80,
             maxHeight: 200,
             backgroundColor: theme.card,
             borderTopColor: theme.border
@@ -228,7 +228,7 @@ export default function AIAgentScreen({ navigation }) {
           position: 'absolute',
           left: 0,
           right: 0,
-          bottom: 88,
+          bottom: 64 + insets.bottom,
           flexDirection: 'row',
           padding: 16,
           alignItems: 'flex-end',
