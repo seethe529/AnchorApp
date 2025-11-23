@@ -156,7 +156,7 @@ export default function AIAgentScreen({ navigation }) {
       <ScrollView 
         ref={scrollViewRef}
         style={styles.conversation}
-        contentContainerStyle={[styles.conversationContent, { paddingBottom: 60 }]}
+        contentContainerStyle={[styles.conversationContent, { paddingBottom: 200 }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         accessible={false}
@@ -296,12 +296,9 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'flex-end',
     marginHorizontal: 12,
+    marginBottom: 100,
     borderRadius: 24,
     ...designTokens.shadows.card,
-    position: 'absolute',
-    bottom: 100,
-    left: 0,
-    right: 0,
   },
   textInput: { 
     flex: 1,
