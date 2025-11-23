@@ -199,14 +199,27 @@ export default function AIAgentScreen({ navigation }) {
       </ScrollView>
 
       {suggestions.length > 0 && (
-        <View style={[styles.suggestions, { backgroundColor: theme.card, borderTopColor: theme.border }]}>
-          <Text style={[styles.suggestionsTitle, { color: theme.text }]}>Suggested techniques:</Text>
-          {suggestions.map((suggestion, index) => (
-            <TouchableOpacity key={index} style={[styles.suggestionCard, { backgroundColor: theme.primary + '20' }]} onPress={() => applySuggestion(suggestion)}>
-              <Text style={[styles.suggestionName, { color: theme.text }]}>{suggestion.name}</Text>
-              <Text style={[styles.suggestionCategory, { color: theme.textSecondary }]}>{formatCategory(suggestion.category)}</Text>
-            </TouchableOpacity>
-          ))}
+        <View style={[
+          styles.suggestions,
+          {
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            bottom: 168,
+            maxHeight: 200,
+            backgroundColor: theme.card,
+            borderTopColor: theme.border
+          }
+        ]}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <Text style={[styles.suggestionsTitle, { color: theme.text }]}>Suggested techniques:</Text>
+            {suggestions.map((suggestion, index) => (
+              <TouchableOpacity key={index} style={[styles.suggestionCard, { backgroundColor: theme.primary + '20' }]} onPress={() => applySuggestion(suggestion)}>
+                <Text style={[styles.suggestionName, { color: theme.text }]}>{suggestion.name}</Text>
+                <Text style={[styles.suggestionCategory, { color: theme.textSecondary }]}>{formatCategory(suggestion.category)}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
       )}
 
