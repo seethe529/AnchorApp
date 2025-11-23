@@ -161,10 +161,10 @@ export default function AIAgentScreen({ navigation }) {
 
       <ScrollView 
         ref={scrollViewRef}
-        style={styles.conversation}
+        style={[styles.conversation, { marginBottom: 168 }]}
         contentContainerStyle={[
           styles.conversationContent,
-          { paddingBottom: 200, paddingTop: 24, paddingHorizontal: 20 }
+          { paddingBottom: 20, paddingTop: 24, paddingHorizontal: 20 }
         ]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
