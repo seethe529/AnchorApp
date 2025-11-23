@@ -162,7 +162,10 @@ export default function AIAgentScreen({ navigation }) {
       <ScrollView 
         ref={scrollViewRef}
         style={styles.conversation}
-        contentContainerStyle={[styles.conversationContent, { paddingBottom: insets.bottom + 130 }]}
+        contentContainerStyle={[
+          styles.conversationContent,
+          { paddingBottom: insets.bottom + 140, paddingTop: 24, paddingHorizontal: 20 }
+        ]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         accessible={false}
@@ -212,7 +215,7 @@ export default function AIAgentScreen({ navigation }) {
           position: 'absolute',
           left: 0,
           right: 0,
-          bottom: insets.bottom + 50,
+          bottom: insets.bottom,
           flexDirection: 'row',
           padding: 16,
           alignItems: 'flex-end',
@@ -257,11 +260,12 @@ export default function AIAgentScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   conversation: { flex: 1 },
-  conversationContent: { paddingBottom: 20, paddingHorizontal: 15, paddingTop: 10 },
+  conversationContent: { paddingBottom: 20, paddingHorizontal: 20, paddingTop: 24 },
   quickActionsContainer: { 
     paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
+    paddingBottom: 12,
   },
   quickActionsTitle: { 
     ...designTokens.typography.h2,
