@@ -256,7 +256,7 @@ const styles = StyleSheet.create({
   activeTab: {},
   categoryText: { fontSize: 13, fontWeight: '600' },
   activeTabText: { color: 'white' },
-  techniquesList: { flex: 1, padding: 16 },
+  techniquesList: { flex: 1, padding: 16, paddingBottom: 140 },
   techniqueCard: { padding: 16, borderRadius: 12, marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },
   techniqueHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   techniqueName: { fontSize: 17, fontWeight: '600', flex: 1 },
