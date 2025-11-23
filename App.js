@@ -50,9 +50,9 @@ function MainTabs() {
         headerTintColor: 'white',
         tabBarStyle: { 
           position: 'absolute',
-          paddingBottom: 20,
+          paddingBottom: 24,
           paddingTop: 8,
-          height: 70,
+          height: 88,
           backgroundColor: isDark ? '#0F1115' : '#FFFFFF',
           borderTopWidth: 0,
           elevation: 8,
@@ -62,9 +62,9 @@ function MainTabs() {
           shadowRadius: 8,
         },
         tabBarLabelStyle: {
-          fontSize: 10,
+          fontSize: 11,
           fontWeight: '600',
-          marginTop: 2,
+          marginTop: 4,
         },
         tabBarIconStyle: {
           marginBottom: 0,
