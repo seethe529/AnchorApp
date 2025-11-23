@@ -376,12 +376,12 @@ const styles = StyleSheet.create({
   },
   circleContainer: {
     alignItems: 'center',
-    marginTop: 60,
-    marginBottom: 80,
+    marginTop: 20,
+    marginBottom: 100,
   },
   footerContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 120,
+    paddingBottom: 20,
     alignItems: 'center',
   },
   breathingCircleWrapper: {
@@ -462,11 +462,13 @@ const styles = StyleSheet.create({
   },
 
   pagination: {
+    position: 'absolute',
+    bottom: 100,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 24,
-    paddingBottom: 40,
   },
   dot: {
     width: 8,

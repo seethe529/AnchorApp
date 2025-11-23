@@ -72,7 +72,7 @@ function MainTabs() {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Tools" component={ToolsScreen} />
-      <Tab.Screen name="AI" component={AIAgentScreen} options={{ title: 'AI Support' }} />
+      <Tab.Screen name="AI" component={AIAgentScreen} options={{ tabBarLabel: 'AI', title: 'Support Chat' }} />
       <Tab.Screen name="Crisis" component={CrisisScreen} />
       <Tab.Screen name="Progress" component={ProgressScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
