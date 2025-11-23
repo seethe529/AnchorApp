@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     ...designTokens.shadows.card,
     position: 'absolute',
-    bottom: 0,
+    bottom: 100,
     left: 0,
     right: 0,
   },
