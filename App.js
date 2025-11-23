@@ -3,7 +3,7 @@ import { View, Text, ActivityIndicator, StyleSheet, AppState } from 'react-nativ
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from './src/screens/HomeScreen';
 import ToolsScreen from './src/screens/ToolsScreen';
@@ -30,6 +30,7 @@ const Stack = createStackNavigator();
 
 function MainTabs() {
   const { theme, isDark } = useTheme();
+  const insets = useSafeAreaInsets();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -50,9 +51,9 @@ function MainTabs() {
         headerTintColor: 'white',
         tabBarStyle: { 
           position: 'absolute',
-          paddingBottom: 24,
+          paddingBottom: insets.bottom,
           paddingTop: 8,
-          height: 88,
+          height: 64 + insets.bottom,
           backgroundColor: isDark ? '#0F1115' : '#FFFFFF',
           borderTopWidth: 0,
           elevation: 8,
@@ -69,7 +70,7 @@ function MainTabs() {
         tabBarIconStyle: {
           marginBottom: 0,
         }
-      })}
+      })
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Tools" component={ToolsScreen} />
