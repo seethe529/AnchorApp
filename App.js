@@ -29,44 +29,46 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 function MainTabs() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
-          if (route.name === 'Home') iconName = focused ? 'home' : 'home-outline';
-          else if (route.name === 'Tools') iconName = focused ? 'build' : 'build-outline';
-          else if (route.name === 'AI') iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
-          else if (route.name === 'Crisis') iconName = focused ? 'medical' : 'medical-outline';
-          else if (route.name === 'Progress') iconName = focused ? 'analytics' : 'analytics-outline';
-          else if (route.name === 'Settings') iconName = focused ? 'settings' : 'settings-outline';
-          return <Ionicons name={iconName} size={size} color={color} />;
+          // Use filled icons for bold appearance
+          if (route.name === 'Home') iconName = 'home';
+          else if (route.name === 'Tools') iconName = 'build';
+          else if (route.name === 'AI') iconName = 'chatbubbles';
+          else if (route.name === 'Crisis') iconName = 'medical';
+          else if (route.name === 'Progress') iconName = 'analytics';
+          else if (route.name === 'Settings') iconName = 'settings';
+          return <Ionicons name={iconName} size={27} color={color} />;
         },
-        tabBarActiveTintColor: theme.primary,
-        tabBarInactiveTintColor: theme.textTertiary,
+        tabBarActiveTintColor: isDark ? '#4ADE80' : '#2E845D',
+        tabBarInactiveTintColor: isDark ? '#6B7280' : '#94A3B8',
         headerStyle: { backgroundColor: theme.primary },
         headerTintColor: 'white',
         tabBarStyle: { 
           position: 'absolute',
-          paddingBottom: 28,
+          paddingBottom: 24,
           paddingTop: 8,
-          height: 88,
-          paddingHorizontal: 12,
-          backgroundColor: theme.tabBarBackground,
+          height: 75,
+          paddingHorizontal: 8,
+          backgroundColor: isDark ? '#0F1115' : '#FFFFFF',
           borderTopWidth: 0,
-          elevation: 0,
-          shadowColor: theme.shadow,
+          elevation: 8,
+          shadowColor: '#000',
           shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: 0.1,
+          shadowOpacity: 0.15,
           shadowRadius: 8,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: '500',
+          fontSize: 13,
+          fontWeight: '600',
         },
+        tabBarLabelPosition: 'below-icon',
         tabBarIconStyle: {
-          marginTop: 4,
+          marginTop: 0,
         }
       })}
     >
