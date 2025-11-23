@@ -129,7 +129,7 @@ export default function AIAgentScreen({ navigation }) {
     <KeyboardAvoidingView 
       style={[styles.container, { backgroundColor: theme.background }]} 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 120 : 0}
+      keyboardVerticalOffset={0}
     >
       <View style={{ flex: 1 }} accessible={false}>
       <View style={[styles.quickActionsContainer, { backgroundColor: theme.card, borderBottomColor: theme.border }]} accessibilityRole="menu">
@@ -164,7 +164,7 @@ export default function AIAgentScreen({ navigation }) {
         style={styles.conversation}
         contentContainerStyle={[
           styles.conversationContent,
-          { paddingBottom: insets.bottom + 140, paddingTop: 24, paddingHorizontal: 20 }
+          { paddingBottom: 200, paddingTop: 24, paddingHorizontal: 20 }
         ]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
@@ -215,7 +215,7 @@ export default function AIAgentScreen({ navigation }) {
           position: 'absolute',
           left: 0,
           right: 0,
-          bottom: insets.bottom,
+          bottom: 88,
           flexDirection: 'row',
           padding: 16,
           alignItems: 'flex-end',
