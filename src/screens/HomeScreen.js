@@ -107,6 +107,7 @@ export default function HomeScreen({ navigation }) {
                 accessibilityHint={`Navigate to ${action.title}`}
                 accessibilityRole="button"
                 activeOpacity={0.7}
+                style={styles.actionCardWrapper}
               >
                 <Card style={styles.actionCard}>
                   <View style={[styles.iconContainer, { backgroundColor: (action.color || theme.primary) + '15' }]}>
@@ -209,14 +210,15 @@ const styles = StyleSheet.create({
   actionGrid: { 
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    gap: 12,
+  },
+  actionCardWrapper: {
+    width: '48%',
   },
   actionCard: { 
-    width: 165,
     alignItems: 'center',
     paddingVertical: 18,
-    paddingHorizontal: 8,
-    marginBottom: 14,
+    paddingHorizontal: 12,
   },
   iconContainer: {
     width: 48,
