@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { suggestTechniques } from '../data/techniques';
@@ -10,6 +11,7 @@ import Card from '../components/Card';
 
 export default function AIAgentScreen({ navigation }) {
   const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState([
     { type: 'ai', text: 'Hey! I\'m Anchor, your personal support companion. I\'m here to help you navigate difficult moments with evidence-based techniques and compassionate guidance. You\'re not alone in this. How are you feeling right now?' }
@@ -99,6 +101,10 @@ export default function AIAgentScreen({ navigation }) {
 
 
 
+  const formatCategory = (category) => {
+    return category.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  };
+
   const applySuggestion = useCallback((technique) => {
     Alert.alert(
       technique.name,
@@ -156,7 +162,7 @@ export default function AIAgentScreen({ navigation }) {
       <ScrollView 
         ref={scrollViewRef}
         style={styles.conversation}
-        contentContainerStyle={[styles.conversationContent, { paddingBottom: 200 }]}
+        contentContainerStyle={[styles.conversationContent, { paddingBottom: insets.bottom + 130 }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         accessible={false}
@@ -195,13 +201,26 @@ export default function AIAgentScreen({ navigation }) {
           {suggestions.map((suggestion, index) => (
             <TouchableOpacity key={index} style={[styles.suggestionCard, { backgroundColor: theme.primary + '20' }]} onPress={() => applySuggestion(suggestion)}>
               <Text style={[styles.suggestionName, { color: theme.text }]}>{suggestion.name}</Text>
-              <Text style={[styles.suggestionCategory, { color: theme.textSecondary }]}>{suggestion.category}</Text>
+              <Text style={[styles.suggestionCategory, { color: theme.textSecondary }]}>{formatCategory(suggestion.category)}</Text>
             </TouchableOpacity>
           ))}
         </View>
       )}
 
-      <View style={[styles.inputContainer, { backgroundColor: theme.card, borderTopColor: theme.border }]} accessible={false}>
+      <View style={[
+        {
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: insets.bottom + 50,
+          flexDirection: 'row',
+          padding: 16,
+          alignItems: 'flex-end',
+          borderTopWidth: 1,
+          borderTopColor: theme.border,
+          backgroundColor: theme.card,
+        }
+      ]} accessible={false}>
         <TextInput
           style={[styles.textInput, { borderColor: theme.border, backgroundColor: theme.background, color: theme.text }]}
           value={message}
@@ -238,7 +257,7 @@ export default function AIAgentScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   conversation: { flex: 1 },
-  conversationContent: { paddingBottom: 30, paddingHorizontal: 15, paddingTop: 10 },
+  conversationContent: { paddingBottom: 20, paddingHorizontal: 15, paddingTop: 10 },
   quickActionsContainer: { 
     paddingVertical: 16,
     paddingHorizontal: 16,
@@ -291,14 +310,17 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
     marginTop: 2,
   },
-  inputContainer: { 
+  inputContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0, // This will be overridden by inline style with insets.bottom + 50
     flexDirection: 'row',
     padding: 16,
     alignItems: 'flex-end',
-    marginHorizontal: 12,
-    marginBottom: 100,
-    borderRadius: 24,
-    ...designTokens.shadows.card,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
+    backgroundColor: 'white',
   },
   textInput: { 
     flex: 1,
