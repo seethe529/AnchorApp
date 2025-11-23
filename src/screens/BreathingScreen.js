@@ -335,7 +335,9 @@ const styles = StyleSheet.create({
   },
   methodContainer: {
     flex: 1,
-    paddingTop: 40,
+    justifyContent: 'space-between',
+    paddingTop: 20,
+    paddingBottom: 60,
   },
   headerContainer: {
     paddingTop: 12,
@@ -376,12 +378,11 @@ const styles = StyleSheet.create({
   },
   circleContainer: {
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 100,
+    marginTop: 40,
+    marginBottom: 60,
   },
   footerContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 20,
     alignItems: 'center',
   },
   breathingCircleWrapper: {
@@ -463,7 +464,7 @@ const styles = StyleSheet.create({
 
   pagination: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 30,
     left: 0,
     right: 0,
     flexDirection: 'row',
