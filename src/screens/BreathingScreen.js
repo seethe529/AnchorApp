@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   methodContainer: {
-    flex: 1,
+    height: '100%',
     justifyContent: 'space-between',
     paddingTop: 40,
   },
