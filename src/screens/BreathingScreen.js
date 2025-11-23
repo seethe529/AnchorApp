@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 24,
-    paddingBottom: 40,
+    paddingBottom: 110,
   },
   dot: {
     width: 8,
