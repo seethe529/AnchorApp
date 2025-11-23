@@ -334,8 +334,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   methodContainer: {
-    height: '100%',
-    justifyContent: 'space-between',
+    flex: 1,
     paddingTop: 40,
   },
   headerContainer: {
@@ -377,12 +376,12 @@ const styles = StyleSheet.create({
   },
   circleContainer: {
     alignItems: 'center',
-    marginTop: 80,
-    marginBottom: 80,
+    marginTop: 60,
+    marginBottom: 40,
   },
   footerContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingBottom: 120,
     alignItems: 'center',
   },
   breathingCircleWrapper: {
