@@ -37,7 +37,7 @@ function MainTabs() {
           let iconName;
           if (route.name === 'Home') iconName = focused ? 'home' : 'home-outline';
           else if (route.name === 'Tools') iconName = focused ? 'build' : 'build-outline';
-          else if (route.name === 'AI Support') iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+          else if (route.name === 'AI') iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           else if (route.name === 'Crisis') iconName = focused ? 'medical' : 'medical-outline';
           else if (route.name === 'Progress') iconName = focused ? 'analytics' : 'analytics-outline';
           else if (route.name === 'Settings') iconName = focused ? 'settings' : 'settings-outline';
@@ -72,7 +72,7 @@ function MainTabs() {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Tools" component={ToolsScreen} />
-      <Tab.Screen name="AI Support" component={AIAgentScreen} />
+      <Tab.Screen name="AI" component={AIAgentScreen} options={{ title: 'AI Support' }} />
       <Tab.Screen name="Crisis" component={CrisisScreen} />
       <Tab.Screen name="Progress" component={ProgressScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />

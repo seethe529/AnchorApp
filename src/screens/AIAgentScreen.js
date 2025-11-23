@@ -123,7 +123,7 @@ export default function AIAgentScreen({ navigation }) {
     <KeyboardAvoidingView 
       style={[styles.container, { backgroundColor: theme.background }]} 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 120 : 0}
     >
       <View style={{ flex: 1 }} accessible={false}>
       <View style={[styles.quickActionsContainer, { backgroundColor: theme.card, borderBottomColor: theme.border }]} accessibilityRole="menu">
@@ -156,7 +156,7 @@ export default function AIAgentScreen({ navigation }) {
       <ScrollView 
         ref={scrollViewRef}
         style={styles.conversation}
-        contentContainerStyle={[styles.conversationContent, { paddingBottom: 120 }]}
+        contentContainerStyle={[styles.conversationContent, { paddingBottom: 60 }]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         accessible={false}
@@ -296,9 +296,12 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'flex-end',
     marginHorizontal: 12,
-    marginBottom: 100,
     borderRadius: 24,
     ...designTokens.shadows.card,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   textInput: { 
     flex: 1,

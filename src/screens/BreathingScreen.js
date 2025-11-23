@@ -377,7 +377,7 @@ const styles = StyleSheet.create({
   circleContainer: {
     alignItems: 'center',
     marginTop: 60,
-    marginBottom: 40,
+    marginBottom: 80,
   },
   footerContainer: {
     paddingHorizontal: 20,
