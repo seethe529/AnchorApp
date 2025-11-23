@@ -44,16 +44,15 @@ function MainTabs() {
           else if (route.name === 'Settings') iconName = 'settings';
           return <Ionicons name={iconName} size={27} color={color} />;
         },
-        tabBarActiveTintColor: isDark ? '#4ADE80' : '#2E845D',
-        tabBarInactiveTintColor: isDark ? '#6B7280' : '#94A3B8',
+        tabBarActiveTintColor: isDark ? '#3FAF7F' : '#2E845D',
+        tabBarInactiveTintColor: isDark ? '#9CA3AF' : '#94A3B8',
         headerStyle: { backgroundColor: theme.primary },
         headerTintColor: 'white',
         tabBarStyle: { 
           position: 'absolute',
-          paddingBottom: 24,
+          paddingBottom: 20,
           paddingTop: 8,
-          height: 75,
-          paddingHorizontal: 8,
+          height: 70,
           backgroundColor: isDark ? '#0F1115' : '#FFFFFF',
           borderTopWidth: 0,
           elevation: 8,
@@ -63,12 +62,12 @@ function MainTabs() {
           shadowRadius: 8,
         },
         tabBarLabelStyle: {
-          fontSize: 13,
+          fontSize: 10,
           fontWeight: '600',
+          marginTop: 2,
         },
-        tabBarLabelPosition: 'below-icon',
         tabBarIconStyle: {
-          marginTop: 0,
+          marginBottom: 0,
         }
       })}
     >
