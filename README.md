@@ -103,19 +103,30 @@ npm run android # for Android
 - `src/utils/storage.js` - AsyncStorage wrapper with error handling
 - `src/services/openai.js` - OpenAI API integration
 
-## Recent Updates (Build 33 - Modern UI)
+## Recent Updates (Build 44 - Modern UI Complete)
 
-### Build 31-33 - Modern UI Upgrade ✅ COMPLETE
+### Build 39-44 - AI Agent & Tab Bar Refinements ✅ COMPLETE
+- ✅ Fixed AI Agent keyboard behavior with proper KeyboardAvoidingView configuration
+- ✅ Input box positioned at bottom: 88px (above 75px tab bar)
+- ✅ ScrollView with marginBottom: 168px prevents content behind tab bar
+- ✅ Technique suggestions positioned absolutely at bottom: 168px with max height
+- ✅ Category names formatted (removed underscores, proper capitalization)
+- ✅ Enhanced tab bar visibility with 27px bold icons and 13px/600 labels
+- ✅ High-contrast colors: Dark mode (#4ADE80 active, #6B7280 inactive), Light mode (#2E845D active, #94A3B8 inactive)
+- ✅ Solid tab bar backgrounds (#0F1115 dark, #FFFFFF light) with improved shadows
+- ✅ Tab bar height optimized to 75px with labels positioned below icons
+- ✅ Full VoiceOver accessibility maintained throughout
+
+### Build 31-38 - Modern UI Upgrade ✅ COMPLETE
 - ✅ Comprehensive design system with modern color palette and design tokens
 - ✅ Reusable Button and Card components with gradients and animations
-- ✅ Floating translucent tab bar with frosted glass effect (88px height)
 - ✅ Modernized Home screen with gradient header and 2×3 Quick Actions grid
 - ✅ Enhanced Breathing screen with 180px gradient circle and modern buttons
 - ✅ Redesigned Crisis screen with gradient emergency cards and circular icons
 - ✅ Updated AI Support, Settings, Progress, and Tools screens with modern styling
 - ✅ iOS-style shadows, 16-20px border radius, improved spacing throughout
 - ✅ Scale animations on button press (0.97→1.0) for tactile feedback
-- ✅ Fixed tab bar overlap with proper bottom padding (120-140px) on all screens
+- ✅ Fixed tab bar overlap with proper bottom padding on all screens
 
 ## Previous Updates (Build 20 - Production)
 

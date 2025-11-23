@@ -3,7 +3,7 @@
 ## Overview
 This document summarizes the modern UI/UX upgrades applied to the Anchor PTSD Support app on the `modern-ui-upgrade` branch.
 
-## ✅ Completed Changes (Build 31-33)
+## ✅ Completed Changes (Build 31-44)
 
 ### 1. Design System Foundation
 **File**: `src/context/ThemeContext.js`
@@ -34,14 +34,20 @@ This document summarizes the modern UI/UX upgrades applied to the Anchor PTSD Su
   - Consistent border radius and padding
   - Support for default and strong variants
 
-### 3. Navigation & Tab Bar
+### 3. Navigation & Tab Bar (Build 44)
 **File**: `App.js`
-- ✅ Modernized bottom tab bar with:
-  - Translucent frosted glass effect
-  - Floating appearance with proper shadows
-  - Increased height (88px) for better touch targets
-  - Updated icon and label styling
-  - Proper color theming for active/inactive states
+- ✅ Enhanced tab bar visibility with:
+  - Larger icons (27px, up from ~24px)
+  - Bold filled icon variants (no -outline)
+  - Larger labels (13px, fontWeight 600)
+  - High-contrast colors:
+    - Dark mode: Active #4ADE80 (bright green), Inactive #6B7280 (slate gray), BG #0F1115
+    - Light mode: Active #2E845D, Inactive #94A3B8, BG #FFFFFF
+  - Solid backgrounds (no transparency)
+  - Improved shadows (shadowOpacity: 0.15, elevation: 8)
+  - Optimized height (75px)
+  - Labels positioned below icons (tabBarLabelPosition: 'below-icon')
+  - Full VoiceOver accessibility maintained
 
 ### 4. Home Screen
 **File**: `src/screens/HomeScreen.js`
@@ -88,12 +94,16 @@ This document summarizes the modern UI/UX upgrades applied to the Anchor PTSD Su
 - ✅ Increased spacing between sections
 - ✅ Better typography and readability
 
-### 7. AI Support Screen
+### 7. AI Support Screen (Build 39-43)
 **File**: `src/screens/AIAgentScreen.js`
+- ✅ Fixed keyboard behavior with KeyboardAvoidingView (keyboardVerticalOffset: 0)
+- ✅ Input box positioned at bottom: 88px (above 75px tab bar)
+- ✅ ScrollView with marginBottom: 168px to prevent content behind tab bar
+- ✅ Technique suggestions positioned absolutely at bottom: 168px with maxHeight: 200px
+- ✅ Suggestions wrapped in ScrollView for overflow handling
+- ✅ Category names formatted (removed underscores, proper capitalization)
 - ✅ Updated chat bubbles with 16px border radius
-- ✅ Floating input bar with 100px bottom margin
 - ✅ Improved quick action button styling
-- ✅ 120px ScrollView bottom padding for tab bar clearance
 
 ### 8. Settings Screen
 **File**: `src/screens/SettingsScreen.js`
@@ -108,10 +118,14 @@ This document summarizes the modern UI/UX upgrades applied to the Anchor PTSD Su
 - ✅ Fixed content overlap with floating tab bar
 - ✅ Improved spacing and readability
 
-### 10. Bug Fixes
+### 10. Bug Fixes (Build 31-44)
 - ✅ Fixed Breathing screen button visibility (changed to flex: 1 layout)
-- ✅ Fixed tab bar overlap on all screens (120-140px bottom padding)
+- ✅ Fixed tab bar overlap on all screens (120-168px bottom padding/margin)
 - ✅ Fixed Home screen Quick Actions layout (2×3 grid, 48% width cards)
+- ✅ Fixed AI Agent keyboard issues (proper KeyboardAvoidingView configuration)
+- ✅ Fixed technique suggestions positioning (absolute at bottom: 168px)
+- ✅ Fixed ScrollView content showing behind translucent tab bar (marginBottom: 168px)
+- ✅ Fixed category name formatting (removed underscores)
 
 ### 11. Dependencies
 - ✅ Installed `expo-linear-gradient` for gradient UI elements
@@ -177,14 +191,17 @@ cardMargin: 16
 - ✅ Test all screens in dark mode
 - ✅ Verify animations are smooth
 - ✅ Check accessibility labels
-- ✅ Test on iOS simulator (Build 31-33)
+- ✅ Test on iOS simulator (Build 31-44)
 - [ ] Test on Android emulator
-- ✅ Verify tab bar translucent effect works
+- ✅ Verify tab bar solid backgrounds work
 - ✅ Check gradient buttons render correctly
 - ✅ Verify shadows appear properly on iOS
-- ✅ Fix tab bar overlap issues (120-140px padding)
+- ✅ Fix tab bar overlap issues (120-168px padding/margin)
 - ✅ Fix Breathing screen button visibility
 - ✅ Confirm Home screen 2×3 grid layout
+- ✅ Test AI Agent keyboard behavior with input box
+- ✅ Verify technique suggestions appear above input
+- ✅ Test VoiceOver with new tab bar styling
 
 ## Notes
 - All changes are visual only - no functionality changes
