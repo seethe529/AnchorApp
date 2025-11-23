@@ -70,7 +70,7 @@ function MainTabs() {
         tabBarIconStyle: {
           marginBottom: 0,
         }
-      })
+      })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Tools" component={ToolsScreen} />
