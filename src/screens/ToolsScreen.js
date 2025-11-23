@@ -251,10 +251,10 @@ export default function ToolsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  categoryTabs: { paddingVertical: 12, paddingHorizontal: 8, borderBottomWidth: 1, maxHeight: 60 },
-  categoryTab: { paddingHorizontal: 16, paddingVertical: 8, marginHorizontal: 4, borderRadius: 16, height: 36 },
+  categoryTabs: { paddingVertical: 14, paddingHorizontal: 12, borderBottomWidth: 1, maxHeight: 64 },
+  categoryTab: { paddingHorizontal: 20, paddingVertical: 10, marginHorizontal: 6, borderRadius: 22, height: 44, justifyContent: 'center', alignItems: 'center' },
   activeTab: {},
-  categoryText: { fontSize: 13, fontWeight: '600' },
+  categoryText: { fontSize: 15, fontWeight: '700' },
   activeTabText: { color: 'white' },
   techniquesList: { flex: 1, padding: 16 },
   techniqueCard: { padding: 16, borderRadius: 12, marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },
