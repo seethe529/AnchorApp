@@ -242,7 +242,7 @@ export default function ToolsScreen() {
         ))}
       </ScrollView>
 
-      <ScrollView style={styles.techniquesList}>
+      <ScrollView style={styles.techniquesList} contentContainerStyle={{ paddingBottom: 140 }}>
         {currentTechniques.map(renderTechnique)}
       </ScrollView>
     </View>
@@ -251,12 +251,12 @@ export default function ToolsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  categoryTabs: { paddingVertical: 12, paddingHorizontal: 8, borderBottomWidth: 1 },
-  categoryTab: { paddingHorizontal: 16, paddingVertical: 8, marginHorizontal: 4, borderRadius: 16 },
+  categoryTabs: { paddingVertical: 12, paddingHorizontal: 8, borderBottomWidth: 1, maxHeight: 60 },
+  categoryTab: { paddingHorizontal: 16, paddingVertical: 8, marginHorizontal: 4, borderRadius: 16, height: 36 },
   activeTab: {},
   categoryText: { fontSize: 13, fontWeight: '600' },
   activeTabText: { color: 'white' },
-  techniquesList: { flex: 1, padding: 16, paddingBottom: 140 },
+  techniquesList: { flex: 1, padding: 16 },
   techniqueCard: { padding: 16, borderRadius: 12, marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },
   techniqueHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   techniqueName: { fontSize: 17, fontWeight: '600', flex: 1 },
