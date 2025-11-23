@@ -2,15 +2,16 @@
 
 This document tracks planned features, enhancements, and ideas for future versions of Anchor.
 
-**Current Status:** Build 14 in development, Build 10 live on App Store
+**Current Status:** Build 33 (Modern UI) in testing, Build 20 live on App Store
 
 ---
 
 ## Version 1.1.0 (Current Development)
 
 ### ✅ Completed Features
+- **Modern UI Upgrade (Build 31-33):** Complete design system overhaul with iOS-style components
 - **Dark Mode (Build 14):** Global theme support with ThemeContext
-- **Enhanced Notifications (Build 12):** Fixed iOS scheduling, 25 randomized messages
+- **Enhanced Notifications (Build 12-20):** Midnight auto-reset system with date-based triggers
 - **Breathing Exercises (Build 10):** 5 swipeable methods with animations
 - **Medical Citations (Build 9):** Comprehensive citations from authoritative sources
 

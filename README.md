@@ -66,12 +66,13 @@ npm run android # for Android
 - **Framework**: React Native with Expo SDK 54
 - **Navigation**: React Navigation v6
 - **State Management**: React Hooks + Context API (ThemeContext)
-- **UI Components**: Custom components with React Native
+- **UI Components**: Custom components with React Native + Expo Linear Gradient
 - **Icons**: Expo Vector Icons
 - **Storage**: AsyncStorage + Expo Secure Store
 - **Notifications**: Expo Notifications
 - **AI Integration**: OpenAI GPT-4 API
 - **Charts**: React Native Chart Kit
+- **Design System**: iOS Human Interface Guidelines with trauma-informed color palette
 
 ## Key Components
 
@@ -92,13 +93,31 @@ npm run android # for Android
 - `src/screens/ResourcesScreen.js` - Medical citations and sources
 - `src/screens/DisclaimerScreen.js` - Medical disclaimer on first launch
 
+### Components
+- `src/components/Button.js` - Modern button with gradients and animations
+- `src/components/Card.js` - iOS-style card with shadows and variants
+
 ### Context & Utils
-- `src/context/ThemeContext.js` - Global dark/light theme management
+- `src/context/ThemeContext.js` - Global dark/light theme with design tokens
 - `src/utils/notifications.js` - Notification scheduling and management
 - `src/utils/storage.js` - AsyncStorage wrapper with error handling
 - `src/services/openai.js` - OpenAI API integration
 
-## Recent Updates (Build 20 - Production)
+## Recent Updates (Build 33 - Modern UI)
+
+### Build 31-33 - Modern UI Upgrade ✅ COMPLETE
+- ✅ Comprehensive design system with modern color palette and design tokens
+- ✅ Reusable Button and Card components with gradients and animations
+- ✅ Floating translucent tab bar with frosted glass effect (88px height)
+- ✅ Modernized Home screen with gradient header and 2×3 Quick Actions grid
+- ✅ Enhanced Breathing screen with 180px gradient circle and modern buttons
+- ✅ Redesigned Crisis screen with gradient emergency cards and circular icons
+- ✅ Updated AI Support, Settings, Progress, and Tools screens with modern styling
+- ✅ iOS-style shadows, 16-20px border radius, improved spacing throughout
+- ✅ Scale animations on button press (0.97→1.0) for tactile feedback
+- ✅ Fixed tab bar overlap with proper bottom padding (120-140px) on all screens
+
+## Previous Updates (Build 20 - Production)
 
 ### Build 20 - Midnight Auto-Reset System ✅ COMPLETE
 - ✅ Complete notification system rewrite with midnight auto-reset architecture

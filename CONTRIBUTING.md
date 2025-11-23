@@ -92,16 +92,21 @@ OPENAI_API_KEY=your_api_key_here
 
 ### Style
 - Use functional components with hooks
-- Follow existing code style
+- Follow existing code style (modern UI with gradients and animations)
 - Use meaningful variable names
 - Add comments for complex logic
 - Keep functions small and focused
+- Use design tokens from ThemeContext for consistency
+- Apply Button and Card components where appropriate
 
 ### Components
 - One component per file
 - Use React.memo for expensive components
 - Add PropTypes or TypeScript types
 - Include accessibility labels
+- Use reusable Button and Card components from `src/components/`
+- Apply design tokens (typography, spacing, borderRadius) from ThemeContext
+- Add scale animations for interactive elements (Animated.spring)
 
 ### Testing
 - Write tests for new features
