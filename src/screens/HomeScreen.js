@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   actionCard: { 
-    width: '48%',
+    width: 165,
     alignItems: 'center',
     paddingVertical: 18,
     paddingHorizontal: 8,
