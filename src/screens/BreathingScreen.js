@@ -154,7 +154,7 @@ export default function BreathingScreen({ navigation }) {
           importantForAccessibility="yes"
         >
           <LinearGradient
-            colors={[item.color, item.color + 'CC']}
+            colors={[item.color, item.color]}
             style={styles.breathingCircle}
           >
             <Text 
@@ -337,7 +337,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingTop: 20,
-    paddingBottom: 60,
+    paddingBottom: 100,
+    backgroundColor: 'transparent',
   },
   headerContainer: {
     paddingTop: 12,
@@ -378,19 +379,19 @@ const styles = StyleSheet.create({
   },
   circleContainer: {
     alignItems: 'center',
-    marginTop: 40,
-    marginBottom: 60,
+    marginTop: 60,
+    marginBottom: 80,
   },
   footerContainer: {
     paddingHorizontal: 20,
     alignItems: 'center',
   },
   breathingCircleWrapper: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowColor: 'transparent',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    elevation: 0,
   },
   breathingCircle: {
     width: 180,
