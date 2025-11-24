@@ -67,10 +67,7 @@ export default function SafetyPlan() {
   }
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: theme.background }]}
-      contentContainerStyle={{ paddingBottom: 120 }}
-    >
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={[styles.header, { backgroundColor: theme.card }]}>
         <Text style={[styles.title, { color: theme.primary }]}>Personal Safety Plan</Text>
         <TouchableOpacity
