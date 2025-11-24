@@ -306,21 +306,6 @@ export default function SettingsScreen({ navigation }) {
 
         <TouchableOpacity 
           style={styles.actionButton} 
-          onPress={exportNotifications}
-          accessibilityLabel="Export Notifications"
-          accessibilityHint="Share scheduled notifications data"
-          accessibilityRole="button"
-        >
-          <Ionicons name="notifications" size={24} color={theme.primary} />
-          <View style={styles.actionInfo}>
-            <Text style={[styles.actionTitle, { color: theme.text }]}>Export Notifications</Text>
-            <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>View scheduled reminders</Text>
-          </View>
-          <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
-        </TouchableOpacity>
-
-        <TouchableOpacity 
-          style={styles.actionButton} 
           onPress={clearAllData}
           accessibilityLabel="Clear All Data"
           accessibilityHint="Warning: Permanently deletes all your data"
