@@ -76,16 +76,16 @@
 
 ## Build 20 Improvements
 
-### 🔔 Midnight Auto-Reset Notification System
-- ✅ Complete notification system rewrite with midnight auto-reset architecture
-- ✅ Date-based triggers only (no interval triggers, no AppState listeners)
-- ✅ Silent system notification at midnight regenerates all notifications automatically
+### 🔔 Notification System
+- ✅ Hourly date-change check system with automatic notification regeneration
+- ✅ Date-based triggers only (no interval triggers)
+- ✅ Hourly timer checks for date changes and regenerates notifications automatically
 - ✅ 24 hourly breathing reminders with 25 randomized DBT/CBT messages
 - ✅ 7-day mood check-in reminders at 8 PM daily
 - ✅ Opt-in notification permissions (default off, user must enable)
 - ✅ Debug notification viewer in Settings for troubleshooting
 - ✅ DEV_MODE flag for testing (3 notifications/60s) vs production (24/hour)
-- ✅ Zero immediate firing, zero spam, self-perpetuating system
+- ✅ Reliable, spam-free notification delivery
 
 ## Build 17-19 Improvements (Included)
 
@@ -104,11 +104,12 @@
 - ✅ Crisis detection and safety resource provision functional
 - ✅ Personalized DBT/CBT technique suggestions operational
 
-### 📱 Notification System - PERFECTED
+### 📱 Notification System - OPTIMIZED
 - ✅ Mood reminders: Daily at 8:00 PM using reliable date-based triggers
 - ✅ Breathing reminders: Hourly with 25 randomized DBT/CBT-inspired messages
-- ✅ Auto-rescheduling when notifications run low
-- ✅ No more calendar-based trigger issues
+- ✅ Hourly date-change detection with automatic regeneration
+- ✅ Date-based triggers stored in last_reset for reliability
+- ✅ No calendar-based trigger issues
 
 ### 🫁 Breathing Screen - PERFECTED
 - ✅ Three-section layout (header/circle/footer) with proper flex behavior
@@ -270,7 +271,7 @@ PTSD, anxiety, DBT, CBT, mental health, veterans, trauma, breathing, mindfulness
 ## Submission Readiness
 
 ### Build Status
-- ✅ Build 20 compiled successfully
+- ✅ Build 47 compiled successfully
 - ✅ All environment variables configured
 - ✅ Apple certificates and provisioning profiles valid
 - ✅ App Store Connect metadata ready
@@ -292,4 +293,4 @@ PTSD, anxiety, DBT, CBT, mental health, veterans, trauma, breathing, mindfulness
 
 ---
 
-**Build 47 represents a major evolution from Build 20, featuring a complete modern UI upgrade with trauma-informed design principles, comprehensive accessibility improvements, and iOS-specific optimizations. The app now features a polished, professional interface with dynamic safe area handling, improved tab bar visibility, and enhanced user experience across all screens. Combined with the revolutionary midnight auto-reset notification system from Build 20, this version is production-ready and will provide immediate value to veterans and individuals dealing with PTSD and trauma.**
+**Build 47 represents a major evolution from Build 20, featuring a complete modern UI upgrade with trauma-informed design principles, comprehensive accessibility improvements, and iOS-specific optimizations. The app now features a polished, professional interface with dynamic safe area handling, improved tab bar visibility, and enhanced user experience across all screens. Combined with the reliable hourly date-change notification system, this version is production-ready and will provide immediate value to veterans and individuals dealing with PTSD and trauma.**
