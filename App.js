@@ -53,6 +53,7 @@ function MainTabs() {
           position: 'absolute',
           paddingBottom: insets.bottom,
           paddingTop: 8,
+          paddingHorizontal: 4,
           height: 64 + insets.bottom,
           backgroundColor: isDark ? '#0F1115' : '#FFFFFF',
           borderTopWidth: 0,
