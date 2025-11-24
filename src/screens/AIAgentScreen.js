@@ -164,7 +164,7 @@ export default function AIAgentScreen({ navigation }) {
         style={[styles.conversation, { marginBottom: 64 + insets.bottom + 80 }]}
         contentContainerStyle={[
           styles.conversationContent,
-          { paddingBottom: 100, paddingTop: 24, paddingHorizontal: 20 }
+          { paddingBottom: 60, paddingTop: 24, paddingHorizontal: 20 }
         ]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
