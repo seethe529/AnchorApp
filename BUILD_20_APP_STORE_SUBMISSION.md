@@ -1,9 +1,78 @@
-# Build 20 - App Store Submission Ready
+# Build 47 - App Store Submission Ready
 
 **Version**: 1.1.0  
-**Build Number**: 20  
+**Build Number**: 47  
 **Submission Date**: November 2025  
 **Status**: Ready for App Store Review
+
+## Build 31-47 Improvements (Modern UI Upgrade)
+
+### 🎨 Modern Design System
+- ✅ Comprehensive design system with modern color palette and design tokens
+- ✅ Reusable Button and Card components with gradients and animations
+- ✅ iOS-style shadows (16-20px border radius) throughout app
+- ✅ Scale animations on button press (0.97→1.0) for tactile feedback
+- ✅ Trauma-informed color palette maintained in both light/dark modes
+
+### 🏠 Enhanced Home Screen
+- ✅ Subtle gradient header background
+- ✅ Redesigned Quick Action cards in 2×3 grid layout
+- ✅ Icon containers with colored backgrounds
+- ✅ Enhanced Daily Reminder card with quote icon
+- ✅ Gradient button for mood tracking
+- ✅ Improved typography using design tokens
+
+### 🫁 Upgraded Breathing Screen
+- ✅ Breathing circle with radial gradient effect (180px)
+- ✅ Enhanced shadow (8px blur, 0.2 opacity)
+- ✅ Modern gradient buttons (green for Start, red for Pause)
+- ✅ Improved animation smoothness
+- ✅ Better centering and spacing
+
+### 🚨 Redesigned Crisis Screen
+- ✅ Emergency action cards with red gradient backgrounds
+- ✅ Large icons on left with chevron indicators
+- ✅ Circular icon containers (56px) with colored backgrounds
+- ✅ Modernized local resource cards
+- ✅ Gradient buttons for safety plan and emergency alerts
+
+### 🤖 AI Support Screen Enhancements (Build 39-47)
+- ✅ Fixed keyboard behavior with proper KeyboardAvoidingView configuration
+- ✅ Input box positioned dynamically above tab bar using safe area insets
+- ✅ ScrollView with proper bottom margin to prevent content behind tab bar
+- ✅ Technique suggestions positioned absolutely with maxHeight: 200px
+- ✅ Category names formatted (removed underscores, proper capitalization)
+- ✅ Updated chat bubbles with 16px border radius
+- ✅ Improved quick action button styling
+- ✅ Increased ScrollView paddingBottom (60px) to prevent chat bubbles hiding under input
+
+### 📱 Tab Bar Improvements (Build 44-47)
+- ✅ Dynamic height using safe area insets (64 + insets.bottom)
+- ✅ Respects iPhone home indicator and rounded corners
+- ✅ Larger icons (27px) with bold filled variants
+- ✅ Calmer active color (#3FAF7F teal instead of neon green)
+- ✅ High-contrast inactive colors for better visibility
+- ✅ Solid backgrounds (#0F1115 dark, #FFFFFF light)
+- ✅ Improved shadows (shadowOpacity: 0.15, elevation: 8)
+- ✅ Horizontal padding (4px) to prevent icons touching screen edges
+- ✅ Labels (11px, fontWeight 600) positioned below icons
+- ✅ Full VoiceOver accessibility maintained
+
+### 🔧 iOS-Specific Fixes (Build 47)
+- ✅ Fixed status bar gold flash by setting userInterfaceStyle to "automatic"
+- ✅ Status bar now automatically matches app's current theme
+- ✅ Eliminated visual glitches during screen transitions
+
+### ⚙️ Enhanced Settings & Other Screens
+- ✅ Increased spacing between sections
+- ✅ Modernized cards with 18px border radius
+- ✅ Enlarged hit areas (60px min height) for accessibility
+- ✅ Proper bottom padding (120-168px) for tab bar clearance on all screens
+- ✅ Improved spacing and readability throughout
+
+### 📦 Dependencies Added
+- ✅ expo-linear-gradient for gradient UI elements
+- ✅ expo-blur for frosted glass effects
 
 ## Build 20 Improvements
 
@@ -223,4 +292,4 @@ PTSD, anxiety, DBT, CBT, mental health, veterans, trauma, breathing, mindfulness
 
 ---
 
-**Build 20 represents the culmination of extensive development and testing, featuring a revolutionary midnight auto-reset notification system that ensures reliable, spam-free reminders. This version is production-ready and will provide immediate value to veterans and individuals dealing with PTSD and trauma.**
+**Build 47 represents a major evolution from Build 20, featuring a complete modern UI upgrade with trauma-informed design principles, comprehensive accessibility improvements, and iOS-specific optimizations. The app now features a polished, professional interface with dynamic safe area handling, improved tab bar visibility, and enhanced user experience across all screens. Combined with the revolutionary midnight auto-reset notification system from Build 20, this version is production-ready and will provide immediate value to veterans and individuals dealing with PTSD and trauma.**
