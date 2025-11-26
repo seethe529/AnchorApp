@@ -33,7 +33,7 @@ export default function BreathingScreen({ navigation }) {
     // Animate circle based on phase
     if (currentPhase.phase.includes('In')) {
       Animated.timing(scaleAnim, {
-        toValue: 1.5,
+        toValue: 1.3,
         duration: currentPhase.duration * 1000,
         useNativeDriver: true,
       }).start();
@@ -162,6 +162,7 @@ export default function BreathingScreen({ navigation }) {
               style={styles.phaseText}
               accessibilityElementsHidden={true}
               importantForAccessibility="no"
+              allowFontScaling={false}
             >
               {isActive ? currentPhase.phase : 'Ready'}
             </Text>
@@ -170,6 +171,7 @@ export default function BreathingScreen({ navigation }) {
                 style={styles.countdownText}
                 accessibilityElementsHidden={true}
                 importantForAccessibility="no"
+                allowFontScaling={false}
               >
                 {countdown}
               </Text>
@@ -289,18 +291,21 @@ export default function BreathingScreen({ navigation }) {
           style={[styles.title, { color: theme.text }]}
           accessibilityRole="header"
           accessibilityLevel={1}
+          allowFontScaling={false}
         >
           {breathingMethods[currentIndex].name}
         </Text>
         <Text 
           style={[styles.subtitle, { color: theme.textSecondary }]}
           accessibilityRole="text"
+          allowFontScaling={false}
         >
           {breathingMethods[currentIndex].subtitle}
         </Text>
         <Text 
           style={[styles.description, { color: theme.textSecondary }]}
           accessibilityRole="text"
+          allowFontScaling={false}
         >
           {breathingMethods[currentIndex].description}
         </Text>
