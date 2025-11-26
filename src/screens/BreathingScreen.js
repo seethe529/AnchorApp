@@ -33,7 +33,7 @@ export default function BreathingScreen({ navigation }) {
     // Animate circle based on phase
     if (currentPhase.phase.includes('In')) {
       Animated.timing(scaleAnim, {
-        toValue: 1.8,
+        toValue: 1.5,
         duration: currentPhase.duration * 1000,
         useNativeDriver: true,
       }).start();
