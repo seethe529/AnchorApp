@@ -18,7 +18,7 @@ export default {
     ios: {
       supportsTablet: false,
       bundleIdentifier: "com.anchor.ptsd-support",
-      buildNumber: "54",
+      buildNumber: "55",
       config: {
         usesNonExemptEncryption: false
       },
