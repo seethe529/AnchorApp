@@ -309,7 +309,7 @@ export default function BreathingScreen({ navigation }) {
         })}
       />
       <View 
-        style={[styles.pagination, { bottom: 30 + insets.bottom }]}
+        style={[styles.pagination, { bottom: 10 + insets.bottom }]}
         accessible={true}
         accessibilityRole="text"
         accessibilityLabel={`Page ${currentIndex + 1} of ${breathingMethods.length}. Current method: ${breathingMethods[currentIndex].name}. Swipe left or right to change methods.`}
@@ -379,8 +379,8 @@ const styles = StyleSheet.create({
   },
   circleContainer: {
     alignItems: 'center',
-    marginTop: 60,
-    marginBottom: 50,
+    marginTop: 55,
+    marginBottom: 55,
   },
   footerContainer: {
     paddingHorizontal: 20,
