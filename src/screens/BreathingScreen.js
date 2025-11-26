@@ -136,7 +136,7 @@ export default function BreathingScreen({ navigation }) {
   }).current;
 
   const renderMethod = ({ item, index }) => (
-    <View style={[styles.methodContainer, { width, paddingBottom: 60 + insets.bottom }]}>
+    <View style={[styles.methodContainer, { width }]}>
       
 
       <View style={styles.circleContainer}>
@@ -336,8 +336,7 @@ const styles = StyleSheet.create({
   },
   methodContainer: {
     flex: 1,
-    justifyContent: 'space-between',
-    paddingTop: 20,
+    paddingTop: 10,
     backgroundColor: 'transparent',
   },
   headerContainer: {
@@ -379,12 +378,20 @@ const styles = StyleSheet.create({
   },
   circleContainer: {
     alignItems: 'center',
-    marginTop: 50,
-    marginBottom: 60,
+    justifyContent: 'center',
+    flex: 1,
+    marginTop: 20,
+    marginBottom: 20,
   },
   footerContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     paddingHorizontal: 20,
+    paddingBottom: 88,
     alignItems: 'center',
+    backgroundColor: 'transparent',
   },
   breathingCircleWrapper: {
     shadowColor: 'transparent',
