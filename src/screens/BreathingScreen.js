@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, TouchableOpacity, FlatList, Dimensions, Platform, AccessibilityInfo } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { breathingMethods } from '../data/breathingMethods';
@@ -12,6 +12,7 @@ const { width } = Dimensions.get('window');
 
 export default function BreathingScreen({ navigation }) {
   const { theme } = useTheme();
+  const insets = useSafeAreaInsets();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState(0);
@@ -135,7 +136,7 @@ export default function BreathingScreen({ navigation }) {
   }).current;
 
   const renderMethod = ({ item, index }) => (
-    <View style={[styles.methodContainer, { width }]}>
+    <View style={[styles.methodContainer, { width, paddingBottom: 60 + insets.bottom }]}>
       
 
       <View style={styles.circleContainer}>
@@ -308,7 +309,7 @@ export default function BreathingScreen({ navigation }) {
         })}
       />
       <View 
-        style={styles.pagination}
+        style={[styles.pagination, { bottom: 30 + insets.bottom }]}
         accessible={true}
         accessibilityRole="text"
         accessibilityLabel={`Page ${currentIndex + 1} of ${breathingMethods.length}. Current method: ${breathingMethods[currentIndex].name}. Swipe left or right to change methods.`}
@@ -337,7 +338,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingTop: 20,
-    paddingBottom: 100,
     backgroundColor: 'transparent',
   },
   headerContainer: {
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
   circleContainer: {
     alignItems: 'center',
     marginTop: 60,
-    marginBottom: 80,
+    marginBottom: 50,
   },
   footerContainer: {
     paddingHorizontal: 20,
