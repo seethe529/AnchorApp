@@ -178,7 +178,7 @@ export default function BreathingScreen({ navigation }) {
         </Animated.View>
       </View>
 
-      <View style={styles.footerContainer}>
+      <View style={[styles.footerContainer, { paddingBottom: 20 + insets.bottom }]}>
         <View style={styles.instructionContainer}>
           <Text 
             style={[styles.instruction, { color: theme.textSecondary }]}
@@ -250,9 +250,24 @@ export default function BreathingScreen({ navigation }) {
           </LinearGradient>
         </TouchableOpacity>
 
-        <View style={{ height: 20 }} />
-
-        
+        <View 
+          style={styles.paginationInline}
+          accessible={true}
+          accessibilityRole="text"
+          accessibilityLabel={`Page ${index + 1} of ${breathingMethods.length}. Current method: ${item.name}. Swipe left or right to change methods.`}
+        >
+          {breathingMethods.map((method, methodIndex) => (
+            <View
+              key={methodIndex}
+              style={[
+                styles.dot,
+                methodIndex === index && styles.dotActive,
+                { backgroundColor: methodIndex === index ? item.color : '#ccc' }
+              ]}
+              accessible={false}
+            />
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -308,24 +323,7 @@ export default function BreathingScreen({ navigation }) {
           index,
         })}
       />
-      <View 
-        style={[styles.pagination, { bottom: 10 + insets.bottom }]}
-        accessible={true}
-        accessibilityRole="text"
-        accessibilityLabel={`Page ${currentIndex + 1} of ${breathingMethods.length}. Current method: ${breathingMethods[currentIndex].name}. Swipe left or right to change methods.`}
-      >
-        {breathingMethods.map((method, methodIndex) => (
-          <View
-            key={methodIndex}
-            style={[
-              styles.dot,
-              methodIndex === currentIndex && styles.dotActive,
-              { backgroundColor: methodIndex === currentIndex ? breathingMethods[currentIndex].color : '#ccc' }
-            ]}
-            accessible={false}
-          />
-        ))}
-      </View>
+
     </View>
   );
 }
@@ -384,12 +382,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   footerContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     paddingHorizontal: 20,
-    paddingBottom: 88,
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
@@ -470,14 +463,11 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 
-  pagination: {
-    position: 'absolute',
-    bottom: 30,
-    left: 0,
-    right: 0,
+  paginationInline: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 20,
   },
   dot: {
     width: 8,
