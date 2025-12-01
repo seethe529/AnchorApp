@@ -21,7 +21,7 @@ describe('AIAgentScreen', () => {
 
   it('renders initial greeting message', () => {
     const { getByText } = render(<AIAgentScreen />);
-    expect(getByText(/Hi, I'm here to support you/i)).toBeTruthy();
+    expect(getByText(/Hey! I'm Anchor, your personal support companion/i)).toBeTruthy();
   });
 
   it('renders Quick Help buttons', () => {
