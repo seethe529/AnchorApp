@@ -18,7 +18,7 @@ Implemented comprehensive dark mode support with global theme management.
 - Trauma-informed color pale# Anchor App - Development Backlog
 
 **Current Build:** 54 (Expo SDK 54)  
-**Last Updated:** December 2025  
+**Last Updated:** December 2, 2025  
 **Status:** Build 54 in TestFlight, preparing for App Store + Android release
 
 ---
@@ -120,7 +120,7 @@ Prepare and release Android version of Anchor app to Google Play Store.
 ## Completed Features
 
 ### Build 54 (December 2025)
-- ✅ Expanded to 27 DBT/CBT techniques (7 new techniques added)
+- ✅ Expanded to 28 DBT/CBT techniques (8 new techniques added)
 - ✅ Enhanced AI suggestion algorithm with synonym mapping
 - ✅ 100% citation coverage for all techniques
 - ✅ Expanded breathing reminders from 25 to 98 messages
@@ -193,4 +193,4 @@ Prepare and release Android version of Anchor app to Google Play Store.
 
 ---
 
-Last Updated: December 2025
+Last Updated: December 2, 2025

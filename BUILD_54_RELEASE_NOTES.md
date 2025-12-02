@@ -2,7 +2,7 @@
 
 **Version:** 1.2.0  
 **Build Number:** 54  
-**Release Date:** December 2025  
+**Release Date:** December 2, 2025  
 **Status:** TestFlight Testing
 
 ---
@@ -11,7 +11,7 @@
 
 ### 🧠 Enhanced DBT/CBT Technique System
 
-**7 New Techniques Added:**
+**8 New Techniques Added:**
 1. **Safe Place Visualization** - Grounding through mental imagery
 2. **Cold Grounding** - Physical sensation grounding technique
 3. **Name 3 Things** - Quick cognitive grounding exercise
@@ -19,8 +19,9 @@
 5. **Pros and Cons** - Decision-making and emotion regulation
 6. **Self-Validation** - Emotion regulation and self-compassion
 7. **Half-Smile and Willing Hands** - DBT mindfulness technique
+8. **Additional Breathing Method** - Enhanced breathing exercise collection
 
-**Total Techniques:** 27 (up from 20)
+**Total Techniques:** 28 (up from 20)
 
 ### 🎯 Improved AI Suggestion Algorithm
 
@@ -31,7 +32,7 @@
 
 ### 📚 100% Citation Coverage
 
-All 27 techniques now include evidence-based citations from:
+All 28 techniques now include evidence-based citations from:
 - Behavioural Tech (Linehan's DBT Institute)
 - American Psychological Association (APA)
 - Veterans Affairs (VA)
@@ -86,7 +87,7 @@ All 27 techniques now include evidence-based citations from:
 - [ ] **New Techniques:** Test all 7 new techniques load and display correctly
 - [ ] **Safety Plan Buttons:** Verify call/text buttons work for all 3 crisis lines
 - [ ] **AI Suggestions:** Test synonym mapping with phrases like "panic attack", "can't breathe"
-- [ ] **Citations:** Verify all 27 techniques show citations
+- [ ] **Citations:** Verify all 28 techniques show citations
 
 ### General Functionality
 - [ ] Dark/Light theme toggle works
@@ -114,7 +115,7 @@ None currently identified. Report any issues found during TestFlight testing.
 
 ## Version History
 
-- **Build 54 (1.2.0):** Enhanced techniques, 98 breathing messages, optimized notifications
+- **Build 54 (1.2.0):** 28 techniques (8 new), 98 breathing messages, optimized notifications
 - **Build 53 (1.1.2):** Breathing screen fixes, iOS stability improvements
 - **Build 44 (1.1.0):** Modern UI complete, dark mode, enhanced tab bar
 - **Build 20 (1.0.5):** Notification system rewrite, midnight auto-reset

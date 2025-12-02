@@ -16,7 +16,7 @@ A mobile application designed to provide comprehensive support for veterans and 
 - **Interpersonal Skills**: DEAR MAN, GIVE
 - **Mindfulness**: Observe, Describe, Participate
 - **Cognitive Techniques**: Thought Records, Behavioral Activation, Exposure
-- **All 27 techniques include citations** from authoritative sources (Harvard Medical School, Mayo Clinic, APA, VA, Behavioural Tech, etc.)
+- **All 28 techniques include citations** from authoritative sources (Harvard Medical School, Mayo Clinic, APA, VA, Behavioural Tech, etc.)
 
 ### 🤖 AI Support Agent
 - Real-time technique suggestions based on user input
@@ -77,7 +77,7 @@ npm run android # for Android
 ## Key Components
 
 ### Data Layer
-- `src/data/techniques.js` - 27 DBT/CBT techniques with enhanced suggestion algorithm
+- `src/data/techniques.js` - 28 DBT/CBT techniques with enhanced suggestion algorithm
 - `src/data/citations.js` - Medical citations from authoritative sources
 - `src/data/dailyReminders.js` - 150+ trauma-informed daily reminders
 - `src/data/breathingMethods.js` - 5 breathing exercise patterns
@@ -106,9 +106,9 @@ npm run android # for Android
 ## Recent Updates (Build 54 - Enhanced Techniques & Notifications)
 
 ### Build 54 - Enhanced Technique System & Notifications ✅ COMPLETE
-- ✅ Expanded to 27 DBT/CBT techniques (added 7 new: Safe Place Visualization, Cold Grounding, Name 3 Things, Radical Acceptance, Pros and Cons, Self-Validation, Half-Smile and Willing Hands)
+- ✅ Expanded to 28 DBT/CBT techniques (added 8 new: Safe Place Visualization, Cold Grounding, Name 3 Things, Radical Acceptance, Pros and Cons, Self-Validation, Half-Smile and Willing Hands, plus additional breathing method)
 - ✅ Enhanced AI suggestion algorithm with synonym mapping and weighted scoring
-- ✅ 100% citation coverage for all 27 techniques from evidence-based sources
+- ✅ 100% citation coverage for all 28 techniques from evidence-based sources
 - ✅ Expanded breathing reminders from 25 to 98 unique messages
 - ✅ Optimized mood reminders from 7 days to 2 days (daily rescheduling makes this sufficient)
 - ✅ Fixed Safety Plan emergency contact buttons (call/text functionality)
