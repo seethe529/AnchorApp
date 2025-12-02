@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { secureStorage, STORAGE_KEYS } from '../utils/storage';
@@ -115,6 +115,7 @@ export default function SafetyPlan() {
         <Text style={[styles.emergencyTitle, { color: theme.primary }]}>Emergency Contacts</Text>
         <TouchableOpacity 
           style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
+          onPress={() => Linking.openURL('tel:988')}
           accessibilityLabel="National Suicide Prevention Lifeline, 988"
           accessibilityHint="Call for immediate crisis support"
           accessibilityRole="button"
@@ -123,6 +124,7 @@ export default function SafetyPlan() {
         </TouchableOpacity>
         <TouchableOpacity 
           style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
+          onPress={() => Linking.openURL('sms:741741&body=HOME')}
           accessibilityLabel="Crisis Text Line, Text HOME to 741741"
           accessibilityHint="Send a text message for crisis support"
           accessibilityRole="button"
@@ -131,6 +133,7 @@ export default function SafetyPlan() {
         </TouchableOpacity>
         <TouchableOpacity 
           style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
+          onPress={() => Linking.openURL('tel:18002738255')}
           accessibilityLabel="Veterans Crisis Line, 1-800-273-8255"
           accessibilityHint="Call for veteran-specific crisis support"
           accessibilityRole="button"

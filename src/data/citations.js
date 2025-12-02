@@ -145,6 +145,69 @@ export const citations = {
     source: "VA National Center for PTSD (2024). Common Reactions After Trauma. https://www.ptsd.va.gov/understand/common/common_adults.asp",
     description:
       "The VA provides educational information on understanding and managing trauma-related reactions and symptoms."
+  },
+
+  radicalAcceptance: {
+    title: "Radical Acceptance (DBT Distress Tolerance)",
+    organization: "Behavioural Tech – DBT Knowledge Center",
+    year: "2024",
+    url: "https://behavioraltech.org/knowledge-center/",
+    description:
+      "Radical Acceptance is a DBT skill for reducing suffering by accepting reality without judgment or resistance."
+  },
+
+  prosAndCons: {
+    title: "Pros and Cons (DBT Distress Tolerance)",
+    organization: "Behavioural Tech – DBT Knowledge Center",
+    year: "2024",
+    url: "https://behavioraltech.org/knowledge-center/",
+    description:
+      "Pros and Cons is a DBT decision-making tool to help pause and make deliberate choices during urges."
+  },
+
+  selfValidation: {
+    title: "Self-Validation and Emotion Regulation",
+    organization: "Behavioural Tech – DBT Knowledge Center",
+    year: "2024",
+    url: "https://behavioraltech.org/knowledge-center/",
+    description:
+      "Self-validation is a DBT emotion regulation skill for acknowledging and accepting your feelings without judgment."
+  },
+
+  halfSmile: {
+    title: "Half-Smile and Willing Hands (DBT Mindfulness)",
+    organization: "Behavioural Tech – DBT Knowledge Center",
+    year: "2024",
+    url: "https://behavioraltech.org/knowledge-center/",
+    description:
+      "Half-smile and willing hands are DBT mindfulness skills using gentle posture to signal safety to the nervous system."
+  },
+
+  safePlaceVisualization: {
+    title: "Guided Imagery and Visualization for Trauma",
+    organization: "U.S. Department of Veterans Affairs - National Center for PTSD",
+    year: "2024",
+    url: "https://www.ptsd.va.gov/understand/common/common_adults.asp",
+    description:
+      "The VA provides educational information on visualization techniques for managing trauma-related distress."
+  },
+
+  coldGrounding: {
+    title: "TIPP Skills - Temperature Component",
+    organization: "Behavioural Tech – DBT Skills Overview",
+    year: "2024",
+    url: "https://behavioraltech.org/resources/faqs/dialectical-behavior-therapy-dbt/",
+    description:
+      "Cold temperature grounding is part of the TIPP DBT skill for rapidly shifting emotional arousal."
+  },
+
+  name3Things: {
+    title: "Grounding Techniques for Anxiety and Dissociation",
+    organization: "University of Rochester Medical Center",
+    year: "2018",
+    url: "https://www.urmc.rochester.edu/behavioral-health-partners/bhp-blog/april-2018/5-4-3-2-1-coping-technique-for-anxiety.aspx",
+    description:
+      "Quick grounding techniques help orient to the present moment during anxiety or dissociation."
   }
 };
 
@@ -189,25 +252,42 @@ export const disclaimer = {
 // Map techniques → citations
 export function getCitationForTechnique(name) {
   const map = {
+    // Grounding
     "5-4-3-2-1 Technique": citations.grounding,
     "Box Breathing": citations.breathing,
     "Progressive Muscle Relaxation": citations.pmr,
+    "4-7-8 Breathing": citations.breathing,
+    "Resonant Breathing": citations.breathing,
+    "Physiological Sigh": citations.breathing,
+    "Triangle Breathing": citations.breathing,
+    "Safe Place Visualization": citations.safePlaceVisualization,
+    "Cold Grounding": citations.coldGrounding,
+    "Name 3 Things": citations.name3Things,
 
+    // Distress Tolerance
     TIPP: citations.tipp,
     "Distract with ACCEPTS": citations.accepts,
     "Self-Soothe": citations.selfSoothe,
+    "Radical Acceptance": citations.radicalAcceptance,
+    "Pros and Cons": citations.prosAndCons,
 
+    // Emotion Regulation
     PLEASE: citations.please,
     "Opposite Action": citations.oppositeAction,
     "Check the Facts": citations.mindfulness,
+    "Self-Validation": citations.selfValidation,
 
+    // Interpersonal
     "DEAR MAN": citations.dearman,
     GIVE: citations.give,
 
+    // Mindfulness
     Observe: citations.mindfulness,
     Describe: citations.mindfulness,
     Participate: citations.mindfulness,
+    "Half-Smile and Willing Hands": citations.halfSmile,
 
+    // Cognitive/CBT
     "Thought Record": citations.thoughtRecord,
     "Behavioral Activation": citations.behavioralActivation,
     Exposure: citations.exposure
