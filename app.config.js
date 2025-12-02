@@ -9,8 +9,8 @@ export default {
     userInterfaceStyle: "automatic",
     splash: {
       image: "./assets/splash.png",
-      resizeMode: "contain",
-      backgroundColor: "#2E8B57"
+      resizeMode: "cover",
+      backgroundColor: "#1A1D21"
     },
     assetBundlePatterns: [
       "**/*"
