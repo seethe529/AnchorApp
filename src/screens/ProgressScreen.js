@@ -77,7 +77,7 @@ export default function ProgressScreen({ navigation }) {
     for (let i = 6; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      const dateString = date.toDateString();
+      const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
       
       const dayLogs = logs.filter(log => log.date === dateString);
       const avgMood = dayLogs.length > 0 

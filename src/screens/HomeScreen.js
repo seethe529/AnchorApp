@@ -37,7 +37,8 @@ export default function HomeScreen({ navigation }) {
   const checkTodayMoodLog = async () => {
     try {
       const moodLogs = await storage.getItem(STORAGE_KEYS.MOOD_LOGS) || [];
-      const today = new Date().toDateString();
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
       const todayLog = moodLogs.find(log => log.date === today);
       
       if (todayLog) {

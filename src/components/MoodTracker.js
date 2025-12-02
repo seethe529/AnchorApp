@@ -25,12 +25,15 @@ const MoodTracker = memo(({ onMoodLogged }) => {
     
     setIsLoading(true);
     try {
+      const now = new Date();
+      const dateString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      
       const moodEntry = {
         mood: selectedMood.value,
         moodName: selectedMood.name,
         notes: sanitizeText(notes, 500),
-        timestamp: new Date().toISOString(),
-        date: new Date().toDateString()
+        timestamp: now.toISOString(),
+        date: dateString
       };
 
       // Validate before saving
