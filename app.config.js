@@ -33,7 +33,12 @@ export default {
         backgroundColor: "#2E8B57"
       },
       package: "com.anchor.ptsdsupport",
-      versionCode: 1
+      versionCode: 54,
+      permissions: [
+        "NOTIFICATIONS",
+        "SCHEDULE_EXACT_ALARM",
+        "USE_EXACT_ALARM"
+      ]
     },
     web: {
       favicon: "./assets/favicon.png"

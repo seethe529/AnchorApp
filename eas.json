@@ -16,6 +16,9 @@
     "production": {
       "ios": {
         "image": "latest"
+      },
+      "android": {
+        "buildType": "apk"
       }
     }
   },
@@ -25,6 +28,10 @@
         "appleId": "lingoryan084@gmail.com",
         "ascAppId": "6755088021",
         "appleTeamId": "X57B3HGZ6U"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json",
+        "track": "internal"
       }
     }
   }
