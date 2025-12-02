@@ -17,22 +17,31 @@ Implemented comprehensive dark mode support with global theme management.
 - Charts and progress visualizations adapt to theme
 - Trauma-informed color pale# Anchor App - Development Backlog
 
-**Current Build:** 53 (Expo SDK 54)  
-**Last Updated:** January 2025  
-**Status:** Production-ready, preparing for Android release
+**Current Build:** 54 (Expo SDK 54)  
+**Last Updated:** December 2025  
+**Status:** Build 54 in TestFlight, preparing for App Store + Android release
 
 ---
 
-## Upcoming - Android Release
+## Upcoming - App Store & Android Release
 
 **Priority:** High  
-**Estimated Effort:** 1-2 days  
-**Status:** 🔄 IN PROGRESS
+**Estimated Effort:** 2-3 days  
+**Status:** 🔄 IN PROGRESS (Build 54 in TestFlight testing)
 
 ### Description
 Prepare and release Android version of Anchor app to Google Play Store.
 
-### Tasks
+### iOS Tasks (Build 54)
+- [x] Enhanced technique system with 7 new techniques
+- [x] Expanded breathing reminders to 98 messages
+- [x] Fixed Safety Plan emergency contacts
+- [x] Optimized notifications (2-day mood reminders)
+- [x] Build 54 submitted to TestFlight
+- [ ] 24-hour TestFlight testing
+- [ ] Submit Build 54 to App Store
+
+### Android Tasks
 - [ ] Configure Android build settings in app.config.js
 - [ ] Generate Android app signing key
 - [ ] Test on Android emulator/device
@@ -110,6 +119,17 @@ Prepare and release Android version of Anchor app to Google Play Store.
 
 ## Completed Features
 
+### Build 54 (December 2025)
+- ✅ Expanded to 27 DBT/CBT techniques (7 new techniques added)
+- ✅ Enhanced AI suggestion algorithm with synonym mapping
+- ✅ 100% citation coverage for all techniques
+- ✅ Expanded breathing reminders from 25 to 98 messages
+- ✅ Optimized mood reminders from 7 days to 2 days
+- ✅ Fixed Safety Plan emergency contact buttons
+- ✅ Comprehensive test suite (68 tests passing)
+- ✅ Removed ios/ and android/ from git (EAS managed)
+- ✅ Build 54 submitted to TestFlight
+
 ### Build 44 (January 2025)
 - ✅ Modern UI upgrade complete
 - ✅ Dark mode and light mode fully implemented
@@ -122,8 +142,8 @@ Prepare and release Android version of Anchor app to Google Play Store.
 
 ### Build 20 (December 2024)
 - ✅ Midnight auto-reset notification system
-- ✅ 24 hourly breathing reminders
-- ✅ 7-day mood check-in reminders
+- ✅ 16 breathing reminders (90-minute intervals)
+- ✅ Mood check-in reminders at 8 PM daily
 - ✅ Opt-in notification permissions
 - ✅ Debug notification viewer
 - ✅ Self-perpetuating notification architecture
@@ -156,11 +176,11 @@ Prepare and release Android version of Anchor app to Google Play Store.
 
 ## Notes
 
-- **Current Build:** 53 (Expo SDK 54)
-- **iOS Status:** Live on App Store
-- **Android Status:** In development
-- **Focus:** Android release preparation
-- **Next:** Google Play Store submission
+- **Current Build:** 54 (Expo SDK 54)
+- **iOS Status:** Build 54 in TestFlight testing
+- **Android Status:** Pending iOS approval
+- **Focus:** TestFlight validation, then App Store + Android
+- **Next:** 24-hour testing, then App Store submission
 
 ### Removed Features
 - ❌ Medication reminders (removed from app)
@@ -173,4 +193,4 @@ Prepare and release Android version of Anchor app to Google Play Store.
 
 ---
 
-Last Updated: January 2025
+Last Updated: December 2025
