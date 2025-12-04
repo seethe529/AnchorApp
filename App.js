@@ -146,12 +146,25 @@ function AppContent() {
     <ErrorBoundary>
     <SafeAreaProvider>
     <OfflineIndicator />
-    <NavigationContainer>
+    <NavigationContainer
+      theme={{
+        dark: theme.background === '#111418',
+        colors: {
+          primary: theme.primary,
+          background: theme.background,
+          card: theme.card,
+          text: theme.text,
+          border: theme.border,
+          notification: theme.primary,
+        },
+      }}
+    >
       <Stack.Navigator
         screenOptions={{
           headerStyle: { backgroundColor: theme.primary },
           headerTintColor: 'white',
-          headerTitleStyle: { fontWeight: 'bold' }
+          headerTitleStyle: { fontWeight: 'bold' },
+          cardStyle: { backgroundColor: theme.background }
         }}
       >
         {!disclaimerAccepted && (
