@@ -91,20 +91,28 @@ function AppContent() {
   useEffect(() => {
     initializeApp();
     
-    // Hourly check for date change to reset notifications
-    const timer = setInterval(async () => {
+    // Check and reschedule on app foreground
+    const checkAndReschedule = async () => {
       const now = new Date();
       const last = await storage.getItem("last_reset") || 0;
+      const prefs = await storage.getItem('user_preferences') || {};
 
       if (now.getDate() !== last) {
         console.log('🌙 [APP] Date changed, resetting notifications');
-        await scheduleBreathingReminder();
-        await scheduleMoodReminder();
+        if (prefs.breathingReminders) await scheduleBreathingReminder();
+        if (prefs.moodReminders) await scheduleMoodReminder();
         await storage.setItem("last_reset", now.getDate());
       }
-    }, 3600000); // every hour
+    };
 
-    return () => clearInterval(timer);
+    // Listen for app state changes
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
+        checkAndReschedule();
+      }
+    });
+
+    return () => subscription.remove();
   }, []);
 
   const initializeApp = async () => {

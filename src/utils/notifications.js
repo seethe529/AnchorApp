@@ -110,7 +110,7 @@ const BREATHING_REMINDER_MESSAGES = [
  *************************************************/
 const DEV_MODE = false; // Set to true for testing
 const MOOD_DAYS = DEV_MODE ? 2 : 2; // Only 2 days since we reschedule daily
-const BREATHING_COUNT = DEV_MODE ? 3 : 16;
+const BREATHING_COUNT = DEV_MODE ? 3 : 48;
 const BREATHING_INTERVAL = DEV_MODE ? 60 : 5400; // seconds (90 minutes)
 
 /*************************************************
@@ -405,7 +405,7 @@ export const exportScheduledNotifications = async () => {
         title: n.content.title,
         body: n.content.body,
         trigger: n.trigger,
-        triggerDate: n.trigger?.seconds ? new Date(Date.now() + (n.trigger.seconds * 1000)).toISOString() : (n.trigger?.date ? new Date(n.trigger.date).toISOString() : (n.trigger?.value ? new Date(n.trigger.value * 1000).toISOString() : 'unknown'))
+        triggerDate: n.trigger?.date ? new Date(n.trigger.date).toISOString() : (n.trigger?.value ? new Date(n.trigger.value).toISOString() : 'unknown')
       }))
     };
   } catch (e) {
