@@ -260,12 +260,11 @@ export const scheduleBreathingReminder = async () => {
     await cancelBreathingReminder();
     console.log('🧹 [NOTIF] Existing breathing reminders cancelled');
 
-    const now = new Date();
+    const now = Date.now();
     
     // Schedule BREATHING_COUNT notifications
     for (let i = 1; i <= BREATHING_COUNT; i++) {
-      const triggerDate = new Date(now);
-      triggerDate.setSeconds(triggerDate.getSeconds() + (BREATHING_INTERVAL * i));
+      const triggerDate = new Date(now + (BREATHING_INTERVAL * 1000 * i));
       
       const randomMessage = BREATHING_REMINDER_MESSAGES[
         Math.floor(Math.random() * BREATHING_REMINDER_MESSAGES.length)
