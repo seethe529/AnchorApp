@@ -109,8 +109,8 @@ const BREATHING_REMINDER_MESSAGES = [
  * CONFIGURATION
  *************************************************/
 const DEV_MODE = false; // Set to true for testing
-const MOOD_DAYS = DEV_MODE ? 2 : 2; // Only 2 days since we reschedule daily
-const BREATHING_COUNT = DEV_MODE ? 3 : 48;
+const MOOD_DAYS = DEV_MODE ? 2 : (Platform.OS === 'ios' ? 2 : 7); // iOS: 2 days (hourly reschedule), Android: 7 days (infrequent opens)
+const BREATHING_COUNT = DEV_MODE ? 3 : (Platform.OS === 'ios' ? 16 : 112); // iOS: 1 day (hourly timer), Android: 7 days (AppState)
 const BREATHING_INTERVAL = DEV_MODE ? 60 : 5400; // seconds (90 minutes)
 
 /*************************************************
@@ -390,13 +390,25 @@ export const exportScheduledNotifications = async () => {
         breathingReminders: byType.breathing.length,
         midnightReset: byType.reset.length
       },
-      hourlyDateCheckSystem: {
-        enabled: true,
-        checkInterval: '3600000ms (1 hour)',
+      rescheduleSystem: {
+        platform: Platform.OS,
+        ios: {
+          method: 'setInterval timer',
+          checkInterval: '3600000ms (1 hour)',
+          breathingCount: 16,
+          moodDays: 2,
+          note: 'Hourly timer checks date change while app is open, reschedules daily'
+        },
+        android: {
+          method: 'AppState listener',
+          checkInterval: 'On app foreground',
+          breathingCount: 112,
+          moodDays: 7,
+          note: 'Checks date change when app comes to foreground, needs longer coverage'
+        },
         lastResetDate: lastReset,
         currentDate: currentDate,
-        willResetToday: lastReset !== currentDate,
-        note: 'App checks every hour if date changed. If changed, notifications are rescheduled automatically.'
+        willResetToday: lastReset !== currentDate
       },
       debugTriggerSample: scheduled.length > 0 ? scheduled[0].trigger : null,
       notifications: scheduled.map(n => ({

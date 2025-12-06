@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, AppState } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, AppState, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -17,7 +17,7 @@ import BreathingExercise from './src/components/BreathingExercise';
 import BreathingScreen from './src/screens/BreathingScreen';
 import SafetyPlan from './src/components/SafetyPlan';
 
-import { scheduleBreathingReminder, scheduleMoodReminder } from './src/utils/notifications';
+import { scheduleBreathingReminder, scheduleMoodReminder, cancelBreathingReminder, cancelMoodReminder } from './src/utils/notifications';
 import { storage } from './src/utils/storage';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import ErrorLogger from './src/utils/errorLogger';
@@ -91,28 +91,52 @@ function AppContent() {
   useEffect(() => {
     initializeApp();
     
-    // Check and reschedule on app foreground
-    const checkAndReschedule = async () => {
-      const now = new Date();
-      const last = await storage.getItem("last_reset") || 0;
-      const prefs = await storage.getItem('user_preferences') || {};
+    // Platform-specific notification rescheduling
+    if (Platform.OS === 'ios') {
+      // iOS: Hourly timer checks for date change
+      const timer = setInterval(async () => {
+        const now = new Date();
+        const last = await storage.getItem("last_reset") || 0;
+        const prefs = await storage.getItem('user_preferences') || {};
 
-      if (now.getDate() !== last) {
-        console.log('🌙 [APP] Date changed, resetting notifications');
-        if (prefs.breathingReminders) await scheduleBreathingReminder();
-        if (prefs.moodReminders) await scheduleMoodReminder();
-        await storage.setItem("last_reset", now.getDate());
-      }
-    };
+        if (now.getDate() !== last) {
+          console.log('🌙 [APP] iOS: Date changed, resetting notifications');
+          // Cancel ALL notifications first to prevent duplicates
+          await cancelBreathingReminder();
+          await cancelMoodReminder();
+          // Then reschedule if user has them enabled
+          if (prefs.breathingReminders) await scheduleBreathingReminder();
+          if (prefs.moodReminders) await scheduleMoodReminder();
+          await storage.setItem("last_reset", now.getDate());
+        }
+      }, 3600000); // every hour
 
-    // Listen for app state changes
-    const subscription = AppState.addEventListener('change', (nextAppState) => {
-      if (nextAppState === 'active') {
-        checkAndReschedule();
-      }
-    });
+      return () => clearInterval(timer);
+    } else if (Platform.OS === 'android') {
+      // Android: Check on app foreground
+      const checkAndReschedule = async () => {
+        const now = new Date();
+        const last = await storage.getItem("last_reset") || 0;
+        const prefs = await storage.getItem('user_preferences') || {};
 
-    return () => subscription.remove();
+        if (now.getDate() !== last) {
+          console.log('🌙 [APP] Android: Date changed, resetting notifications');
+          await cancelBreathingReminder();
+          await cancelMoodReminder();
+          if (prefs.breathingReminders) await scheduleBreathingReminder();
+          if (prefs.moodReminders) await scheduleMoodReminder();
+          await storage.setItem("last_reset", now.getDate());
+        }
+      };
+
+      const subscription = AppState.addEventListener('change', (nextAppState) => {
+        if (nextAppState === 'active') {
+          checkAndReschedule();
+        }
+      });
+
+      return () => subscription.remove();
+    }
   }, []);
 
   const initializeApp = async () => {

@@ -1,3 +1,19 @@
+// Mock React Native Platform
+const mockPlatform = {
+  OS: 'ios',
+  select: jest.fn((obj) => obj.ios || obj.default),
+};
+
+jest.mock('react-native', () => ({
+  Platform: mockPlatform,
+  AppState: {
+    addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+  },
+}));
+
+// Export for test manipulation
+global.mockPlatform = mockPlatform;
+
 // Mock AsyncStorage
 jest.mock('@react-native-async-storage/async-storage', () => ({
   setItem: jest.fn(() => Promise.resolve()),
@@ -18,7 +34,12 @@ jest.mock('expo-notifications', () => ({
   setNotificationHandler: jest.fn(),
   scheduleNotificationAsync: jest.fn(() => Promise.resolve('notification-id')),
   cancelScheduledNotificationAsync: jest.fn(() => Promise.resolve()),
+  cancelAllScheduledNotificationsAsync: jest.fn(() => Promise.resolve()),
+  getAllScheduledNotificationsAsync: jest.fn(() => Promise.resolve([])),
+  getPermissionsAsync: jest.fn(() => Promise.resolve({ status: 'undetermined' })),
   requestPermissionsAsync: jest.fn(() => Promise.resolve({ status: 'granted' })),
+  setNotificationChannelAsync: jest.fn(() => Promise.resolve()),
+  AndroidImportance: { MAX: 4 },
 }));
 
 // Mock Location
