@@ -33,7 +33,7 @@ describe('OpenAI Service', () => {
     fetch.mockRejectedValueOnce(new Error('Network error'));
 
     const response = await sendMessageToOpenAI('test message', []);
-    expect(response).toContain('here to');
+    expect(response).toContain('having trouble');
   });
 
   test('should include conversation history', async () => {

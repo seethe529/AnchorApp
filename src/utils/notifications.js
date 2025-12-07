@@ -147,10 +147,14 @@ export const requestPermissions = async () => {
   try {
     if (Platform.OS === 'android') {
       await Notifications.setNotificationChannelAsync('default', {
-        name: 'default',
-        importance: Notifications.AndroidImportance.MAX,
+        name: 'Breathing Reminders',
+        importance: Notifications.AndroidImportance.HIGH,
+        vibrationPattern: [0, 250, 250, 250],
+        enableVibrate: true,
+        showBadge: false,
+        bypassDnd: false,
       });
-      console.log('🔔 [NOTIF] Android channel "default" set');
+      console.log('🔔 [NOTIF] Android channel "default" set with HIGH importance');
     }
 
     const { status: existing } = await Notifications.getPermissionsAsync();
@@ -189,6 +193,7 @@ export const scheduleMoodReminder = async () => {
 
     const now = new Date();
     const currentHour = now.getHours();
+    let scheduled = 0;
     
     // Schedule for next MOOD_DAYS days
     for (let i = 0; i < MOOD_DAYS; i++) {
@@ -196,9 +201,9 @@ export const scheduleMoodReminder = async () => {
       triggerDate.setDate(triggerDate.getDate() + i);
       triggerDate.setHours(20, 0, 0, 0);
       
-      // If it's already past 8 PM today and this is day 0, skip to tomorrow
-      if (i === 0 && currentHour >= 20) {
-        console.log('⏭️ [NOTIF] Already past 8 PM today, skipping to tomorrow');
+      // Skip if in the past
+      if (triggerDate.getTime() <= Date.now()) {
+        console.log(`⏭️ [NOTIF] Skipping past mood reminder at ${triggerDate.toLocaleString()}`);
         continue;
       }
       
@@ -207,11 +212,15 @@ export const scheduleMoodReminder = async () => {
           title: "Daily Check-in",
           body: "How are you feeling today? Take a moment to log your mood.",
           data: { type: 'mood_reminder' },
+          priority: Notifications.AndroidNotificationPriority.HIGH,
+          categoryIdentifier: 'reminder',
         },
         trigger: { type: 'date', date: triggerDate },
       });
       
-      if (i === 0 || (i === 1 && currentHour >= 20)) {
+      scheduled++;
+      
+      if (scheduled === 1) {
         console.log(`📋 [NOTIF] First mood reminder at: ${triggerDate.toLocaleString()}`);
       }
     }
@@ -261,10 +270,18 @@ export const scheduleBreathingReminder = async () => {
     console.log('🧹 [NOTIF] Existing breathing reminders cancelled');
 
     const now = Date.now();
+    let scheduled = 0;
     
     // Schedule BREATHING_COUNT notifications
     for (let i = 1; i <= BREATHING_COUNT; i++) {
-      const triggerDate = new Date(now + (BREATHING_INTERVAL * 1000 * i));
+      const triggerTime = now + (BREATHING_INTERVAL * 1000 * i);
+      const triggerDate = new Date(triggerTime);
+      
+      // Skip if in the past (shouldn't happen, but safety check)
+      if (triggerTime <= Date.now()) {
+        console.log(`⏭️ [NOTIF] Skipping past notification at ${triggerDate.toLocaleString()}`);
+        continue;
+      }
       
       const randomMessage = BREATHING_REMINDER_MESSAGES[
         Math.floor(Math.random() * BREATHING_REMINDER_MESSAGES.length)
@@ -275,11 +292,15 @@ export const scheduleBreathingReminder = async () => {
           title: "Breathing Break",
           body: randomMessage,
           data: { type: 'breathing_reminder' },
+          priority: Notifications.AndroidNotificationPriority.HIGH,
+          categoryIdentifier: 'reminder',
         },
         trigger: { type: 'date', date: triggerDate },
       });
       
-      if (i === 1) {
+      scheduled++;
+      
+      if (scheduled === 1) {
         console.log(`📋 [NOTIF] First breathing reminder at: ${triggerDate.toLocaleString()}`);
         console.log(`💬 [NOTIF] Sample message: "${randomMessage}"`);
       }

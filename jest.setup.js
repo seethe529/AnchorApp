@@ -9,6 +9,27 @@ jest.mock('react-native', () => ({
   AppState: {
     addEventListener: jest.fn(() => ({ remove: jest.fn() })),
   },
+  StyleSheet: {
+    create: (styles) => styles,
+    flatten: (styles) => styles,
+  },
+  View: 'View',
+  Text: 'Text',
+  ScrollView: 'ScrollView',
+  TouchableOpacity: 'TouchableOpacity',
+  TextInput: 'TextInput',
+  ActivityIndicator: 'ActivityIndicator',
+  KeyboardAvoidingView: 'KeyboardAvoidingView',
+  FlatList: 'FlatList',
+  Dimensions: {
+    get: jest.fn(() => ({ width: 375, height: 667 })),
+  },
+  Linking: {
+    openURL: jest.fn(() => Promise.resolve()),
+  },
+  Alert: {
+    alert: jest.fn(),
+  },
 }));
 
 // Export for test manipulation
@@ -39,7 +60,8 @@ jest.mock('expo-notifications', () => ({
   getPermissionsAsync: jest.fn(() => Promise.resolve({ status: 'undetermined' })),
   requestPermissionsAsync: jest.fn(() => Promise.resolve({ status: 'granted' })),
   setNotificationChannelAsync: jest.fn(() => Promise.resolve()),
-  AndroidImportance: { MAX: 4 },
+  AndroidImportance: { MAX: 4, HIGH: 3 },
+  AndroidNotificationPriority: { HIGH: 'high', MAX: 'max', DEFAULT: 'default' },
 }));
 
 // Mock Location
@@ -139,3 +161,23 @@ jest.mock('./src/context/ThemeContext', () => {
     },
   };
 });
+
+// Mock expo-constants
+jest.mock('expo-constants', () => ({
+  expoConfig: {
+    extra: {
+      openaiApiKey: 'test-api-key',
+    },
+  },
+}));
+
+// Mock expo-linear-gradient
+jest.mock('expo-linear-gradient', () => ({
+  LinearGradient: 'LinearGradient',
+}));
+
+// Mock react-native-chart-kit
+jest.mock('react-native-chart-kit', () => ({
+  LineChart: 'LineChart',
+  BarChart: 'BarChart',
+}));

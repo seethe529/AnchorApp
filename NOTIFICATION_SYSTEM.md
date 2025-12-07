@@ -3,7 +3,7 @@
 ## Overview
 Anchor uses a platform-specific notification system optimized for iOS and Android's different behaviors and constraints.
 
-**Version:** Build 61 (December 5, 2025)
+**Version:** Build 64 (December 6, 2025)
 
 ---
 
@@ -50,10 +50,12 @@ if (Platform.OS === 'ios') {
 **Strategy:** Long coverage + foreground reschedule
 
 #### Rescheduling Mechanism
-- **Method:** `AppState` listener
+- **Method:** `AppState` listener with 5-minute debounce
 - **Trigger:** Only when app comes to foreground (user opens app)
+- **Debounce:** Prevents reschedule checks within 5 minutes of last check
 - **Check:** Compares current date with last reset date
 - **Action:** If date changed, cancels all notifications and reschedules
+- **Safety:** Skips past notification dates to prevent immediate firing
 
 #### Coverage
 - **Breathing Reminders:** 112 notifications (7 days)
@@ -66,8 +68,10 @@ if (Platform.OS === 'ios') {
 #### Rationale
 - Android restricts background timers for battery optimization
 - AppState listener only fires when user opens app
+- 5-minute debounce prevents reschedule spam during PTSD episodes
 - Long coverage handles users who don't open app frequently
-- Without exact alarm permission, notifications may be batched/delayed
+- HIGH priority notifications reduce Android battery batching delays
+- Health category identifier marks notifications as time-sensitive
 
 #### Code Location
 ```javascript
@@ -110,7 +114,10 @@ When `DEV_MODE = true`:
 - **Title:** "Breathing Break"
 - **Body:** Randomized from 98 DBT/CBT-inspired messages
 - **Data:** `{ type: 'breathing_reminder' }`
+- **Priority:** HIGH (Android)
+- **Category:** 'reminder' (health notification)
 - **Trigger:** Date-based (exact time)
+- **Scheduling:** Millisecond-based calculation for exact 90-minute intervals
 
 **Example Messages:**
 - "Take one mindful breath and return to center."
@@ -121,7 +128,10 @@ When `DEV_MODE = true`:
 - **Title:** "Daily Check-in"
 - **Body:** "How are you feeling today? Take a moment to log your mood."
 - **Data:** `{ type: 'mood_reminder' }`
+- **Priority:** HIGH (Android)
+- **Category:** 'reminder' (health notification)
 - **Trigger:** Date-based (8:00 PM daily)
+- **Safety:** Skips past dates to prevent immediate firing
 
 ---
 
@@ -144,7 +154,8 @@ if (prefs.moodReminders) await scheduleMoodReminder();
 
 ### Android Cancellation
 - Same explicit cancellation logic
-- Less critical since longer coverage reduces reschedule frequency
+- 5-minute debounce prevents multiple cancellation/reschedule cycles
+- Skips past notification dates after cancellation to prevent immediate firing
 
 ---
 
@@ -239,12 +250,19 @@ All notification operations log to console with emoji prefixes:
 - **Mitigation:** 1-day coverage usually sufficient
 - **Fallback:** User reopening app triggers reschedule check
 
-### 3. Past 8 PM (Mood Reminders)
-- **Scenario:** Rescheduling happens after 8 PM
-- **Logic:** Skips today, schedules for tomorrow
-- **Code:** `if (i === 0 && currentHour >= 20) continue;`
+### 3. Past Notification Dates
+- **Scenario:** Rescheduling creates notifications with past trigger times
+- **Logic:** Skips any notification with trigger time <= Date.now()
+- **Code:** `if (triggerTime <= Date.now()) continue;`
+- **Impact:** Prevents notifications from firing immediately on app open
 
-### 4. Timezone Changes
+### 4. Rapid App Opens (PTSD Episodes)
+- **Scenario:** User opens app multiple times during distress
+- **Logic:** 5-minute debounce prevents reschedule spam
+- **Code:** `if (now - lastCheck < 300000) return;`
+- **Impact:** No notification disruption during crisis moments
+
+### 5. Timezone Changes
 - **Behavior:** Uses device local time
 - **Impact:** Notifications adjust to new timezone automatically
 - **No special handling needed**
@@ -259,9 +277,10 @@ All notification operations log to console with emoji prefixes:
 - **Memory:** Single timer instance
 
 ### Android
-- **Listener Overhead:** Only fires on app open
+- **Listener Overhead:** Only fires on app open (debounced)
 - **Battery Impact:** None (no background work)
 - **Storage:** 112 scheduled notifications (~10KB)
+- **Notification Priority:** HIGH importance channel with vibration
 
 ---
 
@@ -278,12 +297,14 @@ All notification operations log to console with emoji prefixes:
 
 ### Android Testing
 - [ ] Enable breathing reminders
-- [ ] Verify 112 notifications scheduled
+- [ ] Verify 112 notifications scheduled at exact 90-min intervals
 - [ ] Close app (background)
-- [ ] Wait 24 hours
-- [ ] Reopen app
-- [ ] Check console for reschedule
-- [ ] Verify notifications refreshed
+- [ ] Reopen app immediately → verify debounce (no reschedule)
+- [ ] Wait 6 minutes, reopen → verify debounce expired
+- [ ] Wait 24 hours, reopen → verify reschedule
+- [ ] Check console for reschedule logs
+- [ ] Verify no notifications fire on app open
+- [ ] Rapid open/close 5 times → verify no spam
 
 ### Cross-Platform
 - [ ] Toggle reminders OFF → verify cancellation
@@ -324,10 +345,15 @@ All notification operations log to console with emoji prefixes:
 3. Open app to trigger reschedule
 4. Export notifications to verify scheduling
 
-### Duplicate Notifications (iOS)
-1. Should be fixed in Build 61
+### Duplicate Notifications
+1. Fixed in Build 61 (explicit cancellation)
 2. If still occurring, toggle reminders OFF then ON
 3. Check for multiple app instances running
+
+### Notifications Fire on App Open (Android)
+1. Fixed in Build 64 (skip past dates + debounce)
+2. If still occurring, check console logs for reschedule spam
+3. Verify debounce is working (5-minute minimum between checks)
 
 ### Notifications Stop After 7 Days (Android)
 1. Expected behavior if user doesn't open app
@@ -338,7 +364,19 @@ All notification operations log to console with emoji prefixes:
 
 ## Version History
 
-### Build 61 (Current)
+### Build 64 (Current)
+- Added 5-minute debounce to Android AppState listener
+- Skip past notification dates to prevent immediate firing
+- HIGH priority notifications for Android
+- Health category identifier for time-sensitive notifications
+- Millisecond-based scheduling for exact 90-minute intervals
+
+### Build 62-63
+- Fixed notification scheduling calculation (milliseconds)
+- All 112 Android notifications now perfectly spaced
+- Comprehensive test suite (38 passing tests)
+
+### Build 61
 - Platform-specific systems implemented
 - iOS: Hourly timer with explicit cancellation
 - Android: AppState listener with 7-day coverage
@@ -357,6 +395,6 @@ All notification operations log to console with emoji prefixes:
 
 ---
 
-**Document Version:** 1.0  
-**Last Updated:** December 5, 2025  
+**Document Version:** 2.0  
+**Last Updated:** December 6, 2025  
 **Maintained By:** Development Team

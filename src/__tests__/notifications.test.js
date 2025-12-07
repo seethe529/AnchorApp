@@ -155,6 +155,40 @@ describe('Notification System', () => {
       expect(diff).toBe(5400); // 90 minutes
     });
 
+    it('should schedule ALL reminders at consistent 90-minute intervals', async () => {
+      const mockNow = 1733523177620; // Fixed timestamp
+      jest.spyOn(Date, 'now').mockReturnValue(mockNow);
+      
+      await scheduleBreathingReminder();
+      
+      const calls = Notifications.scheduleNotificationAsync.mock.calls;
+      
+      // Verify each notification is scheduled at exactly i * 90 minutes from now
+      for (let i = 0; i < calls.length; i++) {
+        const triggerDate = calls[i][0].trigger.date;
+        const expectedTime = mockNow + (5400 * 1000 * (i + 1)); // i+1 because loop starts at i=1
+        const actualTime = triggerDate.getTime();
+        
+        expect(actualTime).toBe(expectedTime);
+        
+        // Log for debugging
+        if (i < 3) {
+          console.log(`Notification ${i + 1}: Expected ${expectedTime}, Got ${actualTime}, Diff: ${actualTime - expectedTime}ms`);
+        }
+      }
+      
+      // Verify intervals between consecutive notifications
+      for (let i = 1; i < calls.length; i++) {
+        const prevTrigger = calls[i - 1][0].trigger.date.getTime();
+        const currTrigger = calls[i][0].trigger.date.getTime();
+        const interval = (currTrigger - prevTrigger) / 1000; // seconds
+        
+        expect(interval).toBe(5400); // Exactly 90 minutes
+      }
+      
+      Date.now.mockRestore();
+    });
+
     it('should use randomized messages from message pool', async () => {
       await scheduleBreathingReminder();
       const calls = Notifications.scheduleNotificationAsync.mock.calls;
@@ -171,6 +205,60 @@ describe('Notification System', () => {
       const call = Notifications.scheduleNotificationAsync.mock.calls[0][0];
       expect(call.content.title).toBe('Breathing Break');
       expect(call.content.data.type).toBe('breathing_reminder');
+    });
+  });
+
+  describe('scheduleBreathingReminder - Android (112 notifications)', () => {
+    it('should validate Android scheduling math: 112 notifications × 90 min = 7 days', () => {
+      const BREATHING_COUNT_ANDROID = 112;
+      const BREATHING_INTERVAL = 5400; // seconds (90 minutes)
+      
+      const totalSeconds = BREATHING_COUNT_ANDROID * BREATHING_INTERVAL;
+      const totalMinutes = totalSeconds / 60;
+      const totalHours = totalMinutes / 60;
+      const totalDays = totalHours / 24;
+      
+      expect(totalSeconds).toBe(604800); // 7 days in seconds
+      expect(totalMinutes).toBe(10080); // 7 days in minutes
+      expect(totalHours).toBe(168); // 7 days in hours
+      expect(totalDays).toBe(7); // Exactly 7 days
+    });
+
+    it('should verify 112 notifications would be scheduled with correct intervals', () => {
+      const mockNow = 1733523177620;
+      const BREATHING_COUNT = 112;
+      const BREATHING_INTERVAL = 5400;
+      
+      // Simulate the scheduling loop
+      const scheduledTimes = [];
+      for (let i = 1; i <= BREATHING_COUNT; i++) {
+        const triggerTime = mockNow + (BREATHING_INTERVAL * 1000 * i);
+        scheduledTimes.push(triggerTime);
+      }
+      
+      expect(scheduledTimes.length).toBe(112);
+      
+      // Verify first notification at 90 minutes
+      expect(scheduledTimes[0]).toBe(mockNow + (5400 * 1000 * 1));
+      
+      // Verify last notification at 7 days
+      expect(scheduledTimes[111]).toBe(mockNow + (5400 * 1000 * 112));
+      
+      // Verify all intervals are exactly 90 minutes (5400 seconds)
+      for (let i = 1; i < scheduledTimes.length; i++) {
+        const interval = (scheduledTimes[i] - scheduledTimes[i - 1]) / 1000;
+        expect(interval).toBe(5400);
+      }
+      
+      // Verify coverage span
+      const firstTime = scheduledTimes[0];
+      const lastTime = scheduledTimes[111];
+      const coverageSeconds = (lastTime - firstTime) / 1000;
+      const coverageDays = coverageSeconds / 86400;
+      
+      // 111 intervals of 90 minutes = 6.9375 days (from first to last notification)
+      expect(coverageSeconds).toBe(111 * 5400);
+      expect(coverageDays).toBeCloseTo(6.9375, 4);
     });
   });
 

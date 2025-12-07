@@ -113,19 +113,30 @@ function AppContent() {
 
       return () => clearInterval(timer);
     } else if (Platform.OS === 'android') {
-      // Android: Check on app foreground
+      // Android: Check on app foreground with debounce
+      let lastCheck = 0;
       const checkAndReschedule = async () => {
-        const now = new Date();
+        const now = Date.now();
+        // Debounce: only check once per 5 minutes
+        if (now - lastCheck < 300000) {
+          console.log('⏭️ [APP] Android: Skipping reschedule check (debounced)');
+          return;
+        }
+        lastCheck = now;
+
+        const currentDate = new Date().getDate();
         const last = await storage.getItem("last_reset") || 0;
         const prefs = await storage.getItem('user_preferences') || {};
 
-        if (now.getDate() !== last) {
+        if (currentDate !== last) {
           console.log('🌙 [APP] Android: Date changed, resetting notifications');
           await cancelBreathingReminder();
           await cancelMoodReminder();
           if (prefs.breathingReminders) await scheduleBreathingReminder();
           if (prefs.moodReminders) await scheduleMoodReminder();
-          await storage.setItem("last_reset", now.getDate());
+          await storage.setItem("last_reset", currentDate);
+        } else {
+          console.log('✅ [APP] Android: Date unchanged, no reschedule needed');
         }
       };
 
