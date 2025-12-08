@@ -94,20 +94,31 @@ function AppContent() {
     // Platform-specific notification rescheduling
     if (Platform.OS === 'ios') {
       // iOS: Hourly timer checks for date change
+      let isRescheduling = false;
       const timer = setInterval(async () => {
+        if (isRescheduling) {
+          console.log('⏭️ [APP] iOS: Reschedule already in progress, skipping');
+          return;
+        }
+        
         const now = new Date();
         const last = await storage.getItem("last_reset") || 0;
         const prefs = await storage.getItem('user_preferences') || {};
 
         if (now.getDate() !== last) {
+          isRescheduling = true;
           console.log('🌙 [APP] iOS: Date changed, resetting notifications');
-          // Cancel ALL notifications first to prevent duplicates
-          await cancelBreathingReminder();
-          await cancelMoodReminder();
-          // Then reschedule if user has them enabled
-          if (prefs.breathingReminders) await scheduleBreathingReminder();
-          if (prefs.moodReminders) await scheduleMoodReminder();
-          await storage.setItem("last_reset", now.getDate());
+          try {
+            // Cancel ALL notifications first to prevent duplicates
+            await cancelBreathingReminder();
+            await cancelMoodReminder();
+            // Then reschedule if user has them enabled
+            if (prefs.breathingReminders) await scheduleBreathingReminder();
+            if (prefs.moodReminders) await scheduleMoodReminder();
+            await storage.setItem("last_reset", now.getDate());
+          } finally {
+            isRescheduling = false;
+          }
         }
       }, 3600000); // every hour
 
