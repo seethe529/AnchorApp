@@ -2,6 +2,32 @@
 
 All notable changes to Anchor PTSD Support App will be documented in this file.
 
+## [1.2.0] - Build 61 (iOS Production / Android Alpha Testing)
+
+### Fixed - iOS 64 Notification Limit
+- Discovered iOS platform limit of 64 scheduled notifications maximum
+- Reverted iOS to 48 breathing + 7 mood = 55 total notifications (safe under limit)
+- iOS now has 3-day breathing coverage (down from attempted 7-day)
+- Android maintains 112 breathing + 7 mood = 119 total (7-day coverage)
+- Platform-specific BREATHING_COUNT: iOS 48, Android 112
+- Unified MOOD_DAYS: 7 for both platforms (mood reminders serve as engagement hook)
+
+### Documentation
+- Updated NOTIFICATION_SYSTEM.md with iOS 64 limit discovery and constraints
+- Added "Critical Platform Constraints" section documenting iOS behavior
+- Updated version history and troubleshooting guides
+
+## [1.2.0] - Build 60 (Testing)
+
+### Attempted
+- Unified 7-day notification coverage for iOS and Android (112 breathing + 7 mood)
+- Discovered iOS only scheduled 64 notifications instead of expected 119
+- Identified iOS platform constraint through testing
+
+### Added
+- Test branch `test-8pm-mood-reminder` to verify 8 PM timing
+- Confirmed mood reminders fire at exactly 8:00:00 PM with no drift
+
 ## [1.2.0] - Build 64 (Android Alpha Testing)
 
 ### Fixed - Notification Reliability
@@ -28,7 +54,14 @@ All notable changes to Anchor PTSD Support App will be documented in this file.
 - Comprehensive test suite with 38 passing notification tests
 - Android-specific notification math validation tests
 
-## [1.2.0] - Build 61 (Android Alpha Testing)
+## [1.2.0] - Build 58-59 (iOS Production)
+
+### Changed
+- Extended iOS notification coverage from 2-day to 3-day
+- iOS: 48 breathing + 3 mood notifications (before discovering 64 limit)
+- Tested and validated 8 PM mood reminder timing (exact 8:00:00 PM)
+
+## [1.2.0] - Build 57 (Android Alpha Testing)
 
 ### Added - Platform-Specific Notification Systems
 - iOS: Hourly setInterval timer (16 breathing + 2 mood reminders, 1-2 day coverage)

@@ -3,7 +3,7 @@
 ## Overview
 Anchor uses a platform-specific notification system optimized for iOS and Android's different behaviors and constraints.
 
-**Version:** Build 64 (December 6, 2025)
+**Version:** Build 61 (December 2025)
 
 ---
 
@@ -20,17 +20,25 @@ Anchor uses a platform-specific notification system optimized for iOS and Androi
 - **Action:** If date changed, cancels all notifications and reschedules
 
 #### Coverage
-- **Breathing Reminders:** 16 notifications (1 day)
+- **Breathing Reminders:** 48 notifications (3 days)
   - Interval: 90 minutes
-  - Total coverage: 24 hours
-- **Mood Reminders:** 2 notifications (2 days)
+  - Total coverage: 72 hours
+- **Mood Reminders:** 7 notifications (7 days)
   - Time: 8:00 PM daily
-  - Total coverage: 48 hours
+  - Total coverage: 1 week
+- **Total:** 55 notifications (safely under iOS 64 limit)
+
+#### iOS 64 Notification Limit
+- **Platform Constraint:** iOS has a hard limit of 64 scheduled notifications per app
+- **Discovery:** Build 60 attempted 119 notifications (112 breathing + 7 mood), only 64 were scheduled
+- **Solution:** Reduced to 48 breathing + 7 mood = 55 total (safe margin)
+- **Impact:** 3-day breathing coverage instead of 7-day
 
 #### Rationale
 - iOS allows background timers to run
 - Hourly checks ensure notifications never expire
-- Short coverage reduces notification clutter
+- 3-day coverage balances user engagement with platform limits
+- 7-day mood reminders serve as engagement hook
 - Explicit cancellation prevents duplicate notification branches
 
 #### Code Location
@@ -95,8 +103,10 @@ else if (Platform.OS === 'android') {
 const DEV_MODE = false; // Set to true for testing
 
 // Platform-specific coverage
-const MOOD_DAYS = DEV_MODE ? 2 : (Platform.OS === 'ios' ? 2 : 7);
-const BREATHING_COUNT = DEV_MODE ? 3 : (Platform.OS === 'ios' ? 16 : 112);
+const MOOD_DAYS = 7; // Both platforms: 7-day mood coverage
+const BREATHING_COUNT = DEV_MODE ? 3 : (Platform.OS === 'ios' ? 48 : 112);
+  // iOS: 48 (3 days) - stays under 64 notification limit (48+7=55)
+  // Android: 112 (7 days) - no platform limit
 const BREATHING_INTERVAL = DEV_MODE ? 60 : 5400; // seconds (90 minutes)
 ```
 
@@ -288,7 +298,8 @@ All notification operations log to console with emoji prefixes:
 
 ### iOS Testing
 - [ ] Enable breathing reminders
-- [ ] Verify 16 notifications scheduled
+- [ ] Verify 48 breathing + 7 mood = 55 total notifications scheduled
+- [ ] Confirm total stays under 64 notification limit
 - [ ] Wait 1 hour with app open
 - [ ] Check console for date change check
 - [ ] Verify no duplicate notifications
@@ -335,9 +346,10 @@ All notification operations log to console with emoji prefixes:
 
 ### Notifications Not Firing (iOS)
 1. Check Settings → Notifications → Anchor → Allow Notifications
-2. Verify app is open at least once per day
+2. Verify app is open at least once per 3 days (breathing coverage limit)
 3. Check console logs for timer execution
-4. Export notifications to verify scheduling
+4. Export notifications to verify scheduling (should show 55 total)
+5. If 0 notifications scheduled, iOS may have hit 64 limit from another app
 
 ### Notifications Not Firing (Android)
 1. Check Settings → Apps → Anchor → Notifications → Enabled
@@ -360,34 +372,43 @@ All notification operations log to console with emoji prefixes:
 2. Open app to reschedule
 3. Consider enabling daily app usage
 
+### Notifications Stop After 3 Days (iOS)
+1. Expected behavior if user doesn't open app
+2. Open app to reschedule (hourly timer will trigger)
+3. 7-day mood reminders continue as engagement hook
+
 ---
 
 ## Version History
 
-### Build 64 (Current)
-- Added 5-minute debounce to Android AppState listener
-- Skip past notification dates to prevent immediate firing
-- HIGH priority notifications for Android
-- Health category identifier for time-sensitive notifications
-- Millisecond-based scheduling for exact 90-minute intervals
-
-### Build 62-63
-- Fixed notification scheduling calculation (milliseconds)
-- All 112 Android notifications now perfectly spaced
-- Comprehensive test suite (38 passing tests)
-
-### Build 61
-- Platform-specific systems implemented
-- iOS: Hourly timer with explicit cancellation
-- Android: AppState listener with 7-day coverage
+### Build 61 (Current)
+- **iOS 64 Notification Limit Discovery:** iOS only schedules 64 notifications maximum
+- Reverted iOS to 48 breathing + 7 mood = 55 total (safe under limit)
+- Android maintains 112 breathing + 7 mood = 119 total
+- Platform-specific BREATHING_COUNT: iOS 48, Android 112
+- Unified MOOD_DAYS: 7 for both platforms
+- iOS: 3-day breathing coverage, 7-day mood coverage
+- Android: 7-day breathing coverage, 7-day mood coverage
 
 ### Build 60
-- Added AppState listener for both platforms
-- Extended to 3-day coverage (48 notifications)
+- Attempted unified 7-day coverage (112 breathing + 7 mood = 119)
+- Discovered iOS 64 notification limit (only 64 scheduled instead of 119)
+- Extended iOS coverage from 2-day to 3-day before hitting limit
+- Test branch created to verify 8 PM mood reminder timing
 
-### Build 54 (iOS Original)
-- Hourly timer with 1-day coverage
+### Build 59
+- Test branch `test-8pm-mood-reminder` created
+- Confirmed 8 PM mood reminders fire at exactly 8:00:00 PM
+- Test utilities created and removed after validation
+
+### Build 58
+- Extended iOS notification coverage from 2-day to 3-day
+- iOS: 48 breathing + 3 mood notifications
+
+### Build 54
+- iOS hourly timer with 1-day coverage (16 breathing)
 - 7-day mood reminders
+- Original platform-specific implementation
 
 ### Build 20
 - Original notification system
@@ -395,6 +416,24 @@ All notification operations log to console with emoji prefixes:
 
 ---
 
-**Document Version:** 2.0  
-**Last Updated:** December 6, 2025  
+**Document Version:** 2.1  
+**Last Updated:** December 2025  
 **Maintained By:** Development Team
+
+---
+
+## Critical Platform Constraints
+
+### iOS 64 Notification Limit
+- **Hard Limit:** iOS allows maximum 64 scheduled local notifications per app
+- **Documentation:** Not prominently documented by Apple, discovered through testing
+- **Behavior:** When scheduling >64 notifications, iOS silently drops extras (only first 64 are scheduled)
+- **Detection:** Use `Notifications.getAllScheduledNotificationsAsync()` to verify count
+- **Current Config:** 48 breathing + 7 mood = 55 total (9 notification safety margin)
+- **Trade-off:** 3-day breathing coverage vs 7-day (Android has no such limit)
+
+### Android No Limit
+- **Constraint:** None for scheduled notifications
+- **Current Config:** 112 breathing + 7 mood = 119 total
+- **Coverage:** Full 7-day breathing and mood coverage
+- **Battery:** HIGH priority prevents Android from batching/delaying notifications
