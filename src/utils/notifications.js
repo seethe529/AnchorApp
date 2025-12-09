@@ -109,7 +109,7 @@ const BREATHING_REMINDER_MESSAGES = [
  * CONFIGURATION
  *************************************************/
 const DEV_MODE = false; // Set to true for testing
-const MOOD_DAYS = DEV_MODE ? 2 : (Platform.OS === 'ios' ? 2 : 7); // iOS: 2 days (hourly reschedule), Android: 7 days (infrequent opens)
+const MOOD_DAYS = DEV_MODE ? 2 : (Platform.OS === 'ios' ? 3 : 7); // iOS: 3 days (hourly reschedule), Android: 7 days (infrequent opens)
 const BREATHING_COUNT = DEV_MODE ? 3 : (Platform.OS === 'ios' ? 48 : 112); // iOS: 1 day (hourly timer), Android: 7 days (AppState)
 const BREATHING_INTERVAL = DEV_MODE ? 60 : 5400; // seconds (90 minutes)
 
