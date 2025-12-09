@@ -49,9 +49,11 @@ const MoodTracker = memo(({ onMoodLogged, onDetailedLogRequest }) => {
       await storage.setItem(STORAGE_KEYS.MOOD_LOGS, updatedLogs);
       await trackMoodLog();
       
+      console.log('🎯 [MOOD] About to show detailed CTA');
       setSelectedMood(null);
       setNotes('');
       setShowDetailedCTA(true);
+      console.log('🎯 [MOOD] showDetailedCTA set to true');
       onMoodLogged && onMoodLogged(moodEntry);
     } catch (error) {
       console.error('Error logging mood:', error);
@@ -60,6 +62,8 @@ const MoodTracker = memo(({ onMoodLogged, onDetailedLogRequest }) => {
     }
   }, [selectedMood, notes, onMoodLogged]);
 
+  console.log('🎯 [MOOD] Render - showDetailedCTA:', showDetailedCTA);
+  
   return (
     <View style={[styles.container, { backgroundColor: theme.card }]}>
       {showDetailedCTA ? (
