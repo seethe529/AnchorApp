@@ -14,6 +14,7 @@ export default function HomeScreen({ navigation }) {
   const [showMoodTracker, setShowMoodTracker] = useState(false);
   const [showDetailedLog, setShowDetailedLog] = useState(false);
   const [todayMoodLogged, setTodayMoodLogged] = useState(false);
+  const [isAdditionalLog, setIsAdditionalLog] = useState(false);
   const [recentMood, setRecentMood] = useState(null);
   const [dailyReminder, setDailyReminder] = useState('');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -55,13 +56,14 @@ export default function HomeScreen({ navigation }) {
   };
 
   const handleMoodLogged = (moodEntry) => {
-    setTodayMoodLogged(true);
     if (!moodEntry.skipCTA) {
+      setTodayMoodLogged(true);
       setRecentMood(moodEntry);
-    }
-    // Hide MoodTracker if user clicked Skip
-    if (moodEntry.skipCTA) {
+      // Keep showMoodTracker true to show CTA
+    } else {
+      // User clicked Skip - hide everything
       setShowMoodTracker(false);
+      setIsAdditionalLog(false);
     }
     setShowDetailedLog(false);
   };
@@ -106,11 +108,38 @@ export default function HomeScreen({ navigation }) {
           )}
         </View>
       
-      {showMoodTracker && !todayMoodLogged && (
+      {showMoodTracker && !showDetailedLog && (
         <MoodTracker 
           onMoodLogged={handleMoodLogged} 
           onDetailedLogRequest={handleDetailedLogRequest}
         />
+      )}
+
+      {showDetailedLog && (
+        <DetailedMoodLog 
+          onMoodLogged={handleMoodLogged}
+          onCancel={() => setShowDetailedLog(false)}
+        />
+      )}
+
+      {todayMoodLogged && (
+        <View style={styles.moodButtonContainer}>
+          <TouchableOpacity 
+            onPress={() => setShowMoodTracker(!showMoodTracker)}
+            accessibilityLabel={showMoodTracker ? 'Hide Mood Tracker' : 'Log Another Mood Entry'}
+            accessibilityRole="button"
+            activeOpacity={0.8}
+          >
+            <LinearGradient
+              colors={[theme.primaryGradientTop, theme.primaryGradientBottom]}
+              style={styles.moodButton}
+            >
+              <Text style={styles.moodButtonText}>
+                {showMoodTracker ? 'Hide Mood Tracker' : 'Log Another Mood Entry'}
+              </Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
       )}
       
         <View style={styles.quickActions}>
@@ -147,40 +176,6 @@ export default function HomeScreen({ navigation }) {
           </Card>
         </View>
 
-        {todayMoodLogged && (
-          <View style={styles.moodButtonContainer}>
-            <TouchableOpacity 
-              onPress={() => setShowMoodTracker(!showMoodTracker)}
-              accessibilityLabel={showMoodTracker ? 'Hide Mood Tracker' : 'Log Another Mood Entry'}
-              accessibilityHint={showMoodTracker ? 'Hides the mood tracking form' : 'Opens mood tracking form to log your current mood'}
-              accessibilityRole="button"
-              activeOpacity={0.8}
-            >
-              <LinearGradient
-                colors={[theme.primaryGradientTop, theme.primaryGradientBottom]}
-                style={styles.moodButton}
-              >
-                <Text style={styles.moodButtonText}>
-                  {showMoodTracker ? 'Hide Mood Tracker' : 'Log Another Mood Entry'}
-                </Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {showMoodTracker && todayMoodLogged && (
-          <MoodTracker 
-            onMoodLogged={handleMoodLogged}
-            onDetailedLogRequest={handleDetailedLogRequest}
-          />
-        )}
-
-        {showDetailedLog && todayMoodLogged && (
-          <DetailedMoodLog 
-            onMoodLogged={handleMoodLogged}
-            onCancel={() => setShowDetailedLog(false)}
-          />
-        )}
       </ScrollView>
     </View>
   );
