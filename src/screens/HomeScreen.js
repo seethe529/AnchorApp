@@ -58,13 +58,24 @@ export default function HomeScreen({ navigation }) {
   const handleMoodLogged = (moodEntry) => {
     if (!moodEntry.skipCTA) {
       if (!todayMoodLogged) {
-        // First mood log - mark as logged but keep tracker visible for CTA
+        // First mood log - mark as logged but DON'T set recentMood yet
+        // This keeps the tracker mounted so CTA can show
         setTodayMoodLogged(true);
+      } else {
+        // Subsequent logs - set recentMood
         setRecentMood(moodEntry);
       }
       // Keep showMoodTracker true to show CTA
     } else {
-      // User clicked Skip - hide everything
+      // User clicked Skip - now set recentMood and hide everything
+      if (!recentMood && moodEntry !== true) {
+        // Find the actual mood entry from storage
+        storage.getItem(STORAGE_KEYS.MOOD_LOGS).then(logs => {
+          const today = new Date().toISOString().split('T')[0];
+          const todayLog = logs?.find(log => log.date === today.replace(/-/g, '-'));
+          if (todayLog) setRecentMood(todayLog);
+        });
+      }
       setShowMoodTracker(false);
     }
     setShowDetailedLog(false);
