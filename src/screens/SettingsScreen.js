@@ -274,7 +274,7 @@ export default function SettingsScreen({ navigation }) {
               <Switch
                 value={item.key === 'darkMode' ? isDark : preferences[item.key]}
                 onValueChange={() => togglePreference(item.key)}
-                trackColor={{ false: isDark ? '#767577' : '#D1D5DB', true: theme.primary }}
+                trackColor={{ false: isDark ? '#767577' : '#9CA3AF', true: theme.primary }}
                 thumbColor='#ffffff'
                 accessibilityLabel={`${item.title} toggle`}
                 accessibilityHint={item.subtitle}

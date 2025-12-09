@@ -433,14 +433,24 @@ export const exportScheduledNotifications = async () => {
         willResetToday: lastReset !== currentDate
       },
       debugTriggerSample: scheduled.length > 0 ? scheduled[0].trigger : null,
-      notifications: scheduled.map(n => ({
-        id: n.identifier,
-        type: n.content.data?.type || 'unknown',
-        title: n.content.title,
-        body: n.content.body,
-        trigger: n.trigger,
-        triggerDate: n.trigger?.date ? new Date(n.trigger.date).toISOString() : (n.trigger?.value ? new Date(n.trigger.value).toISOString() : 'unknown')
-      }))
+      notifications: scheduled.map(n => {
+        let triggerDate = 'unknown';
+        if (n.trigger?.date) {
+          triggerDate = new Date(n.trigger.date).toISOString();
+        } else if (n.trigger?.seconds) {
+          triggerDate = new Date(Date.now() + n.trigger.seconds * 1000).toISOString();
+        } else if (n.trigger?.value) {
+          triggerDate = new Date(n.trigger.value).toISOString();
+        }
+        return {
+          id: n.identifier,
+          type: n.content.data?.type || 'unknown',
+          title: n.content.title,
+          body: n.content.body,
+          trigger: n.trigger,
+          triggerDate: triggerDate
+        };
+      })
     };
   } catch (e) {
     console.error('❌ [NOTIF] Failed to export notifications:', e);
