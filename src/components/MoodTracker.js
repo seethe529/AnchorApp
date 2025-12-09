@@ -1,6 +1,7 @@
 import React, { useState, memo, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { sanitizeText, validateMoodEntry } from '../utils/dataValidation';
 import { trackMoodLog } from '../utils/appRating';
@@ -71,13 +72,18 @@ const MoodTracker = memo(({ onMoodLogged, onDetailedLogRequest }) => {
           <Text style={[styles.ctaTitle, { color: theme.text }]}>✓ Mood logged</Text>
           <Text style={[styles.ctaSubtitle, { color: theme.textSecondary }]}>Want to add more emotional detail?</Text>
           <TouchableOpacity
-            style={[styles.detailedButton, { backgroundColor: theme.primary }]}
             onPress={() => {
               setShowDetailedCTA(false);
               onDetailedLogRequest && onDetailedLogRequest();
             }}
+            activeOpacity={0.8}
           >
-            <Text style={styles.detailedButtonText}>Add Emotional Details</Text>
+            <LinearGradient
+              colors={[theme.primaryGradientTop, theme.primaryGradientBottom]}
+              style={styles.detailedButton}
+            >
+              <Text style={styles.detailedButtonText}>Add Emotional Details</Text>
+            </LinearGradient>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.skipButton}
@@ -149,11 +155,11 @@ const styles = StyleSheet.create({
   notesInput: { borderWidth: 1, borderRadius: 8, padding: 12, minHeight: 80, textAlignVertical: 'top' },
   logButton: { marginTop: 15, padding: 15, borderRadius: 8, alignItems: 'center' },
   logButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
-  ctaContainer: { alignItems: 'center', paddingVertical: 24 },
-  ctaTitle: { fontSize: 18, fontWeight: '600', marginBottom: 8 },
-  ctaSubtitle: { fontSize: 15, marginBottom: 20, textAlign: 'center', lineHeight: 22 },
-  detailedButton: { paddingVertical: 15, paddingHorizontal: 24, borderRadius: 10, marginBottom: 10, width: '100%', alignItems: 'center' },
+  ctaContainer: { paddingVertical: 24 },
+  ctaTitle: { fontSize: 18, fontWeight: '600', marginBottom: 8, textAlign: 'center', alignSelf: 'center' },
+  ctaSubtitle: { fontSize: 15, marginBottom: 20, textAlign: 'center', lineHeight: 22, alignSelf: 'center' },
+  detailedButton: { paddingVertical: 16, borderRadius: 10, marginBottom: 10, alignItems: 'center', width: '100%' },
   detailedButtonText: { color: 'white', fontSize: 16, fontWeight: '600' },
-  skipButton: { padding: 12 },
-  skipButtonText: { fontSize: 15, fontWeight: '500' }
+  skipButton: { padding: 12, alignSelf: 'center' },
+  skipButtonText: { fontSize: 15, fontWeight: '500', textAlign: 'center' }
 });
