@@ -81,7 +81,10 @@ export default function ProgressScreen({ navigation }) {
       
       const dayLogs = logs.filter(log => log.date === dateString);
       const avgMood = dayLogs.length > 0 
-        ? dayLogs.reduce((sum, log) => sum + log.mood, 0) / dayLogs.length 
+        ? dayLogs.reduce((sum, log) => {
+            // Handle both quick logs (mood field) and detailed logs (valence field)
+            return sum + (log.mood || log.valence || 0);
+          }, 0) / dayLogs.length 
         : 0;
       
       last7Days.push({

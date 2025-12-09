@@ -14,11 +14,12 @@ const MOODS = [
   { name: 'Terrible', icon: 'sad', color: '#F44336', value: 1 }
 ];
 
-const MoodTracker = memo(({ onMoodLogged }) => {
+const MoodTracker = memo(({ onMoodLogged, onDetailedLogRequest }) => {
   const { theme } = useTheme();
   const [selectedMood, setSelectedMood] = useState(null);
   const [notes, setNotes] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showDetailedCTA, setShowDetailedCTA] = useState(false);
 
   const logMood = useCallback(async () => {
     if (!selectedMood) return;
@@ -50,6 +51,7 @@ const MoodTracker = memo(({ onMoodLogged }) => {
       
       setSelectedMood(null);
       setNotes('');
+      setShowDetailedCTA(true);
       onMoodLogged && onMoodLogged(moodEntry);
     } catch (error) {
       console.error('Error logging mood:', error);
@@ -60,7 +62,29 @@ const MoodTracker = memo(({ onMoodLogged }) => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.card }]}>
-      <Text style={[styles.title, { color: theme.text }]}>How are you feeling today?</Text>
+      {showDetailedCTA ? (
+        <View style={styles.ctaContainer}>
+          <Text style={[styles.ctaTitle, { color: theme.text }]}>✓ Mood logged</Text>
+          <Text style={[styles.ctaSubtitle, { color: theme.textSecondary }]}>Want to add more emotional detail?</Text>
+          <TouchableOpacity
+            style={[styles.detailedButton, { backgroundColor: theme.primary }]}
+            onPress={() => {
+              setShowDetailedCTA(false);
+              onDetailedLogRequest && onDetailedLogRequest();
+            }}
+          >
+            <Text style={styles.detailedButtonText}>Add Emotional Details</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.skipButton}
+            onPress={() => setShowDetailedCTA(false)}
+          >
+            <Text style={[styles.skipButtonText, { color: theme.textSecondary }]}>Skip</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <View>
+          <Text style={[styles.title, { color: theme.text }]}>How are you feeling today?</Text>
       
       <View style={styles.moodGrid}>
         {MOODS.map((mood, index) => (
@@ -102,6 +126,8 @@ const MoodTracker = memo(({ onMoodLogged }) => {
           </TouchableOpacity>
         </View>
       )}
+        </View>
+      )}
     </View>
   );
 });
@@ -118,5 +144,12 @@ const styles = StyleSheet.create({
   notesLabel: { fontSize: 16, fontWeight: '500', marginBottom: 10 },
   notesInput: { borderWidth: 1, borderRadius: 8, padding: 12, minHeight: 80, textAlignVertical: 'top' },
   logButton: { marginTop: 15, padding: 15, borderRadius: 8, alignItems: 'center' },
-  logButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' }
+  logButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
+  ctaContainer: { alignItems: 'center', paddingVertical: 20 },
+  ctaTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
+  ctaSubtitle: { fontSize: 14, marginBottom: 20, textAlign: 'center' },
+  detailedButton: { paddingVertical: 14, paddingHorizontal: 24, borderRadius: 10, marginBottom: 12, width: '100%', alignItems: 'center' },
+  detailedButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
+  skipButton: { padding: 10 },
+  skipButtonText: { fontSize: 14 }
 });

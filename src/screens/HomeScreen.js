@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MoodTracker from '../components/MoodTracker';
+import DetailedMoodLog from '../components/DetailedMoodLog';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { getRandomReminder } from '../data/dailyReminders';
 import { useTheme, designTokens } from '../context/ThemeContext';
@@ -11,6 +12,7 @@ import Card from '../components/Card';
 export default function HomeScreen({ navigation }) {
   const { theme } = useTheme();
   const [showMoodTracker, setShowMoodTracker] = useState(false);
+  const [showDetailedLog, setShowDetailedLog] = useState(false);
   const [todayMoodLogged, setTodayMoodLogged] = useState(false);
   const [recentMood, setRecentMood] = useState(null);
   const [dailyReminder, setDailyReminder] = useState('');
@@ -56,6 +58,12 @@ export default function HomeScreen({ navigation }) {
     setTodayMoodLogged(true);
     setRecentMood(moodEntry);
     setShowMoodTracker(false);
+    setShowDetailedLog(false);
+  };
+
+  const handleDetailedLogRequest = () => {
+    setShowMoodTracker(false);
+    setShowDetailedLog(true);
   };
 
   const quickActions = [
@@ -94,7 +102,17 @@ export default function HomeScreen({ navigation }) {
         </View>
       
       {showMoodTracker && !todayMoodLogged && (
-        <MoodTracker onMoodLogged={handleMoodLogged} />
+        <MoodTracker 
+          onMoodLogged={handleMoodLogged} 
+          onDetailedLogRequest={handleDetailedLogRequest}
+        />
+      )}
+
+      {showDetailedLog && (
+        <DetailedMoodLog 
+          onMoodLogged={handleMoodLogged}
+          onCancel={() => setShowDetailedLog(false)}
+        />
       )}
       
         <View style={styles.quickActions}>
@@ -153,7 +171,10 @@ export default function HomeScreen({ navigation }) {
         )}
 
         {showMoodTracker && todayMoodLogged && (
-          <MoodTracker onMoodLogged={handleMoodLogged} />
+          <MoodTracker 
+            onMoodLogged={handleMoodLogged}
+            onDetailedLogRequest={handleDetailedLogRequest}
+          />
         )}
       </ScrollView>
     </View>
