@@ -149,11 +149,11 @@ const styles = StyleSheet.create({
   notesInput: { borderWidth: 1, borderRadius: 8, padding: 12, minHeight: 80, textAlignVertical: 'top' },
   logButton: { marginTop: 15, padding: 15, borderRadius: 8, alignItems: 'center' },
   logButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
-  ctaContainer: { alignItems: 'center', paddingVertical: 20 },
-  ctaTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 8 },
-  ctaSubtitle: { fontSize: 14, marginBottom: 20, textAlign: 'center' },
-  detailedButton: { paddingVertical: 14, paddingHorizontal: 24, borderRadius: 10, marginBottom: 12, width: '100%', alignItems: 'center' },
-  detailedButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
-  skipButton: { padding: 10 },
-  skipButtonText: { fontSize: 14 }
+  ctaContainer: { alignItems: 'center', paddingVertical: 24 },
+  ctaTitle: { fontSize: 18, fontWeight: '600', marginBottom: 8 },
+  ctaSubtitle: { fontSize: 15, marginBottom: 20, textAlign: 'center', lineHeight: 22 },
+  detailedButton: { paddingVertical: 15, paddingHorizontal: 24, borderRadius: 10, marginBottom: 10, width: '100%', alignItems: 'center' },
+  detailedButtonText: { color: 'white', fontSize: 16, fontWeight: '600' },
+  skipButton: { padding: 12 },
+  skipButtonText: { fontSize: 15, fontWeight: '500' }
 });
