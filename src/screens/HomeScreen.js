@@ -121,26 +121,6 @@ export default function HomeScreen({ navigation }) {
           onCancel={() => setShowDetailedLog(false)}
         />
       )}
-
-      {todayMoodLogged && (
-        <View style={styles.moodButtonContainer}>
-          <TouchableOpacity 
-            onPress={() => setShowMoodTracker(!showMoodTracker)}
-            accessibilityLabel={showMoodTracker ? 'Hide Mood Tracker' : 'Log Another Mood Entry'}
-            accessibilityRole="button"
-            activeOpacity={0.8}
-          >
-            <LinearGradient
-              colors={[theme.primaryGradientTop, theme.primaryGradientBottom]}
-              style={styles.moodButton}
-            >
-              <Text style={styles.moodButtonText}>
-                {showMoodTracker ? 'Hide Mood Tracker' : 'Log Another Mood Entry'}
-              </Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </View>
-      )}
       
         <View style={styles.quickActions}>
           <Text style={[styles.sectionTitle, { color: theme.text }]}>Quick Actions</Text>
@@ -175,6 +155,40 @@ export default function HomeScreen({ navigation }) {
             <Text style={[styles.tipText, { color: theme.textSecondary }]}>"{dailyReminder}"</Text>
           </Card>
         </View>
+
+        {todayMoodLogged && (
+          <View style={styles.moodButtonContainer}>
+            <TouchableOpacity 
+              onPress={() => setShowMoodTracker(!showMoodTracker)}
+              accessibilityLabel={showMoodTracker ? 'Hide Mood Tracker' : 'Log Another Mood Entry'}
+              accessibilityRole="button"
+              activeOpacity={0.8}
+            >
+              <LinearGradient
+                colors={[theme.primaryGradientTop, theme.primaryGradientBottom]}
+                style={styles.moodButton}
+              >
+                <Text style={styles.moodButtonText}>
+                  {showMoodTracker ? 'Hide Mood Tracker' : 'Log Another Mood Entry'}
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {showMoodTracker && todayMoodLogged && !showDetailedLog && (
+          <MoodTracker 
+            onMoodLogged={handleMoodLogged} 
+            onDetailedLogRequest={handleDetailedLogRequest}
+          />
+        )}
+
+        {showDetailedLog && todayMoodLogged && (
+          <DetailedMoodLog 
+            onMoodLogged={handleMoodLogged}
+            onCancel={() => setShowDetailedLog(false)}
+          />
+        )}
 
       </ScrollView>
     </View>
