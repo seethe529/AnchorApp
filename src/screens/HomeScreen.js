@@ -57,13 +57,15 @@ export default function HomeScreen({ navigation }) {
 
   const handleMoodLogged = (moodEntry) => {
     if (!moodEntry.skipCTA) {
-      setTodayMoodLogged(true);
-      setRecentMood(moodEntry);
+      if (!todayMoodLogged) {
+        // First mood log - mark as logged but keep tracker visible for CTA
+        setTodayMoodLogged(true);
+        setRecentMood(moodEntry);
+      }
       // Keep showMoodTracker true to show CTA
     } else {
       // User clicked Skip - hide everything
       setShowMoodTracker(false);
-      setIsAdditionalLog(false);
     }
     setShowDetailedLog(false);
   };
