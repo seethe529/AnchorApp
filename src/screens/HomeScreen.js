@@ -169,7 +169,7 @@ export default function HomeScreen({ navigation }) {
           </Card>
         </View>
 
-        {todayMoodLogged && (
+        {todayMoodLogged && recentMood && (
           <View style={styles.moodButtonContainer}>
             <TouchableOpacity 
               onPress={() => {
@@ -201,7 +201,7 @@ export default function HomeScreen({ navigation }) {
           </View>
         )}
 
-        {showMoodTracker && todayMoodLogged && !showDetailedLog && (
+        {showMoodTracker && todayMoodLogged && recentMood && !showDetailedLog && (
           <View ref={moodTrackerRef}>
             <MoodTracker 
               onMoodLogged={handleMoodLogged} 
@@ -210,7 +210,7 @@ export default function HomeScreen({ navigation }) {
           </View>
         )}
 
-        {showDetailedLog && todayMoodLogged && (
+        {showDetailedLog && todayMoodLogged && recentMood && (
           <DetailedMoodLog 
             onMoodLogged={handleMoodLogged}
             onCancel={() => setShowDetailedLog(false)}
