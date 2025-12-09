@@ -14,11 +14,11 @@ export default function HomeScreen({ navigation }) {
   const [showMoodTracker, setShowMoodTracker] = useState(false);
   const [showDetailedLog, setShowDetailedLog] = useState(false);
   const [todayMoodLogged, setTodayMoodLogged] = useState(false);
-  const [isAdditionalLog, setIsAdditionalLog] = useState(false);
   const [recentMood, setRecentMood] = useState(null);
   const [dailyReminder, setDailyReminder] = useState('');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const scrollViewRef = useRef(null);
+  const moodTrackerRef = useRef(null);
 
   useEffect(() => {
     checkTodayMoodLog();
@@ -108,14 +108,14 @@ export default function HomeScreen({ navigation }) {
           )}
         </View>
       
-      {showMoodTracker && !showDetailedLog && (
+      {showMoodTracker && !todayMoodLogged && !showDetailedLog && (
         <MoodTracker 
           onMoodLogged={handleMoodLogged} 
           onDetailedLogRequest={handleDetailedLogRequest}
         />
       )}
 
-      {showDetailedLog && (
+      {showDetailedLog && !todayMoodLogged && (
         <DetailedMoodLog 
           onMoodLogged={handleMoodLogged}
           onCancel={() => setShowDetailedLog(false)}
@@ -159,7 +159,19 @@ export default function HomeScreen({ navigation }) {
         {todayMoodLogged && (
           <View style={styles.moodButtonContainer}>
             <TouchableOpacity 
-              onPress={() => setShowMoodTracker(!showMoodTracker)}
+              onPress={() => {
+                setShowMoodTracker(!showMoodTracker);
+                if (!showMoodTracker) {
+                  setTimeout(() => {
+                    moodTrackerRef.current?.measureLayout(
+                      scrollViewRef.current,
+                      (x, y) => {
+                        scrollViewRef.current?.scrollTo({ y: y - 20, animated: true });
+                      }
+                    );
+                  }, 100);
+                }
+              }}
               accessibilityLabel={showMoodTracker ? 'Hide Mood Tracker' : 'Log Another Mood Entry'}
               accessibilityRole="button"
               activeOpacity={0.8}
@@ -177,10 +189,12 @@ export default function HomeScreen({ navigation }) {
         )}
 
         {showMoodTracker && todayMoodLogged && !showDetailedLog && (
-          <MoodTracker 
-            onMoodLogged={handleMoodLogged} 
-            onDetailedLogRequest={handleDetailedLogRequest}
-          />
+          <View ref={moodTrackerRef}>
+            <MoodTracker 
+              onMoodLogged={handleMoodLogged} 
+              onDetailedLogRequest={handleDetailedLogRequest}
+            />
+          </View>
         )}
 
         {showDetailedLog && todayMoodLogged && (
