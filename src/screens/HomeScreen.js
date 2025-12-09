@@ -110,14 +110,14 @@ export default function HomeScreen({ navigation }) {
           )}
         </View>
       
-      {showMoodTracker && !todayMoodLogged && !showDetailedLog && (
+      {showMoodTracker && !showDetailedLog && !recentMood && (
         <MoodTracker 
           onMoodLogged={handleMoodLogged} 
           onDetailedLogRequest={handleDetailedLogRequest}
         />
       )}
 
-      {showDetailedLog && !todayMoodLogged && (
+      {showDetailedLog && !recentMood && (
         <DetailedMoodLog 
           onMoodLogged={handleMoodLogged}
           onCancel={() => setShowDetailedLog(false)}
