@@ -108,13 +108,6 @@ export default function HomeScreen({ navigation }) {
           onDetailedLogRequest={handleDetailedLogRequest}
         />
       )}
-
-      {showDetailedLog && (
-        <DetailedMoodLog 
-          onMoodLogged={handleMoodLogged}
-          onCancel={() => setShowDetailedLog(false)}
-        />
-      )}
       
         <View style={styles.quickActions}>
           <Text style={[styles.sectionTitle, { color: theme.text }]}>Quick Actions</Text>
@@ -175,6 +168,13 @@ export default function HomeScreen({ navigation }) {
           <MoodTracker 
             onMoodLogged={handleMoodLogged}
             onDetailedLogRequest={handleDetailedLogRequest}
+          />
+        )}
+
+        {showDetailedLog && todayMoodLogged && (
+          <DetailedMoodLog 
+            onMoodLogged={handleMoodLogged}
+            onCancel={() => setShowDetailedLog(false)}
           />
         )}
       </ScrollView>
