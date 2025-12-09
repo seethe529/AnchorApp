@@ -87,7 +87,11 @@ const MoodTracker = memo(({ onMoodLogged, onDetailedLogRequest }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.skipButton}
-            onPress={() => setShowDetailedCTA(false)}
+            onPress={() => {
+              setShowDetailedCTA(false);
+              // Also notify parent to hide the tracker
+              onMoodLogged && onMoodLogged({ skipCTA: true });
+            }}
           >
             <Text style={[styles.skipButtonText, { color: theme.textSecondary }]}>Skip</Text>
           </TouchableOpacity>

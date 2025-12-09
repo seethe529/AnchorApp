@@ -56,9 +56,13 @@ export default function HomeScreen({ navigation }) {
 
   const handleMoodLogged = (moodEntry) => {
     setTodayMoodLogged(true);
-    setRecentMood(moodEntry);
-    // Don't hide MoodTracker here - let it show the CTA
-    // It will hide itself when user clicks Skip or opens DetailedLog
+    if (!moodEntry.skipCTA) {
+      setRecentMood(moodEntry);
+    }
+    // Hide MoodTracker if user clicked Skip
+    if (moodEntry.skipCTA) {
+      setShowMoodTracker(false);
+    }
     setShowDetailedLog(false);
   };
 
