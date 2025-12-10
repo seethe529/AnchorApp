@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
-import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder } from '../utils/notifications';
+import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, exportScheduledNotifications } from '../utils/notifications';
 import Constants from 'expo-constants';
 import { useTheme, designTokens } from '../context/ThemeContext';
 import Card from '../components/Card';
@@ -268,6 +268,24 @@ export default function SettingsScreen({ navigation }) {
       <View style={[styles.section, { backgroundColor: theme.card }]}>
         <Text style={[styles.sectionTitle, { color: theme.text }]}>Data Management</Text>
         
+        <TouchableOpacity 
+          style={styles.actionButton} 
+          onPress={async () => {
+            const data = await exportScheduledNotifications();
+            await Share.share({ message: data });
+          }}
+          accessibilityLabel="Export Notifications"
+          accessibilityHint="Debug: View scheduled notifications"
+          accessibilityRole="button"
+        >
+          <Ionicons name="notifications" size={24} color={theme.primary} />
+          <View style={styles.actionInfo}>
+            <Text style={[styles.actionTitle, { color: theme.text }]}>Export Notifications</Text>
+            <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>Debug: View scheduled notifications</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
+        </TouchableOpacity>
+
         <TouchableOpacity 
           style={styles.actionButton} 
           onPress={exportData}
