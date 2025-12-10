@@ -145,7 +145,7 @@ export default function OnboardingTour() {
         </View>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <SafeAreaView style={styles.footer} edges={['bottom']}>
         <TouchableOpacity
           onPress={handleNext}
           accessibilityLabel={currentSlide === TOUR_SLIDES.length - 1 ? 'Get started with Anchor' : `Next, slide ${currentSlide + 2} of ${TOUR_SLIDES.length}`}
@@ -168,7 +168,7 @@ export default function OnboardingTour() {
             />
           </LinearGradient>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     </SafeAreaView>
   );
 }
@@ -231,7 +231,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     padding: 20,
-    paddingBottom: 40,
   },
   nextButton: {
     flexDirection: 'row',
