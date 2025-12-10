@@ -272,7 +272,7 @@ export default function SettingsScreen({ navigation }) {
           style={styles.actionButton} 
           onPress={async () => {
             const data = await exportScheduledNotifications();
-            await Share.share({ message: data });
+            await Share.share({ message: JSON.stringify(data, null, 2) });
           }}
           accessibilityLabel="Export Notifications"
           accessibilityHint="Debug: View scheduled notifications"
