@@ -13,6 +13,7 @@ import ProgressScreen from './src/screens/ProgressScreen';
 import SettingsScreen from './src/screens/SettingsScreen';
 import DisclaimerScreen from './src/screens/DisclaimerScreen';
 import ResourcesScreen from './src/screens/ResourcesScreen';
+import OnboardingTour from './src/components/OnboardingTour';
 import BreathingExercise from './src/components/BreathingExercise';
 import BreathingScreen from './src/screens/BreathingScreen';
 import SafetyPlan from './src/components/SafetyPlan';
@@ -86,6 +87,7 @@ function MainTabs() {
 function AppContent() {
   const { theme } = useTheme();
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(null);
+  const [onboardingCompleted, setOnboardingCompleted] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -164,6 +166,7 @@ function AppContent() {
   const initializeApp = async () => {
     try {
       await checkDisclaimer();
+      await checkOnboarding();
       
       // Initialize last_reset if not set
       const lastReset = await storage.getItem("last_reset");
@@ -184,6 +187,17 @@ function AppContent() {
     } catch (error) {
       ErrorLogger.logStorageError(error, 'checkDisclaimer');
       setDisclaimerAccepted(false);
+    }
+  };
+
+  const checkOnboarding = async () => {
+    try {
+      const completed = await storage.getItem('onboarding_completed');
+      console.log('📋 [APP] Onboarding completed:', completed);
+      setOnboardingCompleted(completed === true);
+    } catch (error) {
+      ErrorLogger.logStorageError(error, 'checkOnboarding');
+      setOnboardingCompleted(false);
     }
   };
 
@@ -214,6 +228,11 @@ function AppContent() {
       }}
     >
       <Stack.Navigator
+        initialRouteName={
+          !disclaimerAccepted ? 'Disclaimer' :
+          !onboardingCompleted ? 'Onboarding' :
+          'MainApp'
+        }
         screenOptions={{
           headerStyle: { backgroundColor: theme.primary },
           headerTintColor: 'white',
@@ -221,13 +240,16 @@ function AppContent() {
           cardStyle: { backgroundColor: theme.background }
         }}
       >
-        {!disclaimerAccepted && (
-          <Stack.Screen 
-            name="Disclaimer" 
-            component={DisclaimerScreen} 
-            options={{ headerShown: false }}
-          />
-        )}
+        <Stack.Screen 
+          name="Disclaimer" 
+          component={DisclaimerScreen} 
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen 
+          name="Onboarding" 
+          component={OnboardingTour} 
+          options={{ headerShown: false }}
+        />
         <Stack.Screen 
           name="MainApp" 
           component={MainTabs} 

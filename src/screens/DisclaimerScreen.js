@@ -9,7 +9,15 @@ export default function DisclaimerScreen({ navigation }) {
 
   const handleAccept = async () => {
     await storage.setItem('disclaimer_accepted', true);
-    navigation.replace('MainApp');
+    const onboardingCompleted = await storage.getItem('onboarding_completed');
+    console.log('📋 [DISCLAIMER] Onboarding completed:', onboardingCompleted);
+    if (onboardingCompleted) {
+      console.log('✅ [DISCLAIMER] Navigating to MainApp');
+      navigation.replace('MainApp');
+    } else {
+      console.log('🎯 [DISCLAIMER] Navigating to Onboarding');
+      navigation.replace('Onboarding');
+    }
   };
 
   return (

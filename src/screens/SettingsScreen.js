@@ -321,6 +321,24 @@ export default function SettingsScreen({ navigation }) {
 
         <TouchableOpacity 
           style={styles.actionButton} 
+          onPress={async () => {
+            await storage.removeItem('onboarding_completed');
+            Alert.alert('Success', 'Onboarding reset. Restart the app to see it again.');
+          }}
+          accessibilityLabel="Reset Onboarding"
+          accessibilityHint="Debug: Clear onboarding completion flag"
+          accessibilityRole="button"
+        >
+          <Ionicons name="refresh" size={24} color={theme.primary} />
+          <View style={styles.actionInfo}>
+            <Text style={[styles.actionTitle, { color: theme.text }]}>Reset Onboarding</Text>
+            <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>Debug: See onboarding again</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.actionButton} 
           onPress={clearAllData}
           accessibilityLabel="Clear All Data"
           accessibilityHint="Warning: Permanently deletes all your data"
