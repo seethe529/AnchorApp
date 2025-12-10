@@ -3,7 +3,7 @@
 ## Overview
 Anchor uses a platform-specific notification system optimized for iOS and Android's different behaviors and constraints.
 
-**Version:** Build 61 (December 2025)
+**Version:** Build 64 (December 2025)
 
 ---
 
@@ -13,11 +13,13 @@ Anchor uses a platform-specific notification system optimized for iOS and Androi
 **Strategy:** Short coverage + frequent auto-reschedule
 
 #### Rescheduling Mechanism
-- **Method:** `setInterval` timer
-- **Interval:** Every 1 hour (3600000ms)
-- **Trigger:** Runs while app is open (foreground or background)
+- **Method:** Dual system - `AppState` listener + `setInterval` timer
+- **AppState Listener:** Checks immediately when app comes to foreground (no debounce)
+- **Hourly Timer:** Backup check every 1 hour (3600000ms) while app is open
+- **Trigger:** AppState fires on app open, timer runs continuously in background
 - **Check:** Compares current date with last reset date
 - **Action:** If date changed, cancels all notifications and reschedules
+- **Rationale:** AppState provides immediate reschedule on app open, timer ensures coverage if app stays open
 
 #### Coverage
 - **Breathing Reminders:** 48 notifications (3 days)
@@ -43,12 +45,27 @@ Anchor uses a platform-specific notification system optimized for iOS and Androi
 
 #### Code Location
 ```javascript
-// App.js - Lines ~88-108
+// App.js - Lines ~88-125
 if (Platform.OS === 'ios') {
-  const timer = setInterval(async () => {
+  let isRescheduling = false;
+  
+  const checkAndReschedule = async () => {
+    if (isRescheduling) return;
     // Check date change and reschedule
-  }, 3600000);
-  return () => clearInterval(timer);
+  };
+
+  // Check when app comes to foreground
+  const subscription = AppState.addEventListener('change', (nextAppState) => {
+    if (nextAppState === 'active') checkAndReschedule();
+  });
+  
+  // Hourly backup check
+  const timer = setInterval(checkAndReschedule, 3600000);
+
+  return () => {
+    subscription.remove();
+    clearInterval(timer);
+  };
 }
 ```
 
@@ -381,7 +398,17 @@ All notification operations log to console with emoji prefixes:
 
 ## Version History
 
-### Build 61 (Current)
+### Build 64 (Current)
+- Fixed export notifications button with proper error handling
+- All notification functionality stable and tested
+
+### Build 63
+- **iOS AppState Listener Added:** iOS now checks for date change immediately when app opens
+- Dual reschedule system: AppState listener (immediate) + hourly timer (backup)
+- No debounce on iOS AppState listener (unlike Android's 5-minute debounce)
+- Improves user experience - notifications reschedule as soon as app opens
+
+### Build 61
 - **iOS 64 Notification Limit Discovery:** iOS only schedules 64 notifications maximum
 - Reverted iOS to 48 breathing + 7 mood = 55 total (safe under limit)
 - Android maintains 112 breathing + 7 mood = 119 total
