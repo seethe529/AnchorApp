@@ -95,13 +95,11 @@ function AppContent() {
     
     // Platform-specific notification rescheduling
     if (Platform.OS === 'ios') {
-      // iOS: Hourly timer checks for date change
+      // iOS: Check on app foreground + hourly timer backup
       let isRescheduling = false;
-      const timer = setInterval(async () => {
-        if (isRescheduling) {
-          console.log('⏭️ [APP] iOS: Reschedule already in progress, skipping');
-          return;
-        }
+      
+      const checkAndReschedule = async () => {
+        if (isRescheduling) return;
         
         const now = new Date();
         const last = await storage.getItem("last_reset") || 0;
@@ -111,10 +109,8 @@ function AppContent() {
           isRescheduling = true;
           console.log('🌙 [APP] iOS: Date changed, resetting notifications');
           try {
-            // Cancel ALL notifications first to prevent duplicates
             await cancelBreathingReminder();
             await cancelMoodReminder();
-            // Then reschedule if user has them enabled
             if (prefs.breathingReminders) await scheduleBreathingReminder();
             if (prefs.moodReminders) await scheduleMoodReminder();
             await storage.setItem("last_reset", now.getDate());
@@ -122,9 +118,20 @@ function AppContent() {
             isRescheduling = false;
           }
         }
-      }, 3600000); // every hour
+      };
 
-      return () => clearInterval(timer);
+      // Check when app comes to foreground
+      const subscription = AppState.addEventListener('change', (nextAppState) => {
+        if (nextAppState === 'active') checkAndReschedule();
+      });
+      
+      // Hourly backup check
+      const timer = setInterval(checkAndReschedule, 3600000);
+
+      return () => {
+        subscription.remove();
+        clearInterval(timer);
+      };
     } else if (Platform.OS === 'android') {
       // Android: Check on app foreground with debounce
       let lastCheck = 0;
