@@ -141,6 +141,27 @@ export default function SettingsScreen({ navigation }) {
     );
   };
 
+  const exportNotifications = async () => {
+    try {
+      const notifData = await exportScheduledNotifications();
+      
+      if (!notifData) {
+        Alert.alert('Error', 'Unable to export notifications. Platform not supported.');
+        return;
+      }
+
+      const jsonString = JSON.stringify(notifData, null, 2);
+      
+      await Share.share({
+        message: jsonString,
+        title: 'Scheduled Notifications Export'
+      });
+    } catch (error) {
+      console.error('Export notifications error:', error);
+      Alert.alert('Error', 'Failed to export notifications.');
+    }
+  };
+
   const exportData = async () => {
     try {
       // Gather all user data
@@ -270,12 +291,9 @@ export default function SettingsScreen({ navigation }) {
         
         <TouchableOpacity 
           style={styles.actionButton} 
-          onPress={async () => {
-            const data = await exportScheduledNotifications();
-            await Share.share({ message: JSON.stringify(data, null, 2) });
-          }}
+          onPress={exportNotifications}
           accessibilityLabel="Export Notifications"
-          accessibilityHint="Debug: View scheduled notifications"
+          accessibilityHint="Share scheduled notifications data"
           accessibilityRole="button"
         >
           <Ionicons name="notifications" size={24} color={theme.primary} />
