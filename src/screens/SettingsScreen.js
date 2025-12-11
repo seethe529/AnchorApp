@@ -283,6 +283,14 @@ export default function SettingsScreen({ navigation }) {
               />
             </View>
           ))}
+          {section.title === 'Notifications' && Platform.OS === 'android' && (
+            <View style={styles.androidNotice}>
+              <Ionicons name="information-circle" size={20} color={theme.primary} />
+              <Text style={[styles.androidNoticeText, { color: theme.textSecondary }]}>
+                For reliable notifications, disable battery optimization for Anchor in Android Settings → Apps → Anchor → Battery → Unrestricted.
+              </Text>
+            </View>
+          )}
         </View>
       ))}
 
@@ -467,5 +475,19 @@ const styles = StyleSheet.create({
     marginTop: 16,
     lineHeight: 20,
     fontStyle: 'italic',
+  },
+  androidNotice: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: 'rgba(46, 132, 93, 0.1)',
+    borderRadius: 8,
+    gap: 10,
+  },
+  androidNoticeText: {
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 18,
   },
 });
