@@ -129,7 +129,9 @@ export default function HomeScreen({ navigation }) {
           {todayMoodLogged && recentMood && (
             <View style={[styles.moodStatus, { backgroundColor: theme.primary + '15' }]}>
               <Ionicons name="checkmark-circle" size={18} color={theme.primary} />
-              <Text style={[styles.moodStatusText, { color: theme.primary }]}>Today's mood: {recentMood.moodName}</Text>
+              <Text style={[styles.moodStatusText, { color: theme.primary }]}>
+                {recentMood.primaryEmoji ? `${recentMood.primaryEmoji} ${recentMood.primary}` : `Mood: ${recentMood.moodName}`}
+              </Text>
             </View>
           )}
         </View>
