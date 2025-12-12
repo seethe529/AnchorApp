@@ -98,12 +98,22 @@ const DetailedMoodLog = memo(({ onMoodLogged, onCancel, onStepChange }) => {
     <View style={[styles.container, { backgroundColor: theme.card }]}>
       <View style={styles.header}>
         {step > 1 && (
-          <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+          <TouchableOpacity 
+            onPress={handleBack} 
+            style={styles.backButton}
+            accessibilityLabel="Go back to previous step"
+            accessibilityRole="button"
+          >
             <Text style={[styles.backText, { color: theme.primary }]}>← Back</Text>
           </TouchableOpacity>
         )}
         {onCancel && (
-          <TouchableOpacity onPress={onCancel} style={styles.cancelButton}>
+          <TouchableOpacity 
+            onPress={onCancel} 
+            style={styles.cancelButton}
+            accessibilityLabel="Cancel emotion logging"
+            accessibilityRole="button"
+          >
             <Text style={[styles.cancelText, { color: theme.textSecondary }]}>Cancel</Text>
           </TouchableOpacity>
         )}
@@ -122,6 +132,8 @@ const DetailedMoodLog = memo(({ onMoodLogged, onCancel, onStepChange }) => {
                   key={index}
                   style={[styles.primaryButton, { backgroundColor: theme.background }]}
                   onPress={() => handlePrimarySelect(emotion)}
+                  accessibilityLabel={`Select ${emotion.primary}`}
+                  accessibilityRole="button"
                 >
                   <Text style={styles.primaryEmoji}>{emotion.emoji}</Text>
                   <Text style={[styles.primaryText, { color: theme.text }]}>{emotion.primary}</Text>
@@ -145,6 +157,8 @@ const DetailedMoodLog = memo(({ onMoodLogged, onCancel, onStepChange }) => {
                   key={index}
                   style={[styles.secondaryButton, { backgroundColor: theme.background }]}
                   onPress={() => handleSecondarySelect(secondary)}
+                  accessibilityLabel={`Select ${secondary.name}`}
+                  accessibilityRole="button"
                 >
                   <Text style={[styles.secondaryText, { color: theme.text }]}>{secondary.name}</Text>
                 </TouchableOpacity>
@@ -171,6 +185,9 @@ const DetailedMoodLog = memo(({ onMoodLogged, onCancel, onStepChange }) => {
                     selectedTertiary === tertiary && { backgroundColor: theme.primary + '20', borderColor: theme.primary, borderWidth: 2 }
                   ]}
                   onPress={() => handleTertiarySelect(tertiary)}
+                  accessibilityLabel={`Select ${tertiary}`}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: selectedTertiary === tertiary }}
                 >
                   <Text style={[styles.tertiaryText, { color: theme.text }]}>{tertiary}</Text>
                 </TouchableOpacity>
@@ -181,6 +198,8 @@ const DetailedMoodLog = memo(({ onMoodLogged, onCancel, onStepChange }) => {
               <TouchableOpacity
                 style={[styles.skipButton, { backgroundColor: theme.background }]}
                 onPress={handleSkipTertiary}
+                accessibilityLabel="Skip detailed emotion selection"
+                accessibilityRole="button"
               >
                 <Text style={[styles.skipText, { color: theme.textSecondary }]}>Skip</Text>
               </TouchableOpacity>
@@ -189,6 +208,8 @@ const DetailedMoodLog = memo(({ onMoodLogged, onCancel, onStepChange }) => {
                 <TouchableOpacity
                   style={[styles.continueButton, { backgroundColor: theme.primary }]}
                   onPress={handleContinueToNotes}
+                  accessibilityLabel="Continue to notes"
+                  accessibilityRole="button"
                 >
                   <Text style={styles.continueText}>Continue</Text>
                 </TouchableOpacity>
@@ -214,12 +235,17 @@ const DetailedMoodLog = memo(({ onMoodLogged, onCancel, onStepChange }) => {
               onChangeText={setNotes}
               multiline
               numberOfLines={4}
+              accessibilityLabel="Add optional notes about your mood"
+              accessibilityHint="Enter any additional thoughts or context"
             />
             
             <TouchableOpacity
               style={[styles.logButton, { backgroundColor: theme.primary }]}
               onPress={logDetailedMood}
               disabled={isLoading}
+              accessibilityLabel="Log emotion entry"
+              accessibilityRole="button"
+              accessibilityState={{ disabled: isLoading }}
             >
               <Text style={styles.logButtonText}>
                 {isLoading ? 'Logging...' : 'Log Emotion'}
