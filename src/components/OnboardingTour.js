@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ScrollView, Platform, Alert, AccessibilityInfo } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { storage } from '../utils/storage';
+import ErrorLogger from '../utils/errorLogger';
 import { useTheme, designTokens } from '../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
@@ -40,20 +43,42 @@ const TOUR_SLIDES = [
   }
 ];
 
-export default function OnboardingTour({ onComplete, onSkip }) {
+export default function OnboardingTour() {
+  const navigation = useNavigation();
   const { theme } = useTheme();
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const handleNext = () => {
-    if (currentSlide < TOUR_SLIDES.length - 1) {
-      setCurrentSlide(currentSlide + 1);
-    } else {
-      onComplete();
+  const handleNext = async () => {
+    try {
+      if (currentSlide < TOUR_SLIDES.length - 1) {
+        const nextSlide = currentSlide + 1;
+        setCurrentSlide(nextSlide);
+        // Announce slide change for screen readers
+        AccessibilityInfo.announceForAccessibility(
+          `Slide ${nextSlide + 1} of ${TOUR_SLIDES.length}. ${TOUR_SLIDES[nextSlide].title}`
+        );
+      } else {
+        console.log('✅ [ONBOARDING] Completing onboarding');
+        await storage.setItem('onboarding_completed', true);
+        navigation.replace('MainApp');
+      }
+    } catch (error) {
+      console.error('❌ [ONBOARDING] Error in handleNext:', error);
+      ErrorLogger.log(error, 'OnboardingTour.handleNext');
+      Alert.alert('Error', 'Failed to proceed. Please try again.');
     }
   };
 
-  const handleSkip = () => {
-    onSkip();
+  const handleSkip = async () => {
+    try {
+      console.log('⏭️ [ONBOARDING] Skipping onboarding');
+      await storage.setItem('onboarding_completed', true);
+      navigation.replace('MainApp');
+    } catch (error) {
+      console.error('❌ [ONBOARDING] Error in handleSkip:', error);
+      ErrorLogger.log(error, 'OnboardingTour.handleSkip');
+      Alert.alert('Error', 'Failed to skip onboarding. Please try again.');
+    }
   };
 
   const slide = TOUR_SLIDES[currentSlide];
@@ -63,8 +88,10 @@ export default function OnboardingTour({ onComplete, onSkip }) {
       <TouchableOpacity 
         style={styles.skipButton}
         onPress={handleSkip}
-        accessibilityLabel="Skip tour"
+        accessibilityLabel="Skip onboarding tour"
+        accessibilityHint="Skip the tour and go directly to the app"
         accessibilityRole="button"
+        accessible={true}
       >
         <Text style={[styles.skipText, { color: theme.textSecondary }]}>Skip</Text>
       </TouchableOpacity>
@@ -73,14 +100,35 @@ export default function OnboardingTour({ onComplete, onSkip }) {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        <View style={[styles.iconContainer, { backgroundColor: slide.color + '15' }]}>
+        <View 
+          style={[styles.iconContainer, { backgroundColor: slide.color + '15' }]}
+          accessible={true}
+          accessibilityLabel={`${slide.title} icon`}
+          accessibilityRole="image"
+        >
           <Ionicons name={slide.icon} size={80} color={slide.color} />
         </View>
 
-        <Text style={[styles.title, { color: theme.text }]}>{slide.title}</Text>
-        <Text style={[styles.description, { color: theme.textSecondary }]}>{slide.description}</Text>
+        <Text 
+          style={[styles.title, { color: theme.text }]}
+          accessible={true}
+          accessibilityRole="header"
+        >
+          {slide.title}
+        </Text>
+        <Text 
+          style={[styles.description, { color: theme.textSecondary }]}
+          accessible={true}
+        >
+          {slide.description}
+        </Text>
 
-        <View style={styles.pagination}>
+        <View 
+          style={styles.pagination}
+          accessible={true}
+          accessibilityLabel={`Slide ${currentSlide + 1} of ${TOUR_SLIDES.length}`}
+          accessibilityRole="progressbar"
+        >
           {TOUR_SLIDES.map((_, index) => (
             <View
               key={index}
@@ -91,17 +139,19 @@ export default function OnboardingTour({ onComplete, onSkip }) {
                   width: index === currentSlide ? 24 : 8
                 }
               ]}
+              accessible={false}
             />
           ))}
         </View>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <SafeAreaView style={styles.footer} edges={['bottom']}>
         <TouchableOpacity
           onPress={handleNext}
-          accessibilityLabel={currentSlide === TOUR_SLIDES.length - 1 ? 'Get started' : 'Next'}
+          accessibilityLabel={currentSlide === TOUR_SLIDES.length - 1 ? 'Get started with Anchor' : `Next, slide ${currentSlide + 2} of ${TOUR_SLIDES.length}`}
           accessibilityHint={currentSlide === TOUR_SLIDES.length - 1 ? 'Complete onboarding and start using Anchor' : 'Go to next slide'}
           accessibilityRole="button"
+          accessible={true}
           activeOpacity={0.8}
         >
           <LinearGradient
@@ -118,7 +168,7 @@ export default function OnboardingTour({ onComplete, onSkip }) {
             />
           </LinearGradient>
         </TouchableOpacity>
-      </View>
+      </SafeAreaView>
     </SafeAreaView>
   );
 }
@@ -181,7 +231,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     padding: 20,
-    paddingBottom: 40,
   },
   nextButton: {
     flexDirection: 'row',

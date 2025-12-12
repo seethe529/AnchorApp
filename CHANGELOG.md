@@ -2,6 +2,60 @@
 
 All notable changes to Anchor PTSD Support App will be documented in this file.
 
+## [1.2.1] - Build 66 (Android Alpha Testing) - December 2025
+
+### Fixed
+- Onboarding footer safe area insets for Android devices with navigation bars
+- Button now fully visible above system navigation on all Android devices
+
+## [1.2.1] - Build 65 (Android Alpha Testing) - December 2025
+
+### Added - Onboarding Tour
+- 5-slide welcome tour for new users explaining app features
+- Covers DBT/CBT tools, progress tracking, AI support, and privacy
+- Fully accessible with screen reader support and announcements
+- Skip functionality at any time
+- Only shows on first launch (existing users unaffected)
+- Proper navigation flow: Disclaimer → Onboarding → Home
+
+### Added - Enhanced Mood Logging (Emotion Model Phase 1)
+- Quick Log: Fast 5-point mood scale (existing feature, unchanged)
+- Detailed Log: New optional detailed emotion tracking
+  - Primary emotion selection (Happy, Sad, Angry, Anxious, Calm, Overwhelmed, Numb, Other)
+  - Intensity slider (1-10)
+  - Optional notes field (500 character limit)
+  - Progressive disclosure UI - only shows when user wants more detail
+- Both logging methods available on Home screen
+- Mood data stored locally on device
+- Improved home screen mood logging workflow
+
+### Changed
+- Enhanced accessibility throughout onboarding and mood logging
+- Added comprehensive error handling to onboarding flow
+- Improved keyboard handling in detailed mood log
+
+### Documentation
+- Updated NOTIFICATION_SYSTEM.md with iOS AppState listener (Build 63-64)
+- Added release notes for Android testing community
+
+## [1.2.0] - Build 64 (iOS Production) - December 2025
+
+### Fixed
+- Export notifications button with proper error handling and JSON stringification
+- Added user-friendly error alerts for notification export failures
+
+## [1.2.0] - Build 63 (iOS Production) - December 2025
+
+### Added - iOS Notification Improvements
+- iOS AppState listener for immediate notification rescheduling when app opens
+- Dual reschedule system: AppState listener (immediate) + hourly timer (backup)
+- No debounce on iOS (unlike Android's 5-minute debounce)
+- Improves user experience - notifications reschedule as soon as app opens after date change
+
+### Changed
+- iOS now uses same AppState pattern as Android but without debounce
+- Hourly timer remains as backup for when app stays open
+
 ## [1.2.0] - Build 61 (iOS Production / Android Alpha Testing)
 
 ### Fixed - iOS 64 Notification Limit

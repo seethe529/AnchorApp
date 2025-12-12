@@ -81,6 +81,7 @@ npm run android # for Android
 - `src/data/citations.js` - Medical citations from authoritative sources
 - `src/data/dailyReminders.js` - 150+ trauma-informed daily reminders
 - `src/data/breathingMethods.js` - 5 breathing exercise patterns
+- `src/data/emotionModel.js` - Emotion categories for detailed mood logging
 
 ### Screens
 - `src/screens/HomeScreen.js` - Dashboard with quick actions
@@ -96,6 +97,9 @@ npm run android # for Android
 ### Components
 - `src/components/Button.js` - Modern button with gradients and animations
 - `src/components/Card.js` - iOS-style card with shadows and variants
+- `src/components/OnboardingTour.js` - 5-slide welcome tour with accessibility
+- `src/components/MoodTracker.js` - Quick 5-point mood logging
+- `src/components/DetailedMoodLog.js` - Enhanced emotion tracking with intensity and notes
 
 ### Context & Utils
 - `src/context/ThemeContext.js` - Global dark/light theme with design tokens
@@ -103,7 +107,31 @@ npm run android # for Android
 - `src/utils/storage.js` - AsyncStorage wrapper with error handling
 - `src/services/openai.js` - OpenAI API integration
 
-## Recent Updates (Build 54 - Enhanced Techniques & Notifications)
+## Recent Updates (Build 66 - Onboarding & Emotion Model)
+
+### Build 65-66 - Onboarding Tour & Enhanced Mood Logging ✅ COMPLETE (Android Alpha)
+- ✅ 5-slide onboarding tour for new users (Welcome, DBT/CBT Tools, Progress Tracking, AI Support, Privacy)
+- ✅ Full accessibility support with screen reader announcements
+- ✅ Skip functionality and proper navigation flow (Disclaimer → Onboarding → Home)
+- ✅ Enhanced mood logging with emotion model Phase 1:
+  - Quick Log: Fast 5-point mood scale (existing)
+  - Detailed Log: Primary emotion + intensity slider + optional notes
+  - Progressive disclosure UI design
+- ✅ Safe area insets for Android navigation bars
+- ✅ Comprehensive error handling and logging
+- ✅ Only shows for new users (existing users unaffected)
+
+### Build 63-64 - iOS Notification Improvements ✅ COMPLETE
+- ✅ iOS AppState listener for immediate notification rescheduling on app open
+- ✅ Dual system: AppState listener (immediate) + hourly timer (backup)
+- ✅ Fixed export notifications button with proper error handling
+- ✅ Updated documentation with iOS AppState listener architecture
+
+### Build 61 - iOS 64 Notification Limit Discovery ✅ COMPLETE
+- ✅ Discovered iOS platform limit of 64 scheduled notifications
+- ✅ iOS: 48 breathing + 7 mood = 55 total (3-day coverage)
+- ✅ Android: 112 breathing + 7 mood = 119 total (7-day coverage)
+- ✅ Platform-specific notification counts and strategies
 
 ### Build 54 - Enhanced Technique System & Notifications ✅ COMPLETE
 - ✅ Expanded to 28 DBT/CBT techniques (added 8 new: Safe Place Visualization, Cold Grounding, Name 3 Things, Radical Acceptance, Pros and Cons, Self-Validation, Half-Smile and Willing Hands, plus additional breathing method)

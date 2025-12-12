@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Keyboard } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MoodTracker from '../components/MoodTracker';
+import DetailedMoodLog from '../components/DetailedMoodLog';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { getRandomReminder } from '../data/dailyReminders';
 import { useTheme, designTokens } from '../context/ThemeContext';
@@ -11,11 +12,13 @@ import Card from '../components/Card';
 export default function HomeScreen({ navigation }) {
   const { theme } = useTheme();
   const [showMoodTracker, setShowMoodTracker] = useState(false);
+  const [showDetailedLog, setShowDetailedLog] = useState(false);
   const [todayMoodLogged, setTodayMoodLogged] = useState(false);
   const [recentMood, setRecentMood] = useState(null);
   const [dailyReminder, setDailyReminder] = useState('');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const scrollViewRef = useRef(null);
+  const moodTrackerRef = useRef(null);
 
   useEffect(() => {
     checkTodayMoodLog();
@@ -53,9 +56,42 @@ export default function HomeScreen({ navigation }) {
   };
 
   const handleMoodLogged = (moodEntry) => {
-    setTodayMoodLogged(true);
-    setRecentMood(moodEntry);
+    if (!moodEntry.skipCTA) {
+      if (!todayMoodLogged) {
+        // First mood log - mark as logged but DON'T set recentMood yet
+        // This keeps the tracker mounted so CTA can show
+        setTodayMoodLogged(true);
+      } else {
+        // Subsequent logs - set recentMood
+        setRecentMood(moodEntry);
+      }
+      // Keep showMoodTracker true to show CTA
+    } else {
+      // User clicked Skip - now set recentMood and hide everything
+      if (!recentMood && moodEntry !== true) {
+        // Find the actual mood entry from storage
+        storage.getItem(STORAGE_KEYS.MOOD_LOGS).then(logs => {
+          const today = new Date().toISOString().split('T')[0];
+          const todayLog = logs?.find(log => log.date === today.replace(/-/g, '-'));
+          if (todayLog) setRecentMood(todayLog);
+        });
+      }
+      setShowMoodTracker(false);
+    }
+    setShowDetailedLog(false);
+    // Auto-scroll to top after completing/skipping detailed log
+    setTimeout(() => {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    }, 100);
+  };
+
+  const handleDetailedLogRequest = () => {
     setShowMoodTracker(false);
+    setShowDetailedLog(true);
+    // Auto-scroll to top to show detailed log
+    setTimeout(() => {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    }, 100);
   };
 
   const quickActions = [
@@ -93,8 +129,19 @@ export default function HomeScreen({ navigation }) {
           )}
         </View>
       
-      {showMoodTracker && !todayMoodLogged && (
-        <MoodTracker onMoodLogged={handleMoodLogged} />
+      {showMoodTracker && !showDetailedLog && !recentMood && (
+        <MoodTracker 
+          onMoodLogged={handleMoodLogged} 
+          onDetailedLogRequest={handleDetailedLogRequest}
+        />
+      )}
+
+      {showDetailedLog && !recentMood && (
+        <DetailedMoodLog 
+          onMoodLogged={handleMoodLogged}
+          onCancel={() => setShowDetailedLog(false)}
+          onStepChange={() => scrollViewRef.current?.scrollTo({ y: 0, animated: true })}
+        />
       )}
       
         <View style={styles.quickActions}>
@@ -131,12 +178,23 @@ export default function HomeScreen({ navigation }) {
           </Card>
         </View>
 
-        {todayMoodLogged && (
+        {todayMoodLogged && recentMood && (
           <View style={styles.moodButtonContainer}>
             <TouchableOpacity 
-              onPress={() => setShowMoodTracker(!showMoodTracker)}
+              onPress={() => {
+                setShowMoodTracker(!showMoodTracker);
+                if (!showMoodTracker) {
+                  setTimeout(() => {
+                    moodTrackerRef.current?.measureLayout(
+                      scrollViewRef.current,
+                      (x, y) => {
+                        scrollViewRef.current?.scrollTo({ y: y - 20, animated: true });
+                      }
+                    );
+                  }, 100);
+                }
+              }}
               accessibilityLabel={showMoodTracker ? 'Hide Mood Tracker' : 'Log Another Mood Entry'}
-              accessibilityHint={showMoodTracker ? 'Hides the mood tracking form' : 'Opens mood tracking form to log your current mood'}
               accessibilityRole="button"
               activeOpacity={0.8}
             >
@@ -152,9 +210,23 @@ export default function HomeScreen({ navigation }) {
           </View>
         )}
 
-        {showMoodTracker && todayMoodLogged && (
-          <MoodTracker onMoodLogged={handleMoodLogged} />
+        {showMoodTracker && todayMoodLogged && recentMood && !showDetailedLog && (
+          <View ref={moodTrackerRef}>
+            <MoodTracker 
+              onMoodLogged={handleMoodLogged} 
+              onDetailedLogRequest={handleDetailedLogRequest}
+            />
+          </View>
         )}
+
+        {showDetailedLog && todayMoodLogged && recentMood && (
+          <DetailedMoodLog 
+            onMoodLogged={handleMoodLogged}
+            onCancel={() => setShowDetailedLog(false)}
+            onStepChange={() => scrollViewRef.current?.scrollTo({ y: 0, animated: true })}
+          />
+        )}
+
       </ScrollView>
     </View>
   );
