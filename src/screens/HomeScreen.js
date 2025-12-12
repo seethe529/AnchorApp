@@ -79,11 +79,19 @@ export default function HomeScreen({ navigation }) {
       setShowMoodTracker(false);
     }
     setShowDetailedLog(false);
+    // Auto-scroll to top after completing/skipping detailed log
+    setTimeout(() => {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    }, 100);
   };
 
   const handleDetailedLogRequest = () => {
     setShowMoodTracker(false);
     setShowDetailedLog(true);
+    // Auto-scroll to top to show detailed log
+    setTimeout(() => {
+      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    }, 100);
   };
 
   const quickActions = [
@@ -132,6 +140,7 @@ export default function HomeScreen({ navigation }) {
         <DetailedMoodLog 
           onMoodLogged={handleMoodLogged}
           onCancel={() => setShowDetailedLog(false)}
+          onStepChange={() => scrollViewRef.current?.scrollTo({ y: 0, animated: true })}
         />
       )}
       
@@ -214,6 +223,7 @@ export default function HomeScreen({ navigation }) {
           <DetailedMoodLog 
             onMoodLogged={handleMoodLogged}
             onCancel={() => setShowDetailedLog(false)}
+            onStepChange={() => scrollViewRef.current?.scrollTo({ y: 0, animated: true })}
           />
         )}
 

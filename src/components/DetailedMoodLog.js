@@ -1,4 +1,4 @@
-import React, { useState, memo, useCallback } from 'react';
+import React, { useState, memo, useCallback, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { sanitizeText, validateMoodEntry } from '../utils/dataValidation';
@@ -6,8 +6,9 @@ import { trackMoodLog } from '../utils/appRating';
 import { useTheme } from '../context/ThemeContext';
 import { EmotionModel, getEmotionValence } from '../data/emotionModel';
 
-const DetailedMoodLog = memo(({ onMoodLogged, onCancel }) => {
+const DetailedMoodLog = memo(({ onMoodLogged, onCancel, onStepChange }) => {
   const { theme } = useTheme();
+  const scrollViewRef = useRef(null);
   const [step, setStep] = useState(1); // 1=primary, 2=secondary, 3=tertiary
   const [selectedPrimary, setSelectedPrimary] = useState(null);
   const [selectedSecondary, setSelectedSecondary] = useState(null);
@@ -18,7 +19,11 @@ const DetailedMoodLog = memo(({ onMoodLogged, onCancel }) => {
   const handlePrimarySelect = useCallback((emotion) => {
     setSelectedPrimary(emotion);
     setStep(2);
-  }, []);
+    // Trigger parent scroll to top when secondary emotions appear
+    setTimeout(() => {
+      onStepChange && onStepChange();
+    }, 100);
+  }, [onStepChange]);
 
   const handleSecondarySelect = useCallback((secondary) => {
     setSelectedSecondary(secondary);
@@ -104,7 +109,7 @@ const DetailedMoodLog = memo(({ onMoodLogged, onCancel }) => {
         )}
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView ref={scrollViewRef} contentContainerStyle={styles.scrollContent}>
         {/* Step 1: Primary Emotions */}
         {step === 1 && (
           <View>
