@@ -17,6 +17,7 @@ export default function HomeScreen({ navigation }) {
   const [recentMood, setRecentMood] = useState(null);
   const [dailyReminder, setDailyReminder] = useState('');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [isTopMoodLog, setIsTopMoodLog] = useState(true); // Track if logging at top or bottom
   const scrollViewRef = useRef(null);
   const moodTrackerRef = useRef(null);
 
@@ -79,19 +80,23 @@ export default function HomeScreen({ navigation }) {
       setShowMoodTracker(false);
     }
     setShowDetailedLog(false);
-    // Auto-scroll to top after completing/skipping detailed log
-    setTimeout(() => {
-      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-    }, 100);
+    // Only auto-scroll to top if this was a top mood log (first time)
+    if (isTopMoodLog) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+      }, 100);
+    }
   };
 
   const handleDetailedLogRequest = () => {
     setShowMoodTracker(false);
     setShowDetailedLog(true);
-    // Auto-scroll to top to show detailed log
-    setTimeout(() => {
-      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-    }, 100);
+    // Only auto-scroll to top if this is a top mood log (first time)
+    if (isTopMoodLog) {
+      setTimeout(() => {
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+      }, 100);
+    }
   };
 
   const quickActions = [
@@ -140,7 +145,7 @@ export default function HomeScreen({ navigation }) {
         <DetailedMoodLog 
           onMoodLogged={handleMoodLogged}
           onCancel={() => setShowDetailedLog(false)}
-          onStepChange={() => scrollViewRef.current?.scrollTo({ y: 0, animated: true })}
+          onStepChange={() => isTopMoodLog && scrollViewRef.current?.scrollTo({ y: 0, animated: true })}
         />
       )}
       
@@ -183,6 +188,7 @@ export default function HomeScreen({ navigation }) {
             <TouchableOpacity 
               onPress={() => {
                 setShowMoodTracker(!showMoodTracker);
+                setIsTopMoodLog(false); // Bottom mood logs should not auto-scroll to top
                 if (!showMoodTracker) {
                   setTimeout(() => {
                     moodTrackerRef.current?.measureLayout(
@@ -223,7 +229,7 @@ export default function HomeScreen({ navigation }) {
           <DetailedMoodLog 
             onMoodLogged={handleMoodLogged}
             onCancel={() => setShowDetailedLog(false)}
-            onStepChange={() => scrollViewRef.current?.scrollTo({ y: 0, animated: true })}
+            onStepChange={() => isTopMoodLog && scrollViewRef.current?.scrollTo({ y: 0, animated: true })}
           />
         )}
 
