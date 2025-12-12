@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled, exportScheduledNotifications } from '../utils/notifications';
@@ -375,6 +375,21 @@ export default function SettingsScreen({ navigation }) {
           <View style={styles.actionInfo}>
             <Text style={[styles.actionTitle, { color: theme.text }]}>Resources & Citations</Text>
             <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>Medical sources and references</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={styles.actionButton} 
+          onPress={() => Linking.openURL('https://seethe529.github.io/AnchorApp/')}
+          accessibilityLabel="Privacy Policy"
+          accessibilityHint="View our privacy policy and data practices"
+          accessibilityRole="button"
+        >
+          <Ionicons name="shield-checkmark" size={24} color={theme.primary} />
+          <View style={styles.actionInfo}>
+            <Text style={[styles.actionTitle, { color: theme.text }]}>Privacy Policy</Text>
+            <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>How we handle your data</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
         </TouchableOpacity>
