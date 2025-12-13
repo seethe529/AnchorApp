@@ -49,9 +49,23 @@ export const EmotionModel = [
   },
 
   {
-    primary: "Fearful / Unsafe / Alerted",
-    emoji: "😨",
+    primary: "Alerted / Anxious / On Edge",
+    emoji: "😰",
     secondary: [
+      {
+        name: "Fearful / Unsafe",
+        tertiary: [
+          "Threatened",
+          "In danger"
+        ]
+      },
+      {
+        name: "Hypervigilant",
+        tertiary: [
+          "Scanning for threats",
+          "Can't relax"
+        ]
+      },
       {
         name: "Helpless",
         tertiary: [
@@ -74,24 +88,10 @@ export const EmotionModel = [
         ]
       },
       {
-        name: "Shut Down / Collapsed",
-        tertiary: [
-          "Withdrawn",
-          "Feeling small"
-        ]
-      },
-      {
         name: "Self-Doubt",
         tertiary: [
           "Second-guessing myself",
           "Feeling exposed"
-        ]
-      },
-      {
-        name: "Anxious",
-        tertiary: [
-          "Restless",
-          "On edge"
         ]
       }
     ]
@@ -249,6 +249,13 @@ export const EmotionModel = [
     emoji: "😢",
     secondary: [
       {
+        name: "Shut Down / Collapsed",
+        tertiary: [
+          "Withdrawn",
+          "Feeling small"
+        ]
+      },
+      {
         name: "Lonely",
         tertiary: [
           "Isolated",
@@ -301,7 +308,7 @@ export const getEmotionValence = (primaryEmotion) => {
     "Empowered / Capable": 4,
     "Calm / Grounded / Connected": 4,
     "Activated / Protective": 2,
-    "Fearful / Unsafe / Alerted": 2,
+    "Alerted / Anxious / On Edge": 2,
     "Low / Heavy / Withdrawn": 1
   };
   return valenceMap[primaryEmotion] || 3;
