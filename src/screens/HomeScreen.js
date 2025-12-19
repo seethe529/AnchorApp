@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Keyboard } from '
 import { Ionicons } from '@expo/vector-icons';
 import MoodTracker from '../components/MoodTracker';
 import DetailedMoodLog from '../components/DetailedMoodLog';
+import SwipeableReminders from '../components/SwipeableReminders';
 import { storage, STORAGE_KEYS } from '../utils/storage';
-import { getRandomReminder } from '../data/dailyReminders';
 import { useTheme, designTokens } from '../context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import Card from '../components/Card';
@@ -15,7 +15,6 @@ export default function HomeScreen({ navigation }) {
   const [showDetailedLog, setShowDetailedLog] = useState(false);
   const [todayMoodLogged, setTodayMoodLogged] = useState(false);
   const [recentMood, setRecentMood] = useState(null);
-  const [dailyReminder, setDailyReminder] = useState('');
   const [keyboardHeight, setKeyboardHeight] = useState(0);
   const [isTopMoodLog, setIsTopMoodLog] = useState(true); // Track if logging at top or bottom
   const scrollViewRef = useRef(null);
@@ -23,7 +22,6 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     checkTodayMoodLog();
-    setDailyReminder(getRandomReminder());
     
     const keyboardDidShow = Keyboard.addListener('keyboardDidShow', (e) => {
       setKeyboardHeight(e.endCoordinates.height);
@@ -176,14 +174,10 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         <View style={styles.dailyTipContainer}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Daily Reminder</Text>
-          <Card variant="strong">
-            <View style={styles.quoteIcon}>
-              <Ionicons name="chatbox-ellipses" size={24} color={theme.primary} />
-            </View>
-            <Text style={[styles.tipText, { color: theme.textSecondary }]}>"{dailyReminder}"</Text>
-          </Card>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>Daily Reminders</Text>
+          <Text style={[styles.swipeHint, { color: theme.textTertiary }]}>Swipe to explore more reminders</Text>
         </View>
+        <SwipeableReminders />
 
         {todayMoodLogged && recentMood && (
           <View style={styles.moodButtonContainer}>
@@ -319,6 +313,10 @@ const styles = StyleSheet.create({
   dailyTipContainer: {
     paddingHorizontal: 20,
     marginTop: designTokens.spacing.section,
+  },
+  swipeHint: {
+    fontSize: 13,
+    marginBottom: 12,
   },
   quoteIcon: {
     marginBottom: 12,
