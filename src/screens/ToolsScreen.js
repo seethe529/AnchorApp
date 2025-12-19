@@ -179,7 +179,15 @@ export default function ToolsScreen() {
               <TouchableOpacity 
                 style={styles.feedbackButton}
                 onPress={async () => {
-                  await logTechniqueUsage(selectedTechnique, 5);
+                  const rating = {
+                    technique: selectedTechnique.name,
+                    category: selectedCategory,
+                    timestamp: new Date().toISOString(),
+                    date: new Date().toDateString(),
+                    effectiveness: 5
+                  };
+                  const existingUsage = await storage.getItem(STORAGE_KEYS.TECHNIQUE_USAGE) || [];
+                  await storage.setItem(STORAGE_KEYS.TECHNIQUE_USAGE, [rating, ...existingUsage]);
                   await trackTechniqueUsed();
                   setSelectedTechnique(null);
                 }}
@@ -192,8 +200,16 @@ export default function ToolsScreen() {
               
               <TouchableOpacity 
                 style={styles.feedbackButton}
-                onPress={() => {
-                  logTechniqueUsage(selectedTechnique, 3);
+                onPress={async () => {
+                  const rating = {
+                    technique: selectedTechnique.name,
+                    category: selectedCategory,
+                    timestamp: new Date().toISOString(),
+                    date: new Date().toDateString(),
+                    effectiveness: 3
+                  };
+                  const existingUsage = await storage.getItem(STORAGE_KEYS.TECHNIQUE_USAGE) || [];
+                  await storage.setItem(STORAGE_KEYS.TECHNIQUE_USAGE, [rating, ...existingUsage]);
                   setSelectedTechnique(null);
                 }}
                 accessibilityLabel="Technique somewhat helped"
@@ -205,8 +221,16 @@ export default function ToolsScreen() {
               
               <TouchableOpacity 
                 style={styles.feedbackButton}
-                onPress={() => {
-                  logTechniqueUsage(selectedTechnique, 1);
+                onPress={async () => {
+                  const rating = {
+                    technique: selectedTechnique.name,
+                    category: selectedCategory,
+                    timestamp: new Date().toISOString(),
+                    date: new Date().toDateString(),
+                    effectiveness: 1
+                  };
+                  const existingUsage = await storage.getItem(STORAGE_KEYS.TECHNIQUE_USAGE) || [];
+                  await storage.setItem(STORAGE_KEYS.TECHNIQUE_USAGE, [rating, ...existingUsage]);
                   setSelectedTechnique(null);
                 }}
                 accessibilityLabel="Technique did not help much"

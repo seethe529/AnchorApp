@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo, memo } from 'react';
-import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { useTheme } from '../context/ThemeContext';
@@ -9,27 +10,17 @@ const screenWidth = Dimensions.get('window').width;
 const QuickStats = memo(({ moodData, techniqueData, allMoodLogs, theme }) => {
   const totalMoodLogs = useMemo(() => allMoodLogs?.length || 0, [allMoodLogs]);
   const totalTechniques = useMemo(() => techniqueData.reduce((sum, d) => sum + d.count, 0), [techniqueData]);
-  const avgMood = useMemo(() => {
-    const validMoods = moodData.filter(d => d.mood > 0);
-    return validMoods.length > 0
-      ? (moodData.reduce((sum, d) => sum + d.mood, 0) / validMoods.length).toFixed(1)
-      : '0.0';
-  }, [moodData]);
 
   return (
     <View style={[styles.statsContainer, { backgroundColor: theme.card }]}>
       <Text style={[styles.statsTitle, { color: theme.text }]}>Quick Stats</Text>
       <View style={styles.statRow}>
-        <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Total Mood Logs:</Text>
+        <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Times you checked in:</Text>
         <Text style={[styles.statValue, { color: theme.primary }]}>{totalMoodLogs}</Text>
       </View>
       <View style={styles.statRow}>
-        <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Techniques Used:</Text>
+        <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Support Moments:</Text>
         <Text style={[styles.statValue, { color: theme.primary }]}>{totalTechniques}</Text>
-      </View>
-      <View style={styles.statRow}>
-        <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Average Mood:</Text>
-        <Text style={[styles.statValue, { color: theme.primary }]}>{avgMood}</Text>
       </View>
     </View>
   );
@@ -43,6 +34,7 @@ export default function ProgressScreen({ navigation }) {
   const [allRatedTechniques, setAllRatedTechniques] = useState([]);
   const [allMoodLogs, setAllMoodLogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showViewCounts, setShowViewCounts] = useState(false);
 
   useEffect(() => {
     loadProgressData();
@@ -103,7 +95,11 @@ export default function ProgressScreen({ navigation }) {
       if (!techniqueStats[entry.technique]) {
         techniqueStats[entry.technique] = { count: 0, totalEffectiveness: 0, ratings: 0 };
       }
-      techniqueStats[entry.technique].count++;
+      // Only count views (entries without effectiveness) for "Go-To" chart
+      if (!entry.effectiveness) {
+        techniqueStats[entry.technique].count++;
+      }
+      // Track ratings separately for "What's Working Best"
       if (entry.effectiveness) {
         techniqueStats[entry.technique].totalEffectiveness += entry.effectiveness;
         techniqueStats[entry.technique].ratings++;
@@ -190,34 +186,61 @@ export default function ProgressScreen({ navigation }) {
       </View>
 
       <View style={[styles.chartContainer, { backgroundColor: theme.card }]}>
-        <Text style={[styles.chartTitle, { color: theme.text }]}>Most Used Techniques</Text>
+        <View style={styles.chartHeader}>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.chartTitle, { color: theme.text }]}>Your Go-To Techniques</Text>
+            <Text style={[styles.chartSubtitle, { color: theme.textSecondary }]}>Tools you often reach for when you need support</Text>
+          </View>
+          <TouchableOpacity 
+            onPress={() => setShowViewCounts(!showViewCounts)}
+            style={[styles.toggleButton, { backgroundColor: theme.background }]}
+            accessibilityLabel={showViewCounts ? "Hide view counts" : "Show view counts"}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: showViewCounts }}
+          >
+            <Ionicons name={showViewCounts ? "eye" : "eye-off"} size={20} color={theme.primary} />
+          </TouchableOpacity>
+        </View>
         {techniqueData.length > 0 ? (
           <View>
-            <BarChart
-              data={{
-                labels: techniqueData.map(d => d.name),
-                datasets: [{
-                  data: techniqueData.map(d => d.count)
-                }]
-              }}
-              width={screenWidth - 90}
-              height={220}
-              yAxisSuffix=""
-              chartConfig={chartConfig}
-              style={styles.chart}
-            />
+            {techniqueData.map((tech, idx) => {
+              const maxCount = Math.max(...techniqueData.map(t => t.count));
+              const percentage = (tech.count / maxCount) * 100;
+              return (
+                <View key={idx} style={styles.techniqueUsageRow}>
+                  <Text style={[styles.techniqueUsageName, { color: theme.textSecondary }]} numberOfLines={1}>
+                    {tech.fullName}
+                  </Text>
+                  <View style={[styles.techniqueUsageBar, { backgroundColor: theme.background }]}>
+                    <View style={[styles.techniqueUsageFill, { width: `${percentage}%`, backgroundColor: theme.primary }]} />
+                    {showViewCounts && (
+                      <Text style={[styles.viewCountText, { color: theme.text }]}>{tech.count} views</Text>
+                    )}
+                  </View>
+                </View>
+              );
+            })}
             {allRatedTechniques.length > 0 && (
               <View style={[styles.effectivenessContainer, { borderTopColor: theme.border }]}>
-                <Text style={[styles.effectivenessTitle, { color: theme.text }]}>Top 5 Most Effective:</Text>
-                {allRatedTechniques.map((tech, idx) => (
-                  <View key={idx} style={styles.effectivenessRow}>
-                    <Text style={[styles.effectivenessTechnique, { color: theme.textSecondary }]} numberOfLines={1} ellipsizeMode="tail">{tech.fullName}</Text>
-                    <View style={[styles.effectivenessBar, { backgroundColor: theme.background }]}>
-                      <View style={[styles.effectivenessFill, { width: `${(tech.avgEffectiveness / 5) * 100}%`, backgroundColor: theme.primary }]} />
-                      <Text style={[styles.effectivenessScore, { color: theme.text }]}>{tech.avgEffectiveness}/5</Text>
+                <Text style={[styles.effectivenessTitle, { color: theme.text }]}>What's Felt Most Helpful</Text>
+                <Text style={[styles.effectivenessSubtitle, { color: theme.textSecondary }]}>Tools you've found helpful at times</Text>
+                {allRatedTechniques.map((tech, idx) => {
+                  const getQualitativeLabel = (score) => {
+                    if (score >= 4.5) return 'Very Helpful';
+                    if (score >= 3.5) return 'Helpful';
+                    if (score >= 2.5) return 'Somewhat Helpful';
+                    return 'Needs Practice';
+                  };
+                  return (
+                    <View key={idx} style={styles.effectivenessRow}>
+                      <Text style={[styles.effectivenessTechnique, { color: theme.textSecondary }]} numberOfLines={1} ellipsizeMode="tail">{tech.fullName}</Text>
+                      <View style={[styles.effectivenessBar, { backgroundColor: theme.background }]}>
+                        <View style={[styles.effectivenessFill, { width: `${(tech.avgEffectiveness / 5) * 100}%`, backgroundColor: theme.primary }]} />
+                        <Text style={[styles.effectivenessScore, { color: theme.text }]}>{getQualitativeLabel(parseFloat(tech.avgEffectiveness))}</Text>
+                      </View>
                     </View>
-                  </View>
-                ))}
+                  );
+                })}
               </View>
             )}
           </View>
@@ -239,7 +262,10 @@ const styles = StyleSheet.create({
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginVertical: 20 },
   chartContainer: { margin: 20, padding: 15, borderRadius: 10, elevation: 2 },
-  chartTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
+  chartHeader: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 15 },
+  chartTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 4 },
+  chartSubtitle: { fontSize: 14 },
+  toggleButton: { padding: 8, borderRadius: 8, marginLeft: 10 },
   chart: { marginVertical: 8, borderRadius: 16 },
   noDataContainer: { alignItems: 'center', padding: 40 },
   noDataText: { fontSize: 16, fontWeight: '500', marginBottom: 5 },
@@ -250,10 +276,16 @@ const styles = StyleSheet.create({
   statLabel: { fontSize: 16 },
   statValue: { fontSize: 16, fontWeight: 'bold' },
   effectivenessContainer: { marginTop: 20, paddingTop: 15, borderTopWidth: 1 },
-  effectivenessTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
+  effectivenessTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 4 },
+  effectivenessSubtitle: { fontSize: 13, marginBottom: 10 },
   effectivenessRow: { marginBottom: 12 },
   effectivenessTechnique: { fontSize: 14, marginBottom: 4, flexWrap: 'wrap' },
-  effectivenessBar: { height: 24, borderRadius: 12, position: 'relative', justifyContent: 'center' },
-  effectivenessFill: { position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 12 },
-  effectivenessScore: { fontSize: 12, fontWeight: 'bold', textAlign: 'center', zIndex: 1 }
+  effectivenessBar: { height: 28, borderRadius: 14, position: 'relative', justifyContent: 'center' },
+  effectivenessFill: { position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 14 },
+  effectivenessScore: { fontSize: 13, fontWeight: '600', textAlign: 'center', zIndex: 1 },
+  techniqueUsageRow: { marginBottom: 16 },
+  techniqueUsageName: { fontSize: 14, marginBottom: 6, fontWeight: '500' },
+  techniqueUsageBar: { height: 32, borderRadius: 16, position: 'relative', justifyContent: 'center' },
+  techniqueUsageFill: { position: 'absolute', left: 0, top: 0, bottom: 0, borderRadius: 16 },
+  viewCountText: { fontSize: 12, fontWeight: '500', textAlign: 'center', zIndex: 1 }
 });
