@@ -107,7 +107,31 @@ npm run android # for Android
 - `src/utils/storage.js` - AsyncStorage wrapper with error handling
 - `src/services/openai.js` - OpenAI API integration
 
-## Recent Updates (Build 66 - Onboarding & Emotion Model)
+## Recent Updates (Build 70 - Trauma-Informed Analytics)
+
+### Build 70 - Trauma-Informed Analytics Improvements ✅ COMPLETE
+- ✅ Fixed double-counting bug: views and ratings now tracked separately
+- ✅ Replaced vertical bar chart with horizontal progress bars (full technique names visible)
+- ✅ Added qualitative effectiveness labels: "Very Helpful", "Helpful", "Somewhat Helpful", "Needs Practice"
+- ✅ Added optional view count toggle (eye icon) - default off to reduce pressure
+- ✅ Renamed charts with supportive language:
+  - "Your Go-To Techniques" - Tools you often reach for when you need support
+  - "What's Felt Most Helpful" - Tools you've found helpful at times
+- ✅ Updated Quick Stats labels:
+  - "Times you checked in" (was Total Mood Logs)
+  - "Support Moments" (was Techniques Used)
+  - Removed "Average Mood" to reduce clinical pressure
+- ✅ Normalized bar charts to reduce comparison anxiety
+- ✅ 16 comprehensive unit tests covering all analytics functionality
+- ✅ Follows mental health app best practices for trauma-informed design
+
+### Build 68-69 - Production Release & Emotion Model Refinements ✅ COMPLETE (iOS LIVE)
+- ✅ iOS v1.2.1 (Build 68) released to App Store (US, UK, Australia)
+- ✅ Removed debug buttons from Settings for production (Export Notifications, Reset Onboarding)
+- ✅ Refined emotion model: "Alerted / Anxious / On Edge" with PTSD-appropriate secondary emotions
+- ✅ Added "Fearful / Unsafe" and "Hypervigilant" to anxiety family
+- ✅ Moved "Shut Down / Collapsed" to low energy family (hypo-arousal vs hyper-arousal)
+- ✅ Android Build 69 ready for Google Play production access
 
 ### Build 65-66 - Onboarding Tour & Enhanced Mood Logging ✅ COMPLETE (Android Alpha)
 - ✅ 5-slide onboarding tour for new users (Welcome, DBT/CBT Tools, Progress Tracking, AI Support, Privacy)
