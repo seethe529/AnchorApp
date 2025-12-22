@@ -187,10 +187,7 @@ export default function ProgressScreen({ navigation }) {
 
       <View style={[styles.chartContainer, { backgroundColor: theme.card }]}>
         <View style={styles.chartHeader}>
-          <View style={{ flex: 1 }}>
-            <Text style={[styles.chartTitle, { color: theme.text }]}>Your Go-To Techniques</Text>
-            <Text style={[styles.chartSubtitle, { color: theme.textSecondary }]}>Tools you often reach for when you need support</Text>
-          </View>
+          <Text style={[styles.chartTitle, { color: theme.text }]}>Your Go-To Techniques</Text>
           <TouchableOpacity 
             onPress={() => setShowViewCounts(!showViewCounts)}
             style={[styles.toggleButton, { backgroundColor: theme.background }]}
@@ -223,7 +220,6 @@ export default function ProgressScreen({ navigation }) {
             {allRatedTechniques.length > 0 && (
               <View style={[styles.effectivenessContainer, { borderTopColor: theme.border }]}>
                 <Text style={[styles.effectivenessTitle, { color: theme.text }]}>What's Felt Most Helpful</Text>
-                <Text style={[styles.effectivenessSubtitle, { color: theme.textSecondary }]}>Tools you've found helpful at times</Text>
                 {allRatedTechniques.map((tech, idx) => {
                   const getQualitativeLabel = (score) => {
                     if (score >= 4.5) return 'Very Helpful';
@@ -262,10 +258,9 @@ const styles = StyleSheet.create({
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginVertical: 20 },
   chartContainer: { margin: 20, padding: 15, borderRadius: 10, elevation: 2 },
-  chartHeader: { flexDirection: 'row', alignItems: 'flex-start', marginBottom: 15 },
-  chartTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 4 },
-  chartSubtitle: { fontSize: 14 },
-  toggleButton: { padding: 8, borderRadius: 8, marginLeft: 10 },
+  chartHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 15 },
+  chartTitle: { fontSize: 18, fontWeight: 'bold' },
+  toggleButton: { padding: 8, borderRadius: 8 },
   chart: { marginVertical: 8, borderRadius: 16 },
   noDataContainer: { alignItems: 'center', padding: 40 },
   noDataText: { fontSize: 16, fontWeight: '500', marginBottom: 5 },
@@ -276,8 +271,7 @@ const styles = StyleSheet.create({
   statLabel: { fontSize: 16 },
   statValue: { fontSize: 16, fontWeight: 'bold' },
   effectivenessContainer: { marginTop: 20, paddingTop: 15, borderTopWidth: 1 },
-  effectivenessTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 4 },
-  effectivenessSubtitle: { fontSize: 13, marginBottom: 10 },
+  effectivenessTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
   effectivenessRow: { marginBottom: 12 },
   effectivenessTechnique: { fontSize: 14, marginBottom: 4, flexWrap: 'wrap' },
   effectivenessBar: { height: 28, borderRadius: 14, position: 'relative', justifyContent: 'center' },
