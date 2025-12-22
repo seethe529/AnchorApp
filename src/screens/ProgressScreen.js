@@ -217,28 +217,6 @@ export default function ProgressScreen({ navigation }) {
                 </View>
               );
             })}
-            {allRatedTechniques.length > 0 && (
-              <View style={[styles.effectivenessContainer, { borderTopColor: theme.border }]}>
-                <Text style={[styles.effectivenessTitle, { color: theme.text }]}>What's Felt Most Helpful</Text>
-                {allRatedTechniques.map((tech, idx) => {
-                  const getQualitativeLabel = (score) => {
-                    if (score >= 4.5) return 'Very Helpful';
-                    if (score >= 3.5) return 'Helpful';
-                    if (score >= 2.5) return 'Somewhat Helpful';
-                    return 'Needs Practice';
-                  };
-                  return (
-                    <View key={idx} style={styles.effectivenessRow}>
-                      <Text style={[styles.effectivenessTechnique, { color: theme.textSecondary }]} numberOfLines={1} ellipsizeMode="tail">{tech.fullName}</Text>
-                      <View style={[styles.effectivenessBar, { backgroundColor: theme.background }]}>
-                        <View style={[styles.effectivenessFill, { width: `${(tech.avgEffectiveness / 5) * 100}%`, backgroundColor: theme.primary }]} />
-                        <Text style={[styles.effectivenessScore, { color: theme.text }]}>{getQualitativeLabel(parseFloat(tech.avgEffectiveness))}</Text>
-                      </View>
-                    </View>
-                  );
-                })}
-              </View>
-            )}
           </View>
         ) : (
           <View style={styles.noDataContainer}>
@@ -247,6 +225,29 @@ export default function ProgressScreen({ navigation }) {
           </View>
         )}
       </View>
+
+      {allRatedTechniques.length > 0 && (
+        <View style={[styles.chartContainer, { backgroundColor: theme.card }]}>
+          <Text style={[styles.chartTitle, { color: theme.text }]}>What's Felt Most Helpful</Text>
+          {allRatedTechniques.map((tech, idx) => {
+            const getQualitativeLabel = (score) => {
+              if (score >= 4.5) return 'Very Helpful';
+              if (score >= 3.5) return 'Helpful';
+              if (score >= 2.5) return 'Somewhat Helpful';
+              return 'Needs Practice';
+            };
+            return (
+              <View key={idx} style={styles.effectivenessRow}>
+                <Text style={[styles.effectivenessTechnique, { color: theme.textSecondary }]} numberOfLines={1} ellipsizeMode="tail">{tech.fullName}</Text>
+                <View style={[styles.effectivenessBar, { backgroundColor: theme.background }]}>
+                  <View style={[styles.effectivenessFill, { width: `${(tech.avgEffectiveness / 5) * 100}%`, backgroundColor: theme.primary }]} />
+                  <Text style={[styles.effectivenessScore, { color: theme.text }]}>{getQualitativeLabel(parseFloat(tech.avgEffectiveness))}</Text>
+                </View>
+              </View>
+            );
+          })}
+        </View>
+      )}
 
       <QuickStats moodData={moodData} techniqueData={techniqueData} allMoodLogs={allMoodLogs} theme={theme} />
     </ScrollView>
@@ -270,8 +271,6 @@ const styles = StyleSheet.create({
   statRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
   statLabel: { fontSize: 16 },
   statValue: { fontSize: 16, fontWeight: 'bold' },
-  effectivenessContainer: { marginTop: 20, paddingTop: 15, borderTopWidth: 1 },
-  effectivenessTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
   effectivenessRow: { marginBottom: 12 },
   effectivenessTechnique: { fontSize: 14, marginBottom: 4, flexWrap: 'wrap' },
   effectivenessBar: { height: 28, borderRadius: 14, position: 'relative', justifyContent: 'center' },
