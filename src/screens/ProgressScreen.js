@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginVertical: 20 },
   chartContainer: { margin: 20, padding: 15, borderRadius: 10, elevation: 2 },
   chartHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 15 },
-  chartTitle: { fontSize: 18, fontWeight: 'bold' },
+  chartTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
   toggleButton: { padding: 8, borderRadius: 8 },
   chart: { marginVertical: 8, borderRadius: 16 },
   noDataContainer: { alignItems: 'center', padding: 40 },
