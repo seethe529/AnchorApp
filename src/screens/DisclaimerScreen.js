@@ -104,8 +104,8 @@ const styles = StyleSheet.create({
   bulletPoint: { fontSize: 16, lineHeight: 24, marginLeft: 10, marginBottom: 5 },
   crisisCard: { marginVertical: 20 },
   crisisTitle: { fontSize: 16, fontWeight: 'bold', color: '#DC143C', marginBottom: 10 },
-  crisisText: { fontSize: 14, marginBottom: 5 },
-  checkbox: { flexDirection: 'row', alignItems: 'center', marginTop: 20, marginBottom: 20 },
-  checkboxText: { fontSize: 16, marginLeft: 10, flex: 1 },
+  crisisText: { fontSize: 14, marginBottom: 5, flexWrap: 'wrap' },
+  checkbox: { flexDirection: 'row', alignItems: 'flex-start', marginTop: 20, marginBottom: 20 },
+  checkboxText: { fontSize: 16, marginLeft: 10, flex: 1, flexWrap: 'wrap' },
   buttonContainer: { padding: 20 }
 });
