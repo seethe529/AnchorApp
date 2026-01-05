@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform, Linking, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled, exportScheduledNotifications } from '../utils/notifications';
 import Constants from 'expo-constants';
@@ -15,7 +15,8 @@ export default function SettingsScreen({ navigation }) {
   const [preferences, setPreferences] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [moodReminderTime, setMoodReminderTime] = useState(new Date());
+  const [selectedHour, setSelectedHour] = useState(20);
+  const [selectedMinute, setSelectedMinute] = useState(0);
 
   useEffect(() => {
     loadPreferences();
@@ -29,13 +30,8 @@ export default function SettingsScreen({ navigation }) {
         // Load saved time or default to 8 PM
         if (savedPreferences.moodReminderTime) {
           const [hour, minute] = savedPreferences.moodReminderTime.split(':').map(Number);
-          const date = new Date();
-          date.setHours(hour, minute, 0, 0);
-          setMoodReminderTime(date);
-        } else {
-          const date = new Date();
-          date.setHours(20, 0, 0, 0);
-          setMoodReminderTime(date);
+          setSelectedHour(hour);
+          setSelectedMinute(minute);
         }
       } else {
         // Set defaults only if no saved preferences
@@ -112,9 +108,7 @@ export default function SettingsScreen({ navigation }) {
     
     if (key === 'moodReminders') {
       if (newPreferences.moodReminders) {
-        const hour = moodReminderTime.getHours();
-        const minute = moodReminderTime.getMinutes();
-        await scheduleMoodReminder({ hour, minute });
+        await scheduleMoodReminder({ hour: selectedHour, minute: selectedMinute });
       } else {
         await cancelMoodReminder();
       }
@@ -129,33 +123,23 @@ export default function SettingsScreen({ navigation }) {
     }
   };
 
-  const handleTimeChange = async (event, selectedDate) => {
-    if (Platform.OS === 'android') {
-      setShowTimePicker(false);
+  const handleTimeSave = async () => {
+    const timeString = `${selectedHour}:${selectedMinute.toString().padStart(2, '0')}`;
+    const newPreferences = { ...preferences, moodReminderTime: timeString };
+    await savePreferences(newPreferences);
+    
+    if (preferences.notifications && preferences.moodReminders) {
+      await cancelMoodReminder();
+      await scheduleMoodReminder({ hour: selectedHour, minute: selectedMinute });
     }
     
-    if (selectedDate) {
-      setMoodReminderTime(selectedDate);
-      const hour = selectedDate.getHours();
-      const minute = selectedDate.getMinutes();
-      const timeString = `${hour}:${minute.toString().padStart(2, '0')}`;
-      
-      const newPreferences = { ...preferences, moodReminderTime: timeString };
-      await savePreferences(newPreferences);
-      
-      if (preferences.notifications && preferences.moodReminders) {
-        await cancelMoodReminder();
-        await scheduleMoodReminder({ hour, minute });
-      }
-    }
+    setShowTimePicker(false);
   };
 
-  const formatTime = (date) => {
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const displayHours = hours % 12 || 12;
-    return `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+  const formatTime = (hour, minute) => {
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHours = hour % 12 || 12;
+    return `${displayHours}:${minute.toString().padStart(2, '0')} ${ampm}`;
   };
 
   const clearAllData = () => {
@@ -280,7 +264,7 @@ export default function SettingsScreen({ navigation }) {
       title: 'Notifications',
       items: [
         { key: 'notifications', title: 'Enable Notifications', subtitle: 'Receive app notifications' },
-        { key: 'moodReminders', title: 'Daily Mood Check-ins', subtitle: `Daily reminder at ${formatTime(moodReminderTime)}` },
+        { key: 'moodReminders', title: 'Daily Mood Check-ins', subtitle: `Daily reminder at ${formatTime(selectedHour, selectedMinute)}` },
         { key: 'breathingReminders', title: 'Breathing Reminders', subtitle: 'Periodic breathing exercise prompts' }
       ]
     },
@@ -448,20 +432,36 @@ export default function SettingsScreen({ navigation }) {
           <View style={styles.modalOverlay}>
             <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
               <View style={styles.modalHeader}>
-                <Text style={[styles.modalTitle, { color: theme.text }]}>Select Time</Text>
                 <TouchableOpacity onPress={() => setShowTimePicker(false)}>
+                  <Text style={[styles.modalCancel, { color: theme.textSecondary }]}>Cancel</Text>
+                </TouchableOpacity>
+                <Text style={[styles.modalTitle, { color: theme.text }]}>Select Time</Text>
+                <TouchableOpacity onPress={handleTimeSave}>
                   <Text style={[styles.modalDone, { color: theme.primary }]}>Done</Text>
                 </TouchableOpacity>
               </View>
-              <DateTimePicker
-                value={moodReminderTime}
-                mode="time"
-                is24Hour={false}
-                display="spinner"
-                onChange={handleTimeChange}
-                textColor={theme.text}
-                style={{ height: 200 }}
-              />
+              <View style={styles.pickerRow}>
+                <Picker
+                  selectedValue={selectedHour}
+                  onValueChange={setSelectedHour}
+                  style={styles.picker}
+                  itemStyle={{ color: theme.text }}
+                >
+                  {Array.from({ length: 24 }, (_, i) => (
+                    <Picker.Item key={i} label={`${i % 12 || 12} ${i >= 12 ? 'PM' : 'AM'}`} value={i} />
+                  ))}
+                </Picker>
+                <Picker
+                  selectedValue={selectedMinute}
+                  onValueChange={setSelectedMinute}
+                  style={styles.picker}
+                  itemStyle={{ color: theme.text }}
+                >
+                  {[0, 15, 30, 45].map(min => (
+                    <Picker.Item key={min} label={min.toString().padStart(2, '0')} value={min} />
+                  ))}
+                </Picker>
+              </View>
             </View>
           </View>
         </Modal>
@@ -592,5 +592,17 @@ const styles = StyleSheet.create({
   modalDone: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  modalCancel: {
+    fontSize: 16,
+  },
+  pickerRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    paddingVertical: 20,
+  },
+  picker: {
+    width: 150,
+    height: 200,
   },
 });
