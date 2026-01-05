@@ -54,10 +54,22 @@ export default function DisclaimerScreen({ navigation }) {
         <Card variant="strong" style={styles.crisisCard}>
           <Text style={styles.crisisTitle}>🚨 If You're In Crisis:</Text>
           <View style={styles.crisisList}>
-            <Text style={[styles.crisisText, { color: theme.text }]}>• National Suicide Prevention Lifeline: 988</Text>
-            <Text style={[styles.crisisText, { color: theme.text }]}>• Crisis Text Line: Text HOME to 741741</Text>
-            <Text style={[styles.crisisText, { color: theme.text }]}>• Veterans Crisis Line: 1-800-273-8255</Text>
-            <Text style={[styles.crisisText, { color: theme.text }]}>• Emergency Services: 911</Text>
+            <View style={styles.crisisItem}>
+              <Text style={[styles.crisisLabel, { color: theme.text }]}>National Suicide Prevention Lifeline:</Text>
+              <Text style={[styles.crisisNumber, { color: theme.text }]}>988</Text>
+            </View>
+            <View style={styles.crisisItem}>
+              <Text style={[styles.crisisLabel, { color: theme.text }]}>Crisis Text Line:</Text>
+              <Text style={[styles.crisisNumber, { color: theme.text }]}>Text HOME to 741741</Text>
+            </View>
+            <View style={styles.crisisItem}>
+              <Text style={[styles.crisisLabel, { color: theme.text }]}>Veterans Crisis Line:</Text>
+              <Text style={[styles.crisisNumber, { color: theme.text }]}>1-800-273-8255</Text>
+            </View>
+            <View style={styles.crisisItem}>
+              <Text style={[styles.crisisLabel, { color: theme.text }]}>Emergency Services:</Text>
+              <Text style={[styles.crisisNumber, { color: theme.text }]}>911</Text>
+            </View>
           </View>
         </Card>
 
@@ -158,13 +170,21 @@ const styles = StyleSheet.create({
     marginBottom: 12 
   },
   crisisList: { 
-    paddingLeft: 4 
+    gap: 12
   },
-  crisisText: { 
-    fontSize: 15, 
-    lineHeight: 22, 
-    marginBottom: 8,
-    paddingLeft: 8
+  crisisItem: {
+    flexDirection: 'column'
+  },
+  crisisLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginBottom: 2,
+    opacity: 0.8
+  },
+  crisisNumber: {
+    fontSize: 17,
+    fontWeight: '600',
+    letterSpacing: 0.3
   },
   checkbox: { 
     flexDirection: 'row', 
