@@ -37,15 +37,17 @@
   - User control over reminders increases treatment adherence
 
 **Recommended Intervals to Offer:**
+- **60 minutes** (16 reminders/day) - High frequency for acute crisis periods
+  - iOS: 48 breathing (3 days) + 3 mood (3 days) = 51 total ✓
+  - Trade-off: Reduces mood reminders from 7 days to 3 days
 - **90 minutes** (10-11 reminders/day) - Current default, balanced approach
+  - iOS: 30 breathing (3 days) + 7 mood (7 days) = 37 total ✓
 - **120 minutes** (8 reminders/day) - Moderate frequency
+  - iOS: 24 breathing (3 days) + 7 mood (7 days) = 31 total ✓
 - **180 minutes** (5-6 reminders/day) - Lower frequency for maintenance
+  - iOS: 15 breathing (3 days) + 7 mood (7 days) = 22 total ✓
 - **240 minutes** (4 reminders/day) - Minimal frequency
-
-**NOT RECOMMENDED:**
-- ~~60 minutes (16 reminders/day)~~ - Would exceed iOS 64-notification limit when combined with mood reminders
-  - 60-min × 3 days = 48 breathing + 7 mood = 55 total (too close to limit, no buffer)
-  - Risk of hitting limit with any additional notifications
+  - iOS: 12 breathing (3 days) + 7 mood (7 days) = 19 total ✓
 
 **Sources to Review:**
 - [ ] VA/DoD PTSD Clinical Practice Guidelines (2023)
@@ -105,12 +107,15 @@
 │  Breathing Exercise Reminders       │
 │  ├─ Enable Reminders        [✓]    │
 │  └─ Reminder Interval       [90min]│
-│      Options: 90, 120, 180, 240 min  │
+│      Options: 60, 90, 120, 180, 240  │
 │                                     │
 │  Mood Check-In Reminder             │
 │  ├─ Enable Reminder         [✓]    │
 │  └─ Reminder Time          [8:00PM]│
-│      (Once daily only)              │
+│      (Once daily)                   │
+│                                     │
+│  ⚠️ Note: 60-min interval reduces  │
+│     mood reminders to 3 days        │
 │                                     │
 └─────────────────────────────────────┘
 ```
@@ -122,7 +127,7 @@
    - Enable/disable mood reminders
 
 2. **Picker Wheels** (new component needed)
-   - Breathing interval picker: 90, 120, 180, 240 minutes
+   - Breathing interval picker: 60, 90, 120, 180, 240 minutes
    - Mood time picker: 6:00 AM - 11:00 PM (30-min increments)
 
 3. **Preview Button** (new feature)
@@ -140,12 +145,12 @@
 ```javascript
 // Breathing reminders
 'breathing_reminders_enabled' // boolean (existing)
-'breathing_interval_minutes'  // number: 90, 120, 180, 240 (NEW)
+'breathing_interval_minutes'  // number: 60, 90, 120, 180, 240 (NEW)
 
 // Mood reminders
 'mood_reminders_enabled'      // boolean (existing)
 'mood_reminder_time'          // string: "20:00" (NEW)
-// Note: No frequency option - always once daily
+// Note: Mood reminder days auto-adjust based on breathing interval
 ```
 
 **Default Values:**
@@ -201,7 +206,7 @@ const getMoodReminderTime = async () => {
 **Notification Count Calculation:**
 ```javascript
 // iOS: 64 notification limit - CRITICAL CONSTRAINT
-// Current system: 48 breathing (3 days) + 7 mood (7 days) = 55 total
+// Smart trade-off: 60-min interval reduces mood days to fit under limit
 
 const calculateNotificationCounts = (intervalMinutes) => {
   const hoursInDay = 24;
@@ -210,28 +215,34 @@ const calculateNotificationCounts = (intervalMinutes) => {
   // iOS: 3-day coverage for breathing (to stay under 64 limit)
   const iosBreathingCount = Math.min(breathingPerDay * 3, 48);
   
-  // Mood: Always 7 days, once daily = 7 notifications
-  const moodCount = 7;
+  // Mood: Adjust days based on breathing interval to stay under iOS limit
+  // 60-min: 48 breathing + 3 mood = 51 (safe)
+  // Others: breathing + 7 mood (safe)
+  const moodDays = intervalMinutes === 60 ? 3 : 7;
+  const moodCount = moodDays;
   
   return {
     ios: {
       breathing: iosBreathingCount,
       mood: moodCount,
+      moodDays: moodDays,
       total: iosBreathingCount + moodCount
     },
     android: {
       breathing: breathingPerDay * 7, // 7-day coverage
-      mood: moodCount,
-      total: (breathingPerDay * 7) + moodCount
+      mood: 7, // Always 7 days on Android
+      moodDays: 7,
+      total: (breathingPerDay * 7) + 7
     }
   };
 };
 
 // Validation: Ensure iOS doesn't exceed 64
-// 90 min: 10/day × 3 = 30 + 7 = 37 ✓
-// 120 min: 8/day × 3 = 24 + 7 = 31 ✓
-// 180 min: 5/day × 3 = 15 + 7 = 22 ✓
-// 240 min: 4/day × 3 = 12 + 7 = 19 ✓
+// 60 min: 16/day × 3 = 48 + 3 mood = 51 ✓ (crisis mode)
+// 90 min: 10/day × 3 = 30 + 7 mood = 37 ✓
+// 120 min: 8/day × 3 = 24 + 7 mood = 31 ✓
+// 180 min: 5/day × 3 = 15 + 7 mood = 22 ✓
+// 240 min: 4/day × 3 = 12 + 7 mood = 19 ✓
 // All options safely under 64 limit!
 ```
 
@@ -275,11 +286,13 @@ Total: 11 notifications per day
 - [ ] Test persistence across app restarts
 
 **Edge Cases:**
+- [ ] User sets 60-min interval (16/day × 3 days = 48 + 3 mood = 51 total - safe, crisis mode)
 - [ ] User sets 90-min interval (10/day × 3 days = 30 + 7 mood = 37 total - safe)
 - [ ] User sets 120-min interval (8/day × 3 days = 24 + 7 mood = 31 total - safe)
 - [ ] User sets 180-min interval (5/day × 3 days = 15 + 7 mood = 22 total - safe)
 - [ ] User sets 240-min interval (4/day × 3 days = 12 + 7 mood = 19 total - safe)
 - [ ] All options stay well under iOS 64-notification limit!
+- [ ] User should see warning when selecting 60-min: "Crisis mode: More breathing reminders, fewer mood check-ins (3 days)"
 
 **iOS Limit Handling:**
 ```javascript
