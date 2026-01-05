@@ -3,7 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { storage } from '../utils/storage';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme, designTokens } from '../context/ThemeContext';
 import Button from '../components/Button';
 import Card from '../components/Card';
 
@@ -31,7 +31,7 @@ export default function DisclaimerScreen({ navigation }) {
         <Text style={[styles.title, { color: theme.text }]}>Important Notice</Text>
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
         <Card variant="strong" style={styles.warningCard}>
           <View style={styles.warningHeader}>
             <Ionicons name="warning" size={24} color="#DC143C" />
@@ -44,17 +44,21 @@ export default function DisclaimerScreen({ navigation }) {
         </Text>
 
         <Text style={[styles.boldText, { color: theme.text }]}>This app is NOT:</Text>
-        <Text style={[styles.bulletPoint, { color: theme.textSecondary }]}>• A substitute for professional medical advice</Text>
-        <Text style={[styles.bulletPoint, { color: theme.textSecondary }]}>• A replacement for therapy or counseling</Text>
-        <Text style={[styles.bulletPoint, { color: theme.textSecondary }]}>• Monitored by healthcare professionals</Text>
-        <Text style={[styles.bulletPoint, { color: theme.textSecondary }]}>• An emergency service</Text>
+        <View style={styles.bulletList}>
+          <Text style={[styles.bulletPoint, { color: theme.textSecondary }]}>• A substitute for professional medical advice</Text>
+          <Text style={[styles.bulletPoint, { color: theme.textSecondary }]}>• A replacement for therapy or counseling</Text>
+          <Text style={[styles.bulletPoint, { color: theme.textSecondary }]}>• Monitored by healthcare professionals</Text>
+          <Text style={[styles.bulletPoint, { color: theme.textSecondary }]}>• An emergency service</Text>
+        </View>
 
         <Card variant="strong" style={styles.crisisCard}>
           <Text style={styles.crisisTitle}>🚨 If You're In Crisis:</Text>
-          <Text style={[styles.crisisText, { color: theme.text }]}>• National Suicide Prevention Lifeline: 988</Text>
-          <Text style={[styles.crisisText, { color: theme.text }]}>• Crisis Text Line: Text HOME to 741741</Text>
-          <Text style={[styles.crisisText, { color: theme.text }]}>• Veterans Crisis Line: 1-800-273-8255</Text>
-          <Text style={[styles.crisisText, { color: theme.text }]}>• Emergency Services: 911</Text>
+          <View style={styles.crisisList}>
+            <Text style={[styles.crisisText, { color: theme.text }]}>• National Suicide Prevention Lifeline: 988</Text>
+            <Text style={[styles.crisisText, { color: theme.text }]}>• Crisis Text Line: Text HOME to 741741</Text>
+            <Text style={[styles.crisisText, { color: theme.text }]}>• Veterans Crisis Line: 1-800-273-8255</Text>
+            <Text style={[styles.crisisText, { color: theme.text }]}>• Emergency Services: 911</Text>
+          </View>
         </Card>
 
         <Text style={[styles.text, { color: theme.text }]}>
@@ -70,8 +74,9 @@ export default function DisclaimerScreen({ navigation }) {
         >
           <Ionicons 
             name={accepted ? "checkbox" : "square-outline"} 
-            size={24} 
-            color={theme.primary} 
+            size={28} 
+            color={theme.primary}
+            style={styles.checkboxIcon}
           />
           <Text style={[styles.checkboxText, { color: theme.text }]}>
             I understand and agree to the terms above
@@ -93,19 +98,93 @@ export default function DisclaimerScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  header: { padding: 30, alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },
-  title: { fontSize: 24, fontWeight: 'bold', marginTop: 15 },
-  content: { flex: 1, padding: 20 },
-  warningCard: { marginBottom: 20 },
-  warningHeader: { flexDirection: 'row', alignItems: 'center' },
-  warningTitle: { fontSize: 18, fontWeight: 'bold', color: '#DC143C', marginLeft: 10 },
-  text: { fontSize: 16, lineHeight: 24, marginBottom: 15 },
-  boldText: { fontSize: 16, fontWeight: 'bold', marginBottom: 10, marginTop: 10 },
-  bulletPoint: { fontSize: 16, lineHeight: 24, marginLeft: 10, marginBottom: 5 },
-  crisisCard: { marginVertical: 20 },
-  crisisTitle: { fontSize: 16, fontWeight: 'bold', color: '#DC143C', marginBottom: 10 },
-  crisisText: { fontSize: 14, marginBottom: 5, flexWrap: 'wrap' },
-  checkbox: { flexDirection: 'row', alignItems: 'flex-start', marginTop: 20, marginBottom: 20 },
-  checkboxText: { fontSize: 16, marginLeft: 10, flex: 1, flexWrap: 'wrap' },
-  buttonContainer: { padding: 20 }
+  header: { 
+    padding: 28, 
+    alignItems: 'center', 
+    ...designTokens.shadows.card
+  },
+  title: { 
+    ...designTokens.typography.h1,
+    marginTop: 12
+  },
+  content: { flex: 1 },
+  contentContainer: { 
+    padding: 20, 
+    paddingBottom: 40 
+  },
+  warningCard: { 
+    marginBottom: 20,
+    backgroundColor: 'rgba(220, 20, 60, 0.08)'
+  },
+  warningHeader: { 
+    flexDirection: 'row', 
+    alignItems: 'center' 
+  },
+  warningTitle: { 
+    fontSize: 17, 
+    fontWeight: '600', 
+    color: '#DC143C', 
+    marginLeft: 10 
+  },
+  text: { 
+    fontSize: 15, 
+    lineHeight: 22, 
+    marginBottom: 16 
+  },
+  boldText: { 
+    fontSize: 16, 
+    fontWeight: '600', 
+    marginBottom: 10, 
+    marginTop: 8 
+  },
+  bulletList: { 
+    marginBottom: 16, 
+    paddingLeft: 4 
+  },
+  bulletPoint: { 
+    fontSize: 15, 
+    lineHeight: 22, 
+    marginBottom: 6,
+    paddingLeft: 8
+  },
+  crisisCard: { 
+    marginVertical: 20,
+    backgroundColor: 'rgba(220, 20, 60, 0.08)'
+  },
+  crisisTitle: { 
+    fontSize: 17, 
+    fontWeight: '600', 
+    color: '#DC143C', 
+    marginBottom: 12 
+  },
+  crisisList: { 
+    paddingLeft: 4 
+  },
+  crisisText: { 
+    fontSize: 15, 
+    lineHeight: 22, 
+    marginBottom: 8,
+    paddingLeft: 8
+  },
+  checkbox: { 
+    flexDirection: 'row', 
+    alignItems: 'flex-start', 
+    marginTop: 24, 
+    marginBottom: 32, 
+    paddingHorizontal: 4 
+  },
+  checkboxIcon: { 
+    marginTop: 2 
+  },
+  checkboxText: { 
+    fontSize: 15, 
+    lineHeight: 22, 
+    marginLeft: 12, 
+    flex: 1 
+  },
+  buttonContainer: { 
+    padding: 20, 
+    paddingTop: 12,
+    paddingBottom: 24
+  }
 });
