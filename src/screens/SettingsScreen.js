@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform, Linking } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform, Linking, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled, exportScheduledNotifications } from '../utils/notifications';
 import Constants from 'expo-constants';
@@ -13,6 +14,8 @@ export default function SettingsScreen({ navigation }) {
   const { theme, isDark, toggleTheme } = useTheme();
   const [preferences, setPreferences] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [moodReminderTime, setMoodReminderTime] = useState(new Date());
 
   useEffect(() => {
     loadPreferences();
@@ -23,6 +26,17 @@ export default function SettingsScreen({ navigation }) {
       const savedPreferences = await storage.getItem(STORAGE_KEYS.USER_PREFERENCES);
       if (savedPreferences) {
         setPreferences(savedPreferences);
+        // Load saved time or default to 8 PM
+        if (savedPreferences.moodReminderTime) {
+          const [hour, minute] = savedPreferences.moodReminderTime.split(':').map(Number);
+          const date = new Date();
+          date.setHours(hour, minute, 0, 0);
+          setMoodReminderTime(date);
+        } else {
+          const date = new Date();
+          date.setHours(20, 0, 0, 0);
+          setMoodReminderTime(date);
+        }
       } else {
         // Set defaults only if no saved preferences
         const defaults = {
@@ -98,7 +112,9 @@ export default function SettingsScreen({ navigation }) {
     
     if (key === 'moodReminders') {
       if (newPreferences.moodReminders) {
-        await scheduleMoodReminder();
+        const hour = moodReminderTime.getHours();
+        const minute = moodReminderTime.getMinutes();
+        await scheduleMoodReminder({ hour, minute });
       } else {
         await cancelMoodReminder();
       }
@@ -111,6 +127,35 @@ export default function SettingsScreen({ navigation }) {
         await cancelBreathingReminder();
       }
     }
+  };
+
+  const handleTimeChange = async (event, selectedDate) => {
+    if (Platform.OS === 'android') {
+      setShowTimePicker(false);
+    }
+    
+    if (selectedDate) {
+      setMoodReminderTime(selectedDate);
+      const hour = selectedDate.getHours();
+      const minute = selectedDate.getMinutes();
+      const timeString = `${hour}:${minute.toString().padStart(2, '0')}`;
+      
+      const newPreferences = { ...preferences, moodReminderTime: timeString };
+      await savePreferences(newPreferences);
+      
+      if (preferences.notifications && preferences.moodReminders) {
+        await cancelMoodReminder();
+        await scheduleMoodReminder({ hour, minute });
+      }
+    }
+  };
+
+  const formatTime = (date) => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const displayHours = hours % 12 || 12;
+    return `${displayHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
   };
 
   const clearAllData = () => {
@@ -235,7 +280,7 @@ export default function SettingsScreen({ navigation }) {
       title: 'Notifications',
       items: [
         { key: 'notifications', title: 'Enable Notifications', subtitle: 'Receive app notifications' },
-        { key: 'moodReminders', title: 'Daily Mood Check-ins', subtitle: 'Daily reminder at 8:00 PM' },
+        { key: 'moodReminders', title: 'Daily Mood Check-ins', subtitle: `Daily reminder at ${formatTime(moodReminderTime)}` },
         { key: 'breathingReminders', title: 'Breathing Reminders', subtitle: 'Periodic breathing exercise prompts' }
       ]
     },
@@ -283,6 +328,21 @@ export default function SettingsScreen({ navigation }) {
               />
             </View>
           ))}
+          {section.title === 'Notifications' && preferences.moodReminders && (
+            <TouchableOpacity 
+              style={styles.timePickerButton}
+              onPress={() => setShowTimePicker(true)}
+              accessibilityLabel="Change mood reminder time"
+              accessibilityRole="button"
+            >
+              <Ionicons name="time-outline" size={20} color={theme.primary} style={{ marginRight: 12 }} />
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.settingTitle, { color: theme.text }]}>Change Time</Text>
+                <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>Tap to select reminder time</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={theme.textTertiary} />
+            </TouchableOpacity>
+          )}
           {section.title === 'Notifications' && Platform.OS === 'android' && (
             <View style={styles.androidNotice}>
               <Ionicons name="information-circle" size={20} color={theme.primary} />
@@ -377,6 +437,35 @@ export default function SettingsScreen({ navigation }) {
           If you're experiencing a mental health crisis, please contact emergency services immediately.
         </Text>
       </View>
+      
+      {showTimePicker && (
+        <Modal
+          visible={showTimePicker}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowTimePicker(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
+              <View style={styles.modalHeader}>
+                <Text style={[styles.modalTitle, { color: theme.text }]}>Select Time</Text>
+                <TouchableOpacity onPress={() => setShowTimePicker(false)}>
+                  <Text style={[styles.modalDone, { color: theme.primary }]}>Done</Text>
+                </TouchableOpacity>
+              </View>
+              <DateTimePicker
+                value={moodReminderTime}
+                mode="time"
+                is24Hour={false}
+                display="spinner"
+                onChange={handleTimeChange}
+                textColor={theme.text}
+                style={{ height: 200 }}
+              />
+            </View>
+          </View>
+        </Modal>
+      )}
     </ScrollView>
   );
 }
@@ -471,5 +560,37 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 13,
     lineHeight: 18,
+  },
+  timePickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    marginTop: 8,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContent: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingBottom: 40,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  modalDone: {
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

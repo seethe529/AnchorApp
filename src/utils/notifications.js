@@ -177,10 +177,10 @@ export const requestPermissions = async () => {
 };
 
 /*************************************************
- * MOOD REMINDER — DAILY AT 8 PM
+ * MOOD REMINDER — DAILY AT CUSTOM TIME
  *************************************************/
-export const scheduleMoodReminder = async () => {
-  console.log('🌙 [NOTIF] scheduleMoodReminder called');
+export const scheduleMoodReminder = async ({ hour = 20, minute = 0 } = {}) => {
+  console.log(`🌙 [NOTIF] scheduleMoodReminder called for ${hour}:${minute}`);
 
   if (Platform.OS === 'web') {
     console.log('⚠️ [NOTIF] Platform web — skip mood reminder');
@@ -192,14 +192,13 @@ export const scheduleMoodReminder = async () => {
     console.log('🧹 [NOTIF] Existing mood reminders cancelled');
 
     const now = new Date();
-    const currentHour = now.getHours();
     let scheduled = 0;
     
     // Schedule for next MOOD_DAYS days
     for (let i = 0; i < MOOD_DAYS; i++) {
       const triggerDate = new Date(now);
       triggerDate.setDate(triggerDate.getDate() + i);
-      triggerDate.setHours(20, 0, 0, 0);
+      triggerDate.setHours(hour, minute, 0, 0);
       
       // Skip if in the past
       if (triggerDate.getTime() <= Date.now()) {
