@@ -2,13 +2,75 @@
 
 All notable changes to Anchor PTSD Support App will be documented in this file.
 
-## [1.2.1] - Build 66 (Android Alpha Testing) - December 2025
+## [1.2.5] - Build 71 (UI Modernization Complete) - January 2025
+
+### Changed - DisclaimerScreen Modernization
+- Applied design tokens and theme support for light/dark mode compatibility
+- Integrated reusable Button and Card components
+- Improved typography hierarchy with proper font sizes and weights
+- Enhanced crisis information layout with label/number structure for better readability
+- Added red left border accent (4px) to warning and crisis cards for visual emphasis
+- Restructured crisis resources with separate label and number lines
+- Improved text wrapping and spacing throughout
+
+### Fixed - Button Component
+- Added proper grey disabled state (#CCCCCC) for primary buttons
+- Disabled buttons now show clear visual feedback instead of opacity-only
+- Matches iOS/Android standard disabled button patterns
+
+### Added - Accessibility Improvements
+- Added scroll indicators and bounce scrolling for better UX
+- Enhanced VoiceOver/TalkBack support with accessibility hints
+- Improved touch targets (44pt/48dp minimum) for checkbox and buttons
+- Added haptic feedback (activeOpacity) for better tactile response
+
+### Documentation
+- All screens now modernized and following iOS/Android best practices
+- Complete design system implementation across entire app
+
+## [1.2.4] - Build 70 (Trauma-Informed Analytics) - January 2025
+
+### Fixed - Analytics Double-Counting Bug
+- Fixed critical bug where technique views and ratings were double-counted
+- Views and ratings now tracked separately with proper data structure
+- Analytics now accurately reflect actual usage patterns
+
+### Changed - Trauma-Informed Design Improvements
+- Replaced vertical bar chart with horizontal progress bars (full technique names visible)
+- Added qualitative effectiveness labels: "Very Helpful", "Helpful", "Somewhat Helpful", "Needs Practice"
+- Added optional view count toggle (eye icon) - default off to reduce pressure
+- Renamed charts with supportive language:
+  - "Your Go-To Techniques" - Tools you often reach for when you need support
+  - "What's Felt Most Helpful" - Tools you've found helpful at times
+- Updated Quick Stats labels:
+  - "Times you checked in" (was Total Mood Logs)
+  - "Support Moments" (was Techniques Used)
+  - Removed "Average Mood" to reduce clinical pressure
+- Normalized bar charts to reduce comparison anxiety
+
+### Added
+- 16 comprehensive unit tests covering all analytics functionality
+- Follows mental health app best practices for trauma-informed design
+
+## [1.2.4] - Build 68-69 (iOS Production / Android Production) - December 2025
+
+### Released
+- iOS v1.2.4 (Build 68) released to App Store (US, UK, Australia)
+- Android v1.2.4 (Build 69) released to Google Play
+
+### Changed - Production Refinements
+- Removed debug buttons from Settings for production (Export Notifications, Reset Onboarding)
+- Refined emotion model: "Alerted / Anxious / On Edge" with PTSD-appropriate secondary emotions
+- Added "Fearful / Unsafe" and "Hypervigilant" to anxiety family
+- Moved "Shut Down / Collapsed" to low energy family (hypo-arousal vs hyper-arousal)
+
+## [1.2.3] - Build 66 (Android Alpha Testing) - December 2025
 
 ### Fixed
 - Onboarding footer safe area insets for Android devices with navigation bars
 - Button now fully visible above system navigation on all Android devices
 
-## [1.2.1] - Build 65 (Android Alpha Testing) - December 2025
+## [1.2.2] - Build 65 (Android Alpha Testing) - December 2025
 
 ### Added - Onboarding Tour
 - 5-slide welcome tour for new users explaining app features
