@@ -16,7 +16,6 @@ export default function SettingsScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedHour, setSelectedHour] = useState(20);
-  const [selectedMinute, setSelectedMinute] = useState(0);
 
   useEffect(() => {
     loadPreferences();
@@ -29,9 +28,8 @@ export default function SettingsScreen({ navigation }) {
         setPreferences(savedPreferences);
         // Load saved time or default to 8 PM
         if (savedPreferences.moodReminderTime) {
-          const [hour, minute] = savedPreferences.moodReminderTime.split(':').map(Number);
+          const [hour] = savedPreferences.moodReminderTime.split(':').map(Number);
           setSelectedHour(hour);
-          setSelectedMinute(minute);
         }
       } else {
         // Set defaults only if no saved preferences
@@ -108,7 +106,7 @@ export default function SettingsScreen({ navigation }) {
     
     if (key === 'moodReminders') {
       if (newPreferences.moodReminders) {
-        await scheduleMoodReminder({ hour: selectedHour, minute: selectedMinute });
+        await scheduleMoodReminder({ hour: selectedHour, minute: 0 });
       } else {
         await cancelMoodReminder();
       }
@@ -124,22 +122,22 @@ export default function SettingsScreen({ navigation }) {
   };
 
   const handleTimeSave = async () => {
-    const timeString = `${selectedHour}:${selectedMinute.toString().padStart(2, '0')}`;
+    const timeString = `${selectedHour}:00`;
     const newPreferences = { ...preferences, moodReminderTime: timeString };
     await savePreferences(newPreferences);
     
     if (preferences.notifications && preferences.moodReminders) {
       await cancelMoodReminder();
-      await scheduleMoodReminder({ hour: selectedHour, minute: selectedMinute });
+      await scheduleMoodReminder({ hour: selectedHour, minute: 0 });
     }
     
     setShowTimePicker(false);
   };
 
-  const formatTime = (hour, minute) => {
+  const formatTime = (hour) => {
     const ampm = hour >= 12 ? 'PM' : 'AM';
     const displayHours = hour % 12 || 12;
-    return `${displayHours}:${minute.toString().padStart(2, '0')} ${ampm}`;
+    return `${displayHours}:00 ${ampm}`;
   };
 
   const clearAllData = () => {
@@ -264,7 +262,7 @@ export default function SettingsScreen({ navigation }) {
       title: 'Notifications',
       items: [
         { key: 'notifications', title: 'Enable Notifications', subtitle: 'Receive app notifications' },
-        { key: 'moodReminders', title: 'Daily Mood Check-ins', subtitle: `Daily reminder at ${formatTime(selectedHour, selectedMinute)}` },
+        { key: 'moodReminders', title: 'Daily Mood Check-ins', subtitle: `Daily reminder at ${formatTime(selectedHour)}` },
         { key: 'breathingReminders', title: 'Breathing Reminders', subtitle: 'Periodic breathing exercise prompts' }
       ]
     },
@@ -453,15 +451,6 @@ export default function SettingsScreen({ navigation }) {
                   }))}
                   selectedValue={selectedHour}
                   onValueChange={setSelectedHour}
-                  style={styles.picker}
-                />
-                <WheelPicker
-                  items={[0, 15, 30, 45].map(min => ({
-                    label: min.toString().padStart(2, '0'),
-                    value: min
-                  }))}
-                  selectedValue={selectedMinute}
-                  onValueChange={setSelectedMinute}
                   style={styles.picker}
                 />
               </View>
