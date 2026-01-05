@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform, Linking, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
+import WheelPicker from '../components/WheelPicker';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled, exportScheduledNotifications } from '../utils/notifications';
 import Constants from 'expo-constants';
@@ -315,7 +315,10 @@ export default function SettingsScreen({ navigation }) {
               {item.key === 'moodReminders' && preferences.moodReminders && (
                 <TouchableOpacity 
                   style={styles.timePickerButton}
-                  onPress={() => setShowTimePicker(true)}
+                  onPress={() => {
+                    console.log('Change Time tapped, opening picker');
+                    setShowTimePicker(true);
+                  }}
                   accessibilityLabel="Change mood reminder time"
                   accessibilityRole="button"
                 >
@@ -443,26 +446,24 @@ export default function SettingsScreen({ navigation }) {
                 </TouchableOpacity>
               </View>
               <View style={styles.pickerRow}>
-                <Picker
+                <WheelPicker
+                  items={Array.from({ length: 24 }, (_, i) => ({
+                    label: `${i % 12 || 12} ${i >= 12 ? 'PM' : 'AM'}`,
+                    value: i
+                  }))}
                   selectedValue={selectedHour}
                   onValueChange={setSelectedHour}
                   style={styles.picker}
-                  itemStyle={{ color: theme.text }}
-                >
-                  {Array.from({ length: 24 }, (_, i) => (
-                    <Picker.Item key={i} label={`${i % 12 || 12} ${i >= 12 ? 'PM' : 'AM'}`} value={i} />
-                  ))}
-                </Picker>
-                <Picker
+                />
+                <WheelPicker
+                  items={[0, 15, 30, 45].map(min => ({
+                    label: min.toString().padStart(2, '0'),
+                    value: min
+                  }))}
                   selectedValue={selectedMinute}
                   onValueChange={setSelectedMinute}
                   style={styles.picker}
-                  itemStyle={{ color: theme.text }}
-                >
-                  {[0, 15, 30, 45].map(min => (
-                    <Picker.Item key={min} label={min.toString().padStart(2, '0')} value={min} />
-                  ))}
-                </Picker>
+                />
               </View>
             </View>
           </View>
