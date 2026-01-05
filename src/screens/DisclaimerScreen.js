@@ -133,7 +133,9 @@ const styles = StyleSheet.create({
   },
   warningCard: { 
     marginBottom: 20,
-    backgroundColor: 'rgba(220, 20, 60, 0.08)'
+    backgroundColor: 'rgba(220, 20, 60, 0.08)',
+    borderLeftWidth: 4,
+    borderLeftColor: '#DC143C'
   },
   warningHeader: { 
     flexDirection: 'row', 
@@ -168,7 +170,9 @@ const styles = StyleSheet.create({
   },
   crisisCard: { 
     marginVertical: 20,
-    backgroundColor: 'rgba(220, 20, 60, 0.08)'
+    backgroundColor: 'rgba(220, 20, 60, 0.08)',
+    borderLeftWidth: 4,
+    borderLeftColor: '#DC143C'
   },
   crisisTitle: { 
     fontSize: 17, 
