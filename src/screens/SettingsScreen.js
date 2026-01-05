@@ -322,7 +322,7 @@ export default function SettingsScreen({ navigation }) {
                 >
                   <Ionicons name="time-outline" size={20} color={theme.primary} style={{ marginRight: 12 }} />
                   <View style={{ flex: 1 }}>
-                    <Text style={[styles.settingTitle, { color: theme.text }]}>Reminder Time</Text>
+                    <Text style={[styles.settingTitle, { color: theme.text }]}>Mood Check-in Time</Text>
                     <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>Currently set to {formatTime(selectedHour)}</Text>
                   </View>
                   <Ionicons name="chevron-forward" size={20} color={theme.textTertiary} />
