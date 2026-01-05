@@ -31,7 +31,12 @@ export default function DisclaimerScreen({ navigation }) {
         <Text style={[styles.title, { color: theme.text }]}>Important Notice</Text>
       </View>
 
-      <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+      <ScrollView 
+        style={styles.content} 
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={true}
+        bounces={true}
+      >
         <Card variant="strong" style={styles.warningCard}>
           <View style={styles.warningHeader}>
             <Ionicons name="warning" size={24} color="#DC143C" />
@@ -83,6 +88,8 @@ export default function DisclaimerScreen({ navigation }) {
           accessibilityRole="checkbox"
           accessibilityState={{ checked: accepted }}
           accessibilityLabel="I understand and agree to the terms"
+          accessibilityHint="Tap to accept the terms and conditions"
+          activeOpacity={0.7}
         >
           <Ionicons 
             name={accepted ? "checkbox" : "square-outline"} 
@@ -96,7 +103,7 @@ export default function DisclaimerScreen({ navigation }) {
         </TouchableOpacity>
       </ScrollView>
 
-      <View style={styles.buttonContainer}>
+      <View style={[styles.buttonContainer, { backgroundColor: theme.background }]}>
         <Button 
           title="Continue to App"
           onPress={handleAccept}
