@@ -295,38 +295,40 @@ export default function SettingsScreen({ navigation }) {
         <View key={sectionIndex} style={[styles.section, { backgroundColor: theme.card }]}>
           <Text style={[styles.sectionTitle, { color: theme.text }]}>{section.title}</Text>
           {section.items.map((item, itemIndex) => (
-            <View key={itemIndex} style={styles.settingItem}>
-              <View style={styles.settingInfo}>
-                <Text style={[styles.settingTitle, { color: theme.text }]}>{item.title}</Text>
-                <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>{item.subtitle}</Text>
+            <React.Fragment key={itemIndex}>
+              <View style={styles.settingItem}>
+                <View style={styles.settingInfo}>
+                  <Text style={[styles.settingTitle, { color: theme.text }]}>{item.title}</Text>
+                  <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>{item.subtitle}</Text>
+                </View>
+                <Switch
+                  value={item.key === 'darkMode' ? isDark : preferences[item.key]}
+                  onValueChange={() => togglePreference(item.key)}
+                  trackColor={{ false: isDark ? '#767577' : '#9CA3AF', true: theme.primary }}
+                  thumbColor='#ffffff'
+                  accessibilityLabel={`${item.title} toggle`}
+                  accessibilityHint={item.subtitle}
+                  accessibilityRole="switch"
+                  accessibilityState={{ checked: item.key === 'darkMode' ? isDark : preferences[item.key] }}
+                />
               </View>
-              <Switch
-                value={item.key === 'darkMode' ? isDark : preferences[item.key]}
-                onValueChange={() => togglePreference(item.key)}
-                trackColor={{ false: isDark ? '#767577' : '#9CA3AF', true: theme.primary }}
-                thumbColor='#ffffff'
-                accessibilityLabel={`${item.title} toggle`}
-                accessibilityHint={item.subtitle}
-                accessibilityRole="switch"
-                accessibilityState={{ checked: item.key === 'darkMode' ? isDark : preferences[item.key] }}
-              />
-            </View>
+              {item.key === 'moodReminders' && preferences.moodReminders && (
+                <TouchableOpacity 
+                  style={styles.timePickerButton}
+                  onPress={() => setShowTimePicker(true)}
+                  accessibilityLabel="Change mood reminder time"
+                  accessibilityRole="button"
+                >
+                  <Ionicons name="time-outline" size={20} color={theme.primary} style={{ marginRight: 12 }} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.settingTitle, { color: theme.text }]}>Change Time</Text>
+                    <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>Tap to select reminder time</Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color={theme.textTertiary} />
+                </TouchableOpacity>
+              )}
+            </React.Fragment>
           ))}
-          {section.title === 'Notifications' && preferences.moodReminders && (
-            <TouchableOpacity 
-              style={styles.timePickerButton}
-              onPress={() => setShowTimePicker(true)}
-              accessibilityLabel="Change mood reminder time"
-              accessibilityRole="button"
-            >
-              <Ionicons name="time-outline" size={20} color={theme.primary} style={{ marginRight: 12 }} />
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.settingTitle, { color: theme.text }]}>Change Time</Text>
-                <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>Tap to select reminder time</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={20} color={theme.textTertiary} />
-            </TouchableOpacity>
-          )}
           {section.title === 'Notifications' && Platform.OS === 'android' && (
             <View style={styles.androidNotice}>
               <Ionicons name="information-circle" size={20} color={theme.primary} />
