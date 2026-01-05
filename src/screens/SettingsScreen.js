@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled, exportScheduledNotifications } from '../utils/notifications';
 import Constants from 'expo-constants';
@@ -13,6 +14,8 @@ export default function SettingsScreen({ navigation }) {
   const { theme, isDark, toggleTheme } = useTheme();
   const [preferences, setPreferences] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [moodReminderTime, setMoodReminderTime] = useState(new Date());
 
   useEffect(() => {
     loadPreferences();
@@ -283,13 +286,49 @@ export default function SettingsScreen({ navigation }) {
               />
             </View>
           ))}
-          {section.title === 'Notifications' && Platform.OS === 'android' && (
-            <View style={styles.androidNotice}>
-              <Ionicons name="information-circle" size={20} color={theme.primary} />
-              <Text style={[styles.androidNoticeText, { color: theme.textSecondary }]}>
-                For reliable notifications, disable battery optimization for Anchor in Android Settings → Apps → Anchor → Battery → Unrestricted.
-              </Text>
-            </View>
+          {section.title === 'Notifications' && (
+            <>
+              {preferences.moodReminders && (
+                <TouchableOpacity 
+                  style={styles.timePickerButton}
+                  onPress={() => setShowTimePicker(true)}
+                  accessibilityLabel="Set mood reminder time"
+                  accessibilityRole="button"
+                >
+                  <Ionicons name="time-outline" size={20} color={theme.primary} style={{ marginRight: 12 }} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.settingTitle, { color: theme.text }]}>Reminder Time</Text>
+                    <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>Daily at {moodReminderTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}</Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color={theme.textTertiary} />
+                </TouchableOpacity>
+              )}
+              {showTimePicker && (
+                <DateTimePicker
+                  value={moodReminderTime}
+                  mode="time"
+                  is24Hour={false}
+                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                  onChange={(event, selectedDate) => {
+                    if (Platform.OS === 'android') {
+                      setShowTimePicker(false);
+                    }
+                    if (selectedDate) {
+                      setMoodReminderTime(selectedDate);
+                    }
+                  }}
+                  style={{ height: 120 }}
+                />
+              )}
+              {Platform.OS === 'android' && (
+                <View style={styles.androidNotice}>
+                  <Ionicons name="information-circle" size={20} color={theme.primary} />
+                  <Text style={[styles.androidNoticeText, { color: theme.textSecondary }]}>
+                    For reliable notifications, disable battery optimization for Anchor in Android Settings → Apps → Anchor → Battery → Unrestricted.
+                  </Text>
+                </View>
+              )}
+            </>
           )}
         </View>
       ))}
@@ -471,5 +510,11 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 13,
     lineHeight: 18,
+  },
+  timePickerButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    marginTop: 8,
   },
 });
