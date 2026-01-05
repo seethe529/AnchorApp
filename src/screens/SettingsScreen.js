@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-picker/picker';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled, exportScheduledNotifications } from '../utils/notifications';
 import Constants from 'expo-constants';
@@ -15,7 +15,8 @@ export default function SettingsScreen({ navigation }) {
   const [preferences, setPreferences] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showTimePicker, setShowTimePicker] = useState(false);
-  const [moodReminderTime, setMoodReminderTime] = useState(new Date());
+  const [selectedHour, setSelectedHour] = useState(20);
+  const [selectedMinute, setSelectedMinute] = useState(0);
 
   useEffect(() => {
     loadPreferences();
@@ -289,36 +290,47 @@ export default function SettingsScreen({ navigation }) {
           {section.title === 'Notifications' && (
             <>
               {preferences.moodReminders && (
-                <TouchableOpacity 
-                  style={styles.timePickerButton}
-                  onPress={() => setShowTimePicker(true)}
-                  accessibilityLabel="Set mood reminder time"
-                  accessibilityRole="button"
-                >
-                  <Ionicons name="time-outline" size={20} color={theme.primary} style={{ marginRight: 12 }} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.settingTitle, { color: theme.text }]}>Reminder Time</Text>
-                    <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>Daily at {moodReminderTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}</Text>
-                  </View>
-                  <Ionicons name="chevron-forward" size={20} color={theme.textTertiary} />
-                </TouchableOpacity>
-              )}
-              {showTimePicker && (
-                <DateTimePicker
-                  value={moodReminderTime}
-                  mode="time"
-                  is24Hour={false}
-                  display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                  onChange={(event, selectedDate) => {
-                    if (Platform.OS === 'android') {
-                      setShowTimePicker(false);
-                    }
-                    if (selectedDate) {
-                      setMoodReminderTime(selectedDate);
-                    }
-                  }}
-                  style={{ height: 120 }}
-                />
+                <>
+                  <TouchableOpacity 
+                    style={styles.timePickerButton}
+                    onPress={() => setShowTimePicker(!showTimePicker)}
+                    accessibilityLabel="Set mood reminder time"
+                    accessibilityRole="button"
+                  >
+                    <Ionicons name="time-outline" size={20} color={theme.primary} style={{ marginRight: 12 }} />
+                    <View style={{ flex: 1 }}>
+                      <Text style={[styles.settingTitle, { color: theme.text }]}>Reminder Time</Text>
+                      <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>Daily at {selectedHour % 12 || 12}:{selectedMinute.toString().padStart(2, '0')} {selectedHour >= 12 ? 'PM' : 'AM'}</Text>
+                    </View>
+                    <Ionicons name={showTimePicker ? "chevron-up" : "chevron-down"} size={20} color={theme.textTertiary} />
+                  </TouchableOpacity>
+                  {showTimePicker && (
+                    <View style={[styles.pickerContainer, { backgroundColor: theme.background }]}>
+                      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                        <Picker
+                          selectedValue={selectedHour}
+                          onValueChange={setSelectedHour}
+                          style={{ width: 100, height: 150 }}
+                          itemStyle={{ color: theme.text, height: 150 }}
+                        >
+                          {Array.from({ length: 24 }, (_, i) => (
+                            <Picker.Item key={i} label={`${i % 12 || 12} ${i >= 12 ? 'PM' : 'AM'}`} value={i} />
+                          ))}
+                        </Picker>
+                        <Picker
+                          selectedValue={selectedMinute}
+                          onValueChange={setSelectedMinute}
+                          style={{ width: 80, height: 150 }}
+                          itemStyle={{ color: theme.text, height: 150 }}
+                        >
+                          {[0, 15, 30, 45].map(min => (
+                            <Picker.Item key={min} label={min.toString().padStart(2, '0')} value={min} />
+                          ))}
+                        </Picker>
+                      </View>
+                    </View>
+                  )}
+                </>
               )}
               {Platform.OS === 'android' && (
                 <View style={styles.androidNotice}>
@@ -516,5 +528,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 14,
     marginTop: 8,
+  },
+  pickerContainer: {
+    marginTop: 8,
+    borderRadius: 12,
+    overflow: 'hidden',
   },
 });
