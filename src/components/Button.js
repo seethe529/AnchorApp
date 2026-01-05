@@ -80,6 +80,25 @@ export default function Button({
     );
   }
 
+  if (variant === 'primary' && disabled) {
+    return (
+      <Animated.View style={[{ transform: [{ scale: scaleAnim }] }, style]}>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            styles.disabledButton,
+          ]}
+          onPress={onPress}
+          disabled={disabled}
+          activeOpacity={1}
+          {...props}
+        >
+          {buttonContent}
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  }
+
   return (
     <Animated.View style={[{ transform: [{ scale: scaleAnim }] }, style]}>
       <TouchableOpacity
@@ -121,5 +140,8 @@ const styles = StyleSheet.create({
   },
   disabled: {
     opacity: 0.5,
+  },
+  disabledButton: {
+    backgroundColor: '#CCCCCC',
   },
 });
