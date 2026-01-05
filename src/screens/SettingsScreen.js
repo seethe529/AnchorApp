@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled, exportScheduledNotifications } from '../utils/notifications';
 import Constants from 'expo-constants';
@@ -14,9 +13,6 @@ export default function SettingsScreen({ navigation }) {
   const { theme, isDark, toggleTheme } = useTheme();
   const [preferences, setPreferences] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [showTimePicker, setShowTimePicker] = useState(false);
-  const [selectedHour, setSelectedHour] = useState(20);
-  const [selectedMinute, setSelectedMinute] = useState(0);
 
   useEffect(() => {
     loadPreferences();
@@ -239,7 +235,7 @@ export default function SettingsScreen({ navigation }) {
       title: 'Notifications',
       items: [
         { key: 'notifications', title: 'Enable Notifications', subtitle: 'Receive app notifications' },
-        { key: 'moodReminders', title: 'Daily Mood Check-ins', subtitle: 'Remind me to log my mood' },
+        { key: 'moodReminders', title: 'Daily Mood Check-ins', subtitle: 'Daily reminder at 8:00 PM' },
         { key: 'breathingReminders', title: 'Breathing Reminders', subtitle: 'Periodic breathing exercise prompts' }
       ]
     },
@@ -287,60 +283,13 @@ export default function SettingsScreen({ navigation }) {
               />
             </View>
           ))}
-          {section.title === 'Notifications' && (
-            <>
-              {preferences.moodReminders && (
-                <>
-                  <TouchableOpacity 
-                    style={styles.timePickerButton}
-                    onPress={() => setShowTimePicker(!showTimePicker)}
-                    accessibilityLabel="Set mood reminder time"
-                    accessibilityRole="button"
-                  >
-                    <Ionicons name="time-outline" size={20} color={theme.primary} style={{ marginRight: 12 }} />
-                    <View style={{ flex: 1 }}>
-                      <Text style={[styles.settingTitle, { color: theme.text }]}>Reminder Time</Text>
-                      <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>Daily at {selectedHour % 12 || 12}:{selectedMinute.toString().padStart(2, '0')} {selectedHour >= 12 ? 'PM' : 'AM'}</Text>
-                    </View>
-                    <Ionicons name={showTimePicker ? "chevron-up" : "chevron-down"} size={20} color={theme.textTertiary} />
-                  </TouchableOpacity>
-                  {showTimePicker && (
-                    <View style={[styles.pickerContainer, { backgroundColor: theme.background }]}>
-                      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                        <Picker
-                          selectedValue={selectedHour}
-                          onValueChange={setSelectedHour}
-                          style={{ width: 100, height: 150 }}
-                          itemStyle={{ color: theme.text, height: 150 }}
-                        >
-                          {Array.from({ length: 24 }, (_, i) => (
-                            <Picker.Item key={i} label={`${i % 12 || 12} ${i >= 12 ? 'PM' : 'AM'}`} value={i} />
-                          ))}
-                        </Picker>
-                        <Picker
-                          selectedValue={selectedMinute}
-                          onValueChange={setSelectedMinute}
-                          style={{ width: 80, height: 150 }}
-                          itemStyle={{ color: theme.text, height: 150 }}
-                        >
-                          {[0, 15, 30, 45].map(min => (
-                            <Picker.Item key={min} label={min.toString().padStart(2, '0')} value={min} />
-                          ))}
-                        </Picker>
-                      </View>
-                    </View>
-                  )}
-                </>
-              )}
-              {Platform.OS === 'android' && (
-                <View style={styles.androidNotice}>
-                  <Ionicons name="information-circle" size={20} color={theme.primary} />
-                  <Text style={[styles.androidNoticeText, { color: theme.textSecondary }]}>
-                    For reliable notifications, disable battery optimization for Anchor in Android Settings → Apps → Anchor → Battery → Unrestricted.
-                  </Text>
-                </View>
-              )}
-            </>
+          {section.title === 'Notifications' && Platform.OS === 'android' && (
+            <View style={styles.androidNotice}>
+              <Ionicons name="information-circle" size={20} color={theme.primary} />
+              <Text style={[styles.androidNoticeText, { color: theme.textSecondary }]}>
+                For reliable notifications, disable battery optimization for Anchor in Android Settings → Apps → Anchor → Battery → Unrestricted.
+              </Text>
+            </View>
           )}
         </View>
       ))}
@@ -522,16 +471,5 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 13,
     lineHeight: 18,
-  },
-  timePickerButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    marginTop: 8,
-  },
-  pickerContainer: {
-    marginTop: 8,
-    borderRadius: 12,
-    overflow: 'hidden',
   },
 });
