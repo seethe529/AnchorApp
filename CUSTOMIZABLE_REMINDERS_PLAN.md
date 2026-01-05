@@ -8,6 +8,49 @@
 
 ## Research: Therapeutically Sound Reminder Intervals
 
+### Key Research Findings from Google Scholar Labs (January 2025)
+
+#### Evidence-Based Timing Recommendations:
+
+**1. Wallace et al. (2022) - Military mTBI with PTSD:**
+- **Finding:** Participants instructed to practice diaphragmatic breathing "twice daily during slow, calm periods" AND when experiencing stress
+- **Implication:** Supports both scheduled reminders (for habit formation) and on-demand access (for crisis)
+- **Therapeutic Mechanism:** Breathing exercises mitigate physiological dyscontrol and regulate symptoms like rapid heart rate
+
+**2. Baumel et al. (2019) - User Engagement Patterns:**
+- **Finding:** Mindfulness/meditation apps show TWO usage peaks: morning and night
+- **Finding:** Psychoeducation/tracker apps peak toward evening
+- **Implication:** Default 8 PM mood reminder aligns with natural usage patterns
+- **Implication:** Consider morning + evening as natural breathing reminder times
+
+**3. Bakker et al. (2016) - Mental Health App Recommendations:**
+- **Finding:** Tailoring techniques based on real-time physiological arousal is ideal
+- **Finding:** Ecological momentary interventions with real-time engagement show efficacy
+- **Finding:** Habit formation requires repeated behaviors triggered by cues
+- **Implication:** Regular interval reminders help build automatic coping habits
+
+**4. Zhang et al. (2021) - Customization and Mental Capacity:**
+- **Finding:** Customization is most desirable when required effort doesn't exceed user's mental/motivational capacity
+- **Finding:** Most valued customizations: setting daily goals and manually logging (low-burden)
+- **Implication:** Simple interval selection (not complex scheduling) is appropriate for PTSD users
+
+**5. Pretolesi et al. (2025) - Notification Preferences:**
+- **Finding:** Customization of timing and frequency enhances persuasive aspect of mHealth apps
+- **Finding:** Time range options help users limit app use to opportune times (e.g., not at work)
+- **Implication:** User control over reminder timing increases engagement
+
+**6. Garrido et al. (2022) - Young People's Preferences:**
+- **Finding:** Strong preference for control over settings, including frequency of reminders
+- **Finding:** Too-frequent notifications can be burden or irritation
+- **Finding:** Snooze functionality important for social settings
+- **Implication:** Balance between prompting engagement and respecting autonomy
+
+**7. Wright et al. (2025) - Personalized Timing:**
+- **Finding:** Timing of reminders should be personalized for daily use to increase consistency
+- **Finding:** Participants experienced barriers with inconvenient timing of default reminders
+- **Finding:** 6 breaths per minute effective for positive mood and stress tolerance
+- **Implication:** User-selected reminder times more effective than fixed intervals
+
 ### Breathing Exercise Reminders
 
 **Current System:** 90-minute intervals (16 reminders/day)
@@ -50,10 +93,16 @@
   - iOS: 12 breathing (3 days) + 7 mood (7 days) = 19 total ✓
 
 **Sources to Review:**
-- [ ] VA/DoD PTSD Clinical Practice Guidelines (2023)
-- [ ] "Effectiveness of Mobile Mental Health Apps" - JMIR mHealth (2022)
-- [ ] "Push Notification Timing in Mental Health Apps" - Digital Health (2021)
-- [ ] DBT Skills Training Manual (Linehan, 2015)
+- [✓] Wallace et al. (2022) - Military mTBI with PTSD breathing intervention
+- [✓] Baumel et al. (2019) - User engagement patterns in mental health apps  
+- [✓] Bakker et al. (2016) - Mental health app recommendations
+- [✓] Zhang et al. (2021) - Customization and emotional well-being
+- [✓] Pretolesi et al. (2025) - Notification preferences in mHealth
+- [✓] Garrido et al. (2022) - Young people's app preferences
+- [✓] Wright et al. (2025) - Personalized reminder timing
+- [✓] Torous et al. (2018) - User engagement barriers
+- [✓] Jin et al. (2025) - Notification challenges in mobile mental health
+- [✓] Kim & Park (2025) - Personalized notification systems
 
 ---
 
