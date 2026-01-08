@@ -16,6 +16,10 @@ export default function SettingsScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(true);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [selectedHour, setSelectedHour] = useState(20);
+  const [tempHour, setTempHour] = useState(20);
+  const [showIntervalPicker, setShowIntervalPicker] = useState(false);
+  const [selectedInterval, setSelectedInterval] = useState(90);
+  const [tempInterval, setTempInterval] = useState(90);
 
   useEffect(() => {
     loadPreferences();
@@ -30,6 +34,10 @@ export default function SettingsScreen({ navigation }) {
         if (savedPreferences.moodReminderTime) {
           const [hour] = savedPreferences.moodReminderTime.split(':').map(Number);
           setSelectedHour(hour);
+        }
+        // Load saved interval or default to 90 minutes
+        if (savedPreferences.breathingInterval) {
+          setSelectedInterval(savedPreferences.breathingInterval);
         }
       } else {
         // Set defaults only if no saved preferences
@@ -114,7 +122,7 @@ export default function SettingsScreen({ navigation }) {
     
     if (key === 'breathingReminders') {
       if (newPreferences.breathingReminders) {
-        await scheduleBreathingReminder();
+        await scheduleBreathingReminder(selectedInterval);
       } else {
         await cancelBreathingReminder();
       }
@@ -122,22 +130,50 @@ export default function SettingsScreen({ navigation }) {
   };
 
   const handleTimeSave = async () => {
-    const timeString = `${selectedHour}:00`;
+    setSelectedHour(tempHour);
+    const timeString = `${tempHour}:00`;
     const newPreferences = { ...preferences, moodReminderTime: timeString };
     await savePreferences(newPreferences);
     
-    if (preferences.notifications && preferences.moodReminders) {
-      await cancelMoodReminder();
-      await scheduleMoodReminder({ hour: selectedHour, minute: 0 });
-    }
-    
     setShowTimePicker(false);
+    
+    // Reschedule in background after modal closes
+    if (preferences.notifications && preferences.moodReminders) {
+      setTimeout(async () => {
+        await cancelMoodReminder();
+        await scheduleMoodReminder({ hour: tempHour, minute: 0 });
+      }, 100);
+    }
   };
 
   const formatTime = (hour) => {
     const ampm = hour >= 12 ? 'PM' : 'AM';
     const displayHours = hour % 12 || 12;
     return `${displayHours}:00 ${ampm}`;
+  };
+
+  const handleIntervalSave = async () => {
+    setSelectedInterval(tempInterval);
+    const newPreferences = { ...preferences, breathingInterval: tempInterval };
+    await savePreferences(newPreferences);
+    
+    setShowIntervalPicker(false);
+    
+    // Reschedule in background after modal closes
+    if (preferences.notifications && preferences.breathingReminders) {
+      setTimeout(async () => {
+        await cancelBreathingReminder();
+        await scheduleBreathingReminder(tempInterval);
+      }, 100);
+    }
+  };
+
+  const formatInterval = (minutes) => {
+    if (minutes >= 60) {
+      const hours = minutes / 60;
+      return hours === 1 ? '1 hour' : `${hours} hours`;
+    }
+    return `${minutes} minutes`;
   };
 
   const clearAllData = () => {
@@ -263,7 +299,7 @@ export default function SettingsScreen({ navigation }) {
       items: [
         { key: 'notifications', title: 'Enable Notifications', subtitle: 'Receive app notifications' },
         { key: 'moodReminders', title: 'Daily Mood Check-ins', subtitle: `Daily reminder at ${formatTime(selectedHour)}` },
-        { key: 'breathingReminders', title: 'Breathing Reminders', subtitle: 'Periodic breathing exercise prompts' }
+        { key: 'breathingReminders', title: 'Breathing Reminders', subtitle: `Every ${formatInterval(selectedInterval)}` }
       ]
     },
     {
@@ -314,7 +350,7 @@ export default function SettingsScreen({ navigation }) {
                 <TouchableOpacity 
                   style={styles.timePickerButton}
                   onPress={() => {
-                    console.log('Change Time tapped, opening picker');
+                    setTempHour(selectedHour);
                     setShowTimePicker(true);
                   }}
                   accessibilityLabel="Change mood reminder time"
@@ -324,6 +360,24 @@ export default function SettingsScreen({ navigation }) {
                   <View style={{ flex: 1 }}>
                     <Text style={[styles.settingTitle, { color: theme.text }]}>Mood Check-in Time</Text>
                     <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>Currently set to {formatTime(selectedHour)}</Text>
+                  </View>
+                  <Ionicons name="chevron-forward" size={20} color={theme.textTertiary} />
+                </TouchableOpacity>
+              )}
+              {item.key === 'breathingReminders' && preferences.breathingReminders && (
+                <TouchableOpacity 
+                  style={styles.timePickerButton}
+                  onPress={() => {
+                    setTempInterval(selectedInterval);
+                    setShowIntervalPicker(true);
+                  }}
+                  accessibilityLabel="Change breathing reminder interval"
+                  accessibilityRole="button"
+                >
+                  <Ionicons name="timer-outline" size={20} color={theme.primary} style={{ marginRight: 12 }} />
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.settingTitle, { color: theme.text }]}>Breathing Interval</Text>
+                    <Text style={[styles.settingSubtitle, { color: theme.textSecondary }]}>Currently set to {formatInterval(selectedInterval)}</Text>
                   </View>
                   <Ionicons name="chevron-forward" size={20} color={theme.textTertiary} />
                 </TouchableOpacity>
@@ -358,6 +412,21 @@ export default function SettingsScreen({ navigation }) {
           </View>
           <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
         </TouchableOpacity>
+
+        {/* <TouchableOpacity 
+          style={styles.actionButton} 
+          onPress={exportNotifications}
+          accessibilityLabel="Export Notifications"
+          accessibilityHint="View scheduled notification details"
+          accessibilityRole="button"
+        >
+          <Ionicons name="notifications-outline" size={24} color={theme.primary} />
+          <View style={styles.actionInfo}>
+            <Text style={[styles.actionTitle, { color: theme.text }]}>Export Notifications</Text>
+            <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>View scheduled reminders</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
+        </TouchableOpacity> */}
 
         <TouchableOpacity 
           style={styles.actionButton} 
@@ -449,9 +518,47 @@ export default function SettingsScreen({ navigation }) {
                     label: `${i % 12 || 12} ${i >= 12 ? 'PM' : 'AM'}`,
                     value: i
                   }))}
-                  selectedValue={selectedHour}
-                  onValueChange={setSelectedHour}
+                  selectedValue={tempHour}
+                  onValueChange={setTempHour}
                   style={styles.picker}
+                  theme={theme}
+                />
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
+      
+      {showIntervalPicker && (
+        <Modal
+          visible={showIntervalPicker}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowIntervalPicker(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
+              <View style={styles.modalHeader}>
+                <TouchableOpacity onPress={() => setShowIntervalPicker(false)}>
+                  <Text style={[styles.modalCancel, { color: theme.textSecondary }]}>Cancel</Text>
+                </TouchableOpacity>
+                <Text style={[styles.modalTitle, { color: theme.text }]}>Select Interval</Text>
+                <TouchableOpacity onPress={handleIntervalSave}>
+                  <Text style={[styles.modalDone, { color: theme.primary }]}>Done</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.pickerRow}>
+                <WheelPicker
+                  items={[
+                    { label: '90 minutes', value: 90 },
+                    { label: '120 minutes', value: 120 },
+                    { label: '180 minutes', value: 180 },
+                    { label: '240 minutes', value: 240 }
+                  ]}
+                  selectedValue={tempInterval}
+                  onValueChange={setTempInterval}
+                  style={styles.picker}
+                  theme={theme}
                 />
               </View>
             </View>
@@ -589,12 +696,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   pickerRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
     paddingVertical: 20,
   },
   picker: {
-    width: 150,
+    width: '100%',
     height: 200,
   },
 });

@@ -111,8 +111,18 @@ function AppContent() {
           try {
             await cancelBreathingReminder();
             await cancelMoodReminder();
-            if (prefs.breathingReminders) await scheduleBreathingReminder();
-            if (prefs.moodReminders) await scheduleMoodReminder();
+            
+            // Use saved custom settings
+            if (prefs.breathingReminders) {
+              const interval = prefs.breathingInterval || 90;
+              await scheduleBreathingReminder(interval);
+            }
+            if (prefs.moodReminders) {
+              const timeString = prefs.moodReminderTime || '20:00';
+              const [hour] = timeString.split(':').map(Number);
+              await scheduleMoodReminder({ hour, minute: 0 });
+            }
+            
             await storage.setItem("last_reset", now.getDate());
           } finally {
             isRescheduling = false;
@@ -152,8 +162,18 @@ function AppContent() {
           console.log('🌙 [APP] Android: Date changed, resetting notifications');
           await cancelBreathingReminder();
           await cancelMoodReminder();
-          if (prefs.breathingReminders) await scheduleBreathingReminder();
-          if (prefs.moodReminders) await scheduleMoodReminder();
+          
+          // Use saved custom settings
+          if (prefs.breathingReminders) {
+            const interval = prefs.breathingInterval || 90;
+            await scheduleBreathingReminder(interval);
+          }
+          if (prefs.moodReminders) {
+            const timeString = prefs.moodReminderTime || '20:00';
+            const [hour] = timeString.split(':').map(Number);
+            await scheduleMoodReminder({ hour, minute: 0 });
+          }
+          
           await storage.setItem("last_reset", currentDate);
         } else {
           console.log('✅ [APP] Android: Date unchanged, no reschedule needed');

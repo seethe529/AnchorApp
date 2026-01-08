@@ -257,8 +257,8 @@ export const cancelMoodReminder = async () => {
 /*************************************************
  * BREATHING REMINDER — HOURLY
  *************************************************/
-export const scheduleBreathingReminder = async () => {
-  console.log('🫁 [NOTIF] scheduleBreathingReminder called');
+export const scheduleBreathingReminder = async (intervalMinutes = 90) => {
+  console.log(`🫁 [NOTIF] scheduleBreathingReminder called with ${intervalMinutes} minute interval`);
 
   if (Platform.OS === 'web' || !Notifications) {
     console.log('⚠️ [NOTIF] Platform web or Notifications missing — skip breathing reminder');
@@ -269,12 +269,20 @@ export const scheduleBreathingReminder = async () => {
     await cancelBreathingReminder();
     console.log('🧹 [NOTIF] Existing breathing reminders cancelled');
 
+    // Calculate how many notifications based on platform
+    const intervalSeconds = intervalMinutes * 60;
+    const notificationsPerDay = Math.floor((24 * 60) / intervalMinutes);
+    const coverageDays = Platform.OS === 'ios' ? 3 : 7; // iOS: 3 days, Android: 7 days
+    const breathingCount = notificationsPerDay * coverageDays;
+    
+    console.log(`📊 [NOTIF] Platform: ${Platform.OS}, Interval: ${intervalMinutes}min, Per day: ${notificationsPerDay}, Coverage: ${coverageDays} days, Total: ${breathingCount}`);
+
     const now = Date.now();
     let scheduled = 0;
     
-    // Schedule BREATHING_COUNT notifications
-    for (let i = 1; i <= BREATHING_COUNT; i++) {
-      const triggerTime = now + (BREATHING_INTERVAL * 1000 * i);
+    // Schedule breathing notifications
+    for (let i = 1; i <= breathingCount; i++) {
+      const triggerTime = now + (intervalSeconds * 1000 * i);
       const triggerDate = new Date(triggerTime);
       
       // Skip if in the past (shouldn't happen, but safety check)
@@ -307,7 +315,7 @@ export const scheduleBreathingReminder = async () => {
       }
     }
 
-    console.log(`✅ [NOTIF] ${BREATHING_COUNT} breathing reminders scheduled (every ${BREATHING_INTERVAL}s)`);
+    console.log(`✅ [NOTIF] ${breathingCount} breathing reminders scheduled (every ${intervalMinutes} minutes, ${coverageDays} days coverage)`);
   } catch (e) {
     console.error('❌ [NOTIF] Breathing reminder schedule fail:', e);
   }
@@ -416,16 +424,14 @@ export const exportScheduledNotifications = async () => {
         ios: {
           method: 'setInterval timer',
           checkInterval: '3600000ms (1 hour)',
-          breathingCount: 16,
-          moodDays: 2,
-          note: 'Hourly timer checks date change while app is open, reschedules daily'
+          coverageDays: 3,
+          note: 'Hourly timer checks date change while app is open, reschedules daily with 3-day coverage'
         },
         android: {
           method: 'AppState listener',
           checkInterval: 'On app foreground',
-          breathingCount: 112,
-          moodDays: 7,
-          note: 'Checks date change when app comes to foreground, needs longer coverage'
+          coverageDays: 7,
+          note: 'Checks date change when app comes to foreground, 7-day coverage for less frequent app opens'
         },
         lastResetDate: lastReset,
         currentDate: currentDate,

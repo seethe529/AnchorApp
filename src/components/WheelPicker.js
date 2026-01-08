@@ -4,7 +4,7 @@ import { View, Text, ScrollView, StyleSheet, Dimensions } from 'react-native';
 const ITEM_HEIGHT = 40;
 const VISIBLE_ITEMS = 5;
 
-export default function WheelPicker({ items, selectedValue, onValueChange, style }) {
+export default function WheelPicker({ items, selectedValue, onValueChange, style, theme }) {
   const scrollViewRef = useRef(null);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function WheelPicker({ items, selectedValue, onValueChange, style
       >
         {items.map((item, index) => (
           <View key={index} style={styles.item}>
-            <Text style={styles.itemText}>{item.label}</Text>
+            <Text style={[styles.itemText, { color: theme?.text || '#333' }]}>{item.label}</Text>
           </View>
         ))}
       </ScrollView>
@@ -51,6 +51,7 @@ export default function WheelPicker({ items, selectedValue, onValueChange, style
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     height: ITEM_HEIGHT * VISIBLE_ITEMS,
     overflow: 'hidden',
   },
@@ -73,6 +74,5 @@ const styles = StyleSheet.create({
   },
   itemText: {
     fontSize: 18,
-    color: '#333',
   },
 });
