@@ -243,13 +243,15 @@ export default function BreathingScreen({ navigation }) {
             }
           }}
           activeOpacity={0.9}
+          importantForAccessibility={index === currentIndex ? "yes" : "no-hide-descendants"}
         >
           <LinearGradient
             colors={isActive ? ['#E74C3C', '#C0392B'] : [theme.primaryGradientTop, theme.primaryGradientBottom]}
             style={styles.button}
+            accessible={false}
           >
-            <Ionicons name={isActive ? 'pause' : 'play'} size={24} color="white" />
-            <Text style={styles.buttonText}>{isActive ? 'Pause' : 'Start'}</Text>
+            <Ionicons name={isActive ? 'pause' : 'play'} size={24} color="white" accessible={false} />
+            <Text style={styles.buttonText} accessible={false}>{isActive ? 'Pause' : 'Start'}</Text>
           </LinearGradient>
         </TouchableOpacity>
 
