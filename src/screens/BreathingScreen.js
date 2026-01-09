@@ -195,6 +195,7 @@ export default function BreathingScreen({ navigation }) {
           accessible={index === currentIndex}
           accessibilityRole="text"
           accessibilityLabel={`Breathing pattern: ${item.pattern.map(p => `${p.phase} ${p.duration} seconds`).join(', ')}`}
+          importantForAccessibility={index === currentIndex ? "yes" : "no-hide-descendants"}
         >
           {item.pattern.map((phase, idx) => (
             <Text 
@@ -260,6 +261,7 @@ export default function BreathingScreen({ navigation }) {
           accessible={index === currentIndex}
           accessibilityRole="text"
           accessibilityLabel={`Page ${index + 1} of ${breathingMethods.length}. Current method: ${item.name}. Swipe left or right to change methods.`}
+          importantForAccessibility={index === currentIndex ? "yes" : "no-hide-descendants"}
         >
           {breathingMethods.map((method, methodIndex) => (
             <View
