@@ -93,7 +93,13 @@ export default function ToolsScreen() {
           >
             <Ionicons name="chevron-back" size={28} color={theme.primary} />
           </TouchableOpacity>
-          <Text style={[styles.techniqueTitle, { color: theme.text }]}>{selectedTechnique.name}</Text>
+          <Text 
+            style={[styles.techniqueTitle, { color: theme.text }]}
+            accessibilityRole="header"
+            accessibilityLevel={1}
+          >
+            {selectedTechnique.name}
+          </Text>
           <View style={styles.backButton} />
         </View>
         
@@ -101,60 +107,90 @@ export default function ToolsScreen() {
           <Text style={[styles.fullDescription, { color: theme.text }]}>{selectedTechnique.description}</Text>
           
           {selectedTechnique.example && (
-            <View style={[styles.exampleBox, { backgroundColor: theme.card, borderLeftColor: theme.primary }]}>
-              <Text style={[styles.exampleTitle, { color: theme.primary }]}>💡 Example:</Text>
-              <Text style={[styles.exampleText, { color: theme.text }]}>{selectedTechnique.example}</Text>
+            <View 
+              style={[styles.exampleBox, { backgroundColor: theme.card, borderLeftColor: theme.primary }]}
+              accessible={true}
+              accessibilityRole="text"
+              accessibilityLabel={`Example: ${selectedTechnique.example}`}
+            >
+              <Text style={[styles.exampleTitle, { color: theme.primary }]} accessible={false}>💡 Example:</Text>
+              <Text style={[styles.exampleText, { color: theme.text }]} accessible={false}>{selectedTechnique.example}</Text>
             </View>
           )}
           
           {selectedTechnique.name === '5-4-3-2-1 Technique' && (
-            <View style={[styles.stepByStep, { backgroundColor: theme.card, borderColor: theme.border }]}>
-              <Text style={[styles.stepTitle, { color: theme.primary }]}>Step by Step:</Text>
-              <Text style={[styles.step, { color: theme.text }]}>1. Name 5 things you can SEE</Text>
-              <Text style={[styles.step, { color: theme.text }]}>2. Name 4 things you can HEAR</Text>
-              <Text style={[styles.step, { color: theme.text }]}>3. Name 3 things you can TOUCH</Text>
-              <Text style={[styles.step, { color: theme.text }]}>4. Name 2 things you can SMELL</Text>
-              <Text style={[styles.step, { color: theme.text }]}>5. Name 1 thing you can TASTE</Text>
+            <View 
+              style={[styles.stepByStep, { backgroundColor: theme.card, borderColor: theme.border }]}
+              accessible={true}
+              accessibilityRole="text"
+              accessibilityLabel="Step by Step: 1. Name 5 things you can see. 2. Name 4 things you can hear. 3. Name 3 things you can touch. 4. Name 2 things you can smell. 5. Name 1 thing you can taste."
+            >
+              <Text style={[styles.stepTitle, { color: theme.primary }]} accessible={false}>Step by Step:</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>1. Name 5 things you can SEE</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>2. Name 4 things you can HEAR</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>3. Name 3 things you can TOUCH</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>4. Name 2 things you can SMELL</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>5. Name 1 thing you can TASTE</Text>
             </View>
           )}
           
           {selectedTechnique.name === 'Box Breathing' && (
-            <View style={[styles.stepByStep, { backgroundColor: theme.card, borderColor: theme.border }]}>
-              <Text style={[styles.stepTitle, { color: theme.primary }]}>Instructions:</Text>
-              <Text style={[styles.step, { color: theme.text }]}>1. Breathe in for 4 counts</Text>
-              <Text style={[styles.step, { color: theme.text }]}>2. Hold your breath for 4 counts</Text>
-              <Text style={[styles.step, { color: theme.text }]}>3. Breathe out for 4 counts</Text>
-              <Text style={[styles.step, { color: theme.text }]}>4. Hold empty for 4 counts</Text>
-              <Text style={[styles.step, { color: theme.text }]}>5. Repeat 4-8 times</Text>
+            <View 
+              style={[styles.stepByStep, { backgroundColor: theme.card, borderColor: theme.border }]}
+              accessible={true}
+              accessibilityRole="text"
+              accessibilityLabel="Instructions: 1. Breathe in for 4 counts. 2. Hold your breath for 4 counts. 3. Breathe out for 4 counts. 4. Hold empty for 4 counts. 5. Repeat 4 to 8 times."
+            >
+              <Text style={[styles.stepTitle, { color: theme.primary }]} accessible={false}>Instructions:</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>1. Breathe in for 4 counts</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>2. Hold your breath for 4 counts</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>3. Breathe out for 4 counts</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>4. Hold empty for 4 counts</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>5. Repeat 4-8 times</Text>
             </View>
           )}
           
           {selectedTechnique.name === 'TIPP' && (
-            <View style={[styles.stepByStep, { backgroundColor: theme.card, borderColor: theme.border }]}>
-              <Text style={[styles.stepTitle, { color: theme.primary }]}>TIPP Technique:</Text>
-              <Text style={[styles.step, { color: theme.text }]}>T - Temperature: Use cold water on face/hands</Text>
-              <Text style={[styles.step, { color: theme.text }]}>I - Intense Exercise: 10 minutes of vigorous activity</Text>
-              <Text style={[styles.step, { color: theme.text }]}>P - Paced Breathing: Slow, deep breaths</Text>
-              <Text style={[styles.step, { color: theme.text }]}>P - Paired Muscle Relaxation: Tense and release</Text>
+            <View 
+              style={[styles.stepByStep, { backgroundColor: theme.card, borderColor: theme.border }]}
+              accessible={true}
+              accessibilityRole="text"
+              accessibilityLabel="TIPP Technique: T, Temperature, Use cold water on face or hands. I, Intense Exercise, 10 minutes of vigorous activity. P, Paced Breathing, Slow, deep breaths. P, Paired Muscle Relaxation, Tense and release."
+            >
+              <Text style={[styles.stepTitle, { color: theme.primary }]} accessible={false}>TIPP Technique:</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>T - Temperature: Use cold water on face/hands</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>I - Intense Exercise: 10 minutes of vigorous activity</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>P - Paced Breathing: Slow, deep breaths</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>P - Paired Muscle Relaxation: Tense and release</Text>
             </View>
           )}
           
           {selectedTechnique.name === 'DEAR MAN' && (
-            <View style={[styles.stepByStep, { backgroundColor: theme.card, borderColor: theme.border }]}>
-              <Text style={[styles.stepTitle, { color: theme.primary }]}>DEAR MAN Steps:</Text>
-              <Text style={[styles.step, { color: theme.text }]}>D - Describe the situation</Text>
-              <Text style={[styles.step, { color: theme.text }]}>E - Express your feelings</Text>
-              <Text style={[styles.step, { color: theme.text }]}>A - Assert your needs</Text>
-              <Text style={[styles.step, { color: theme.text }]}>R - Reinforce benefits</Text>
-              <Text style={[styles.step, { color: theme.text }]}>M - Mindful (stay focused)</Text>
-              <Text style={[styles.step, { color: theme.text }]}>A - Appear confident</Text>
-              <Text style={[styles.step, { color: theme.text }]}>N - Negotiate when possible</Text>
+            <View 
+              style={[styles.stepByStep, { backgroundColor: theme.card, borderColor: theme.border }]}
+              accessible={true}
+              accessibilityRole="text"
+              accessibilityLabel="DEAR MAN Steps: D, Describe the situation. E, Express your feelings. A, Assert your needs. R, Reinforce benefits. M, Mindful, stay focused. A, Appear confident. N, Negotiate when possible."
+            >
+              <Text style={[styles.stepTitle, { color: theme.primary }]} accessible={false}>DEAR MAN Steps:</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>D - Describe the situation</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>E - Express your feelings</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>A - Assert your needs</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>R - Reinforce benefits</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>M - Mindful (stay focused)</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>A - Appear confident</Text>
+              <Text style={[styles.step, { color: theme.text }]} accessible={false}>N - Negotiate when possible</Text>
             </View>
           )}
           
-          <View style={[styles.citationBox, { backgroundColor: theme.card, borderLeftColor: theme.primary }]}>
-            <Text style={[styles.citationTitle, { color: theme.primary }]}>📚 Source</Text>
-            <Text style={[styles.citationText, { color: theme.textSecondary }]}>
+          <View 
+            style={[styles.citationBox, { backgroundColor: theme.card, borderLeftColor: theme.primary }]}
+            accessible={true}
+            accessibilityRole="text"
+            accessibilityLabel={`Source: ${formatCitation(getCitationForTechnique(selectedTechnique.name))}`}
+          >
+            <Text style={[styles.citationTitle, { color: theme.primary }]} accessible={false}>📚 Source</Text>
+            <Text style={[styles.citationText, { color: theme.textSecondary }]} accessible={false}>
               {formatCitation(getCitationForTechnique(selectedTechnique.name))}
             </Text>
             <TouchableOpacity 
@@ -168,13 +204,18 @@ export default function ToolsScreen() {
               accessibilityLabel="View source"
               accessibilityRole="button"
             >
-              <Text style={[styles.citationLinkText, { color: theme.primary }]}>View Source</Text>
-              <Ionicons name="open-outline" size={16} color={theme.primary} />
+              <Text style={[styles.citationLinkText, { color: theme.primary }]} accessible={false}>View Source</Text>
+              <Ionicons name="open-outline" size={16} color={theme.primary} accessible={false} />
             </TouchableOpacity>
           </View>
 
           <View style={[styles.feedbackSection, { backgroundColor: theme.card, borderColor: theme.border }]}>
-            <Text style={[styles.feedbackQuestion, { color: theme.text }]}>Was this helpful?</Text>
+            <Text 
+              style={[styles.feedbackQuestion, { color: theme.text }]}
+              accessibilityRole="header"
+            >
+              Was this helpful?
+            </Text>
             <View style={styles.feedbackButtons}>
               <TouchableOpacity 
                 style={styles.feedbackButton}

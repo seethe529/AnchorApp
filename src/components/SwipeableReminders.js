@@ -39,11 +39,17 @@ export default function SwipeableReminders() {
   const renderReminder = ({ item, index }) => (
     <View style={styles.cardContainer}>
       <View style={styles.cardInner}>
-        <Card variant="strong">
+        <Card 
+          variant="strong"
+          accessible={true}
+          accessibilityRole="text"
+          accessibilityLabel={`Daily reminder ${index + 1} of ${reminders.length}: ${item}`}
+          accessibilityHint="Swipe left or right to see more reminders"
+        >
           <View style={styles.quoteIcon}>
-            <Ionicons name="chatbox-ellipses" size={24} color={theme.primary} />
+            <Ionicons name="chatbox-ellipses" size={24} color={theme.primary} accessible={false} />
           </View>
-          <Text style={[styles.reminderText, { color: theme.textSecondary }]}>
+          <Text style={[styles.reminderText, { color: theme.textSecondary }]} accessible={false}>
             "{item}"
           </Text>
         </Card>
@@ -70,6 +76,7 @@ export default function SwipeableReminders() {
           offset: CARD_WIDTH * index,
           index,
         })}
+        accessible={false}
       />
     </View>
   );

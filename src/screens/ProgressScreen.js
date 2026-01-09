@@ -13,14 +13,30 @@ const QuickStats = memo(({ moodData, techniqueData, allMoodLogs, theme }) => {
 
   return (
     <View style={[styles.statsContainer, { backgroundColor: theme.card }]}>
-      <Text style={[styles.statsTitle, { color: theme.text }]}>Quick Stats</Text>
-      <View style={styles.statRow}>
-        <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Times you checked in:</Text>
-        <Text style={[styles.statValue, { color: theme.primary }]}>{totalMoodLogs}</Text>
+      <Text 
+        style={[styles.statsTitle, { color: theme.text }]}
+        accessibilityRole="header"
+        accessibilityLevel={2}
+      >
+        Quick Stats
+      </Text>
+      <View 
+        style={styles.statRow}
+        accessible={true}
+        accessibilityRole="text"
+        accessibilityLabel={`Times you checked in: ${totalMoodLogs}`}
+      >
+        <Text style={[styles.statLabel, { color: theme.textSecondary }]} accessible={false}>Times you checked in:</Text>
+        <Text style={[styles.statValue, { color: theme.primary }]} accessible={false}>{totalMoodLogs}</Text>
       </View>
-      <View style={styles.statRow}>
-        <Text style={[styles.statLabel, { color: theme.textSecondary }]}>Support Moments:</Text>
-        <Text style={[styles.statValue, { color: theme.primary }]}>{totalTechniques}</Text>
+      <View 
+        style={styles.statRow}
+        accessible={true}
+        accessibilityRole="text"
+        accessibilityLabel={`Support Moments: ${totalTechniques}`}
+      >
+        <Text style={[styles.statLabel, { color: theme.textSecondary }]} accessible={false}>Support Moments:</Text>
+        <Text style={[styles.statValue, { color: theme.primary }]} accessible={false}>{totalTechniques}</Text>
       </View>
     </View>
   );
@@ -157,26 +173,44 @@ export default function ProgressScreen({ navigation }) {
       style={[styles.container, { backgroundColor: theme.background }]}
       contentContainerStyle={{ paddingBottom: 120 }}
     >
-      <Text style={[styles.title, { color: theme.primary }]}>Your Progress</Text>
+      <Text 
+        style={[styles.title, { color: theme.primary }]}
+        accessibilityRole="header"
+        accessibilityLevel={1}
+      >
+        Your Progress
+      </Text>
       
       <View style={[styles.chartContainer, { backgroundColor: theme.card }]}>
-        <Text style={[styles.chartTitle, { color: theme.text }]}>Mood Trend (Last 7 Days)</Text>
+        <Text 
+          style={[styles.chartTitle, { color: theme.text }]}
+          accessibilityRole="header"
+          accessibilityLevel={2}
+        >
+          Mood Trend (Last 7 Days)
+        </Text>
         {moodData.length > 0 && moodData.some(d => d.mood > 0) ? (
-          <LineChart
-            data={{
-              labels: moodData.map(d => d.date.toString()),
-              datasets: [{
-                data: moodData.map(d => d.mood || 0)
-              }]
-            }}
-            width={screenWidth - 70}
-            height={220}
-            yAxisSuffix=""
-            yAxisInterval={1}
-            chartConfig={chartConfig}
-            bezier
-            style={styles.chart}
-          />
+          <View
+            accessible={true}
+            accessibilityRole="image"
+            accessibilityLabel={`Mood trend chart for last 7 days. ${moodData.map((d, i) => `Day ${d.date}: mood ${d.mood.toFixed(1)}`).join('. ')}`}
+          >
+            <LineChart
+              data={{
+                labels: moodData.map(d => d.date.toString()),
+                datasets: [{
+                  data: moodData.map(d => d.mood || 0)
+                }]
+              }}
+              width={screenWidth - 70}
+              height={220}
+              yAxisSuffix=""
+              yAxisInterval={1}
+              chartConfig={chartConfig}
+              bezier
+              style={styles.chart}
+            />
+          </View>
         ) : (
           <View style={styles.noDataContainer}>
             <Text style={[styles.noDataText, { color: theme.textSecondary }]}>No mood data available yet</Text>
@@ -187,7 +221,13 @@ export default function ProgressScreen({ navigation }) {
 
       <View style={[styles.chartContainer, { backgroundColor: theme.card }]}>
         <View style={styles.chartHeader}>
-          <Text style={[styles.chartTitle, { color: theme.text }]}>Your Go-To Techniques</Text>
+          <Text 
+            style={[styles.chartTitle, { color: theme.text }]}
+            accessibilityRole="header"
+            accessibilityLevel={2}
+          >
+            Your Go-To Techniques
+          </Text>
           <TouchableOpacity 
             onPress={() => setShowViewCounts(!showViewCounts)}
             style={[styles.toggleButton, { backgroundColor: theme.background }]}
@@ -199,16 +239,22 @@ export default function ProgressScreen({ navigation }) {
           </TouchableOpacity>
         </View>
         {techniqueData.length > 0 ? (
-          <View>
+          <View accessible={false}>
             {techniqueData.map((tech, idx) => {
               const maxCount = Math.max(...techniqueData.map(t => t.count));
               const percentage = (tech.count / maxCount) * 100;
               return (
-                <View key={idx} style={styles.techniqueUsageRow}>
-                  <Text style={[styles.techniqueUsageName, { color: theme.textSecondary }]} numberOfLines={1}>
+                <View 
+                  key={idx} 
+                  style={styles.techniqueUsageRow}
+                  accessible={true}
+                  accessibilityRole="text"
+                  accessibilityLabel={`${tech.fullName}, ${tech.count} views`}
+                >
+                  <Text style={[styles.techniqueUsageName, { color: theme.textSecondary }]} numberOfLines={1} accessible={false}>
                     {tech.fullName}
                   </Text>
-                  <View style={[styles.techniqueUsageBar, { backgroundColor: theme.background }]}>
+                  <View style={[styles.techniqueUsageBar, { backgroundColor: theme.background }]} accessible={false}>
                     <View style={[styles.techniqueUsageFill, { width: `${percentage}%`, backgroundColor: theme.primary }]} />
                     {showViewCounts && (
                       <Text style={[styles.viewCountText, { color: theme.text }]}>{tech.count} views</Text>
@@ -228,7 +274,14 @@ export default function ProgressScreen({ navigation }) {
 
       {allRatedTechniques.length > 0 && (
         <View style={[styles.chartContainer, { backgroundColor: theme.card }]}>
-          <Text style={[styles.chartTitle, { color: theme.text }]}>What's Felt Most Helpful</Text>
+          <Text 
+            style={[styles.chartTitle, { color: theme.text }]}
+            accessibilityRole="header"
+            accessibilityLevel={2}
+          >
+            What's Felt Most Helpful
+          </Text>
+          <View accessible={false}>
           {allRatedTechniques.map((tech, idx) => {
             const getQualitativeLabel = (score) => {
               if (score >= 4.5) return 'Very Helpful';
@@ -237,15 +290,22 @@ export default function ProgressScreen({ navigation }) {
               return 'Needs Practice';
             };
             return (
-              <View key={idx} style={styles.effectivenessRow}>
-                <Text style={[styles.effectivenessTechnique, { color: theme.textSecondary }]} numberOfLines={1} ellipsizeMode="tail">{tech.fullName}</Text>
-                <View style={[styles.effectivenessBar, { backgroundColor: theme.background }]}>
+              <View 
+                key={idx} 
+                style={styles.effectivenessRow}
+                accessible={true}
+                accessibilityRole="text"
+                accessibilityLabel={`${tech.fullName}, ${getQualitativeLabel(parseFloat(tech.avgEffectiveness))}`}
+              >
+                <Text style={[styles.effectivenessTechnique, { color: theme.textSecondary }]} numberOfLines={1} ellipsizeMode="tail" accessible={false}>{tech.fullName}</Text>
+                <View style={[styles.effectivenessBar, { backgroundColor: theme.background }]} accessible={false}>
                   <View style={[styles.effectivenessFill, { width: `${(tech.avgEffectiveness / 5) * 100}%`, backgroundColor: theme.primary }]} />
                   <Text style={[styles.effectivenessScore, { color: theme.text }]}>{getQualitativeLabel(parseFloat(tech.avgEffectiveness))}</Text>
                 </View>
               </View>
             );
           })}
+          </View>
         </View>
       )}
 

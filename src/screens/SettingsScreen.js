@@ -323,11 +323,23 @@ export default function SettingsScreen({ navigation }) {
       style={[styles.container, { backgroundColor: theme.background }]}
       contentContainerStyle={{ paddingBottom: 120 }}
     >
-      <Text style={[styles.title, { color: theme.primary }]}>Settings</Text>
+      <Text 
+        style={[styles.title, { color: theme.primary }]}
+        accessibilityRole="header"
+        accessibilityLevel={1}
+      >
+        Settings
+      </Text>
       
       {settingSections.map((section, sectionIndex) => (
         <View key={sectionIndex} style={[styles.section, { backgroundColor: theme.card }]}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>{section.title}</Text>
+          <Text 
+            style={[styles.sectionTitle, { color: theme.text }]}
+            accessibilityRole="header"
+            accessibilityLevel={2}
+          >
+            {section.title}
+          </Text>
           {section.items.map((item, itemIndex) => (
             <React.Fragment key={itemIndex}>
               <View style={styles.settingItem}>
@@ -385,9 +397,14 @@ export default function SettingsScreen({ navigation }) {
             </React.Fragment>
           ))}
           {section.title === 'Notifications' && Platform.OS === 'android' && (
-            <View style={styles.androidNotice}>
-              <Ionicons name="information-circle" size={20} color={theme.primary} />
-              <Text style={[styles.androidNoticeText, { color: theme.textSecondary }]}>
+            <View 
+              style={styles.androidNotice}
+              accessible={true}
+              accessibilityRole="text"
+              accessibilityLabel="Android tip: For reliable notifications, disable battery optimization for Anchor in Android Settings, Apps, Anchor, Battery, Unrestricted."
+            >
+              <Ionicons name="information-circle" size={20} color={theme.primary} accessible={false} />
+              <Text style={[styles.androidNoticeText, { color: theme.textSecondary }]} accessible={false}>
                 For reliable notifications, disable battery optimization for Anchor in Android Settings → Apps → Anchor → Battery → Unrestricted.
               </Text>
             </View>
@@ -396,7 +413,13 @@ export default function SettingsScreen({ navigation }) {
       ))}
 
       <View style={[styles.section, { backgroundColor: theme.card }]}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Data Management</Text>
+        <Text 
+          style={[styles.sectionTitle, { color: theme.text }]}
+          accessibilityRole="header"
+          accessibilityLevel={2}
+        >
+          Data Management
+        </Text>
         
         <TouchableOpacity 
           style={styles.actionButton} 
@@ -445,7 +468,13 @@ export default function SettingsScreen({ navigation }) {
       </View>
 
       <View style={[styles.section, { backgroundColor: theme.card }]}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Information</Text>
+        <Text 
+          style={[styles.sectionTitle, { color: theme.text }]}
+          accessibilityRole="header"
+          accessibilityLevel={2}
+        >
+          Information
+        </Text>
         
         <TouchableOpacity 
           style={styles.actionButton} 
@@ -479,16 +508,36 @@ export default function SettingsScreen({ navigation }) {
       </View>
 
       <View style={[styles.section, { backgroundColor: theme.card }]}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>About</Text>
-        <View style={styles.infoItem}>
-          <Text style={[styles.infoLabel, { color: theme.textSecondary }]}>Version:</Text>
-          <Text style={[styles.infoValue, { color: theme.text }]}>{APP_VERSION}</Text>
+        <Text 
+          style={[styles.sectionTitle, { color: theme.text }]}
+          accessibilityRole="header"
+          accessibilityLevel={2}
+        >
+          About
+        </Text>
+        <View 
+          style={styles.infoItem}
+          accessible={true}
+          accessibilityRole="text"
+          accessibilityLabel="Version: {APP_VERSION}"
+        >
+          <Text style={[styles.infoLabel, { color: theme.textSecondary }]} accessible={false}>Version:</Text>
+          <Text style={[styles.infoValue, { color: theme.text }]} accessible={false}>{APP_VERSION}</Text>
         </View>
-        <View style={styles.infoItem}>
-          <Text style={[styles.infoLabel, { color: theme.textSecondary }]}>Platform:</Text>
-          <Text style={[styles.infoValue, { color: theme.text }]}>{Platform.OS === 'ios' ? 'iOS' : Platform.OS === 'android' ? 'Android' : 'Web'}</Text>
+        <View 
+          style={styles.infoItem}
+          accessible={true}
+          accessibilityRole="text"
+          accessibilityLabel={`Platform: ${Platform.OS === 'ios' ? 'iOS' : Platform.OS === 'android' ? 'Android' : 'Web'}`}
+        >
+          <Text style={[styles.infoLabel, { color: theme.textSecondary }]} accessible={false}>Platform:</Text>
+          <Text style={[styles.infoValue, { color: theme.text }]} accessible={false}>{Platform.OS === 'ios' ? 'iOS' : Platform.OS === 'android' ? 'Android' : 'Web'}</Text>
         </View>
-        <Text style={[styles.disclaimer, { color: theme.textTertiary }]}>
+        <Text 
+          style={[styles.disclaimer, { color: theme.textTertiary }]}
+          accessible={true}
+          accessibilityRole="text"
+        >
           This app is not a replacement for professional mental health treatment. 
           If you're experiencing a mental health crisis, please contact emergency services immediately.
         </Text>
@@ -504,11 +553,24 @@ export default function SettingsScreen({ navigation }) {
           <View style={styles.modalOverlay}>
             <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
               <View style={styles.modalHeader}>
-                <TouchableOpacity onPress={() => setShowTimePicker(false)}>
+                <TouchableOpacity 
+                  onPress={() => setShowTimePicker(false)}
+                  accessibilityLabel="Cancel time selection"
+                  accessibilityRole="button"
+                >
                   <Text style={[styles.modalCancel, { color: theme.textSecondary }]}>Cancel</Text>
                 </TouchableOpacity>
-                <Text style={[styles.modalTitle, { color: theme.text }]}>Select Time</Text>
-                <TouchableOpacity onPress={handleTimeSave}>
+                <Text 
+                  style={[styles.modalTitle, { color: theme.text }]}
+                  accessibilityRole="header"
+                >
+                  Select Time
+                </Text>
+                <TouchableOpacity 
+                  onPress={handleTimeSave}
+                  accessibilityLabel="Save selected time"
+                  accessibilityRole="button"
+                >
                   <Text style={[styles.modalDone, { color: theme.primary }]}>Done</Text>
                 </TouchableOpacity>
               </View>
@@ -539,11 +601,24 @@ export default function SettingsScreen({ navigation }) {
           <View style={styles.modalOverlay}>
             <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
               <View style={styles.modalHeader}>
-                <TouchableOpacity onPress={() => setShowIntervalPicker(false)}>
+                <TouchableOpacity 
+                  onPress={() => setShowIntervalPicker(false)}
+                  accessibilityLabel="Cancel interval selection"
+                  accessibilityRole="button"
+                >
                   <Text style={[styles.modalCancel, { color: theme.textSecondary }]}>Cancel</Text>
                 </TouchableOpacity>
-                <Text style={[styles.modalTitle, { color: theme.text }]}>Select Interval</Text>
-                <TouchableOpacity onPress={handleIntervalSave}>
+                <Text 
+                  style={[styles.modalTitle, { color: theme.text }]}
+                  accessibilityRole="header"
+                >
+                  Select Interval
+                </Text>
+                <TouchableOpacity 
+                  onPress={handleIntervalSave}
+                  accessibilityLabel="Save selected interval"
+                  accessibilityRole="button"
+                >
                   <Text style={[styles.modalDone, { color: theme.primary }]}>Done</Text>
                 </TouchableOpacity>
               </View>

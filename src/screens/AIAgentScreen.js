@@ -211,12 +211,24 @@ export default function AIAgentScreen({ navigation }) {
             borderTopColor: theme.border
           }
         ]}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <Text style={[styles.suggestionsTitle, { color: theme.text }]}>Suggested techniques:</Text>
+          <ScrollView showsVerticalScrollIndicator={false} accessible={false}>
+            <Text 
+              style={[styles.suggestionsTitle, { color: theme.text }]}
+              accessibilityRole="header"
+            >
+              Suggested techniques:
+            </Text>
             {suggestions.map((suggestion, index) => (
-              <TouchableOpacity key={index} style={[styles.suggestionCard, { backgroundColor: theme.primary + '20' }]} onPress={() => applySuggestion(suggestion)}>
-                <Text style={[styles.suggestionName, { color: theme.text }]}>{suggestion.name}</Text>
-                <Text style={[styles.suggestionCategory, { color: theme.textSecondary }]}>{formatCategory(suggestion.category)}</Text>
+              <TouchableOpacity 
+                key={index} 
+                style={[styles.suggestionCard, { backgroundColor: theme.primary + '20' }]} 
+                onPress={() => applySuggestion(suggestion)}
+                accessibilityLabel={`${suggestion.name}, ${formatCategory(suggestion.category)} technique`}
+                accessibilityHint="View details about this technique"
+                accessibilityRole="button"
+              >
+                <Text style={[styles.suggestionName, { color: theme.text }]} accessible={false}>{suggestion.name}</Text>
+                <Text style={[styles.suggestionCategory, { color: theme.textSecondary }]} accessible={false}>{formatCategory(suggestion.category)}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>

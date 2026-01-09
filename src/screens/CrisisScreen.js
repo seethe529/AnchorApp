@@ -151,10 +151,20 @@ export default function CrisisScreen({ navigation }) {
     return (
       <View style={[styles.container, { backgroundColor: theme.background }]}>
         <View style={[styles.safetyPlanHeader, { backgroundColor: theme.primary }]}>
-          <TouchableOpacity onPress={() => setShowSafetyPlan(false)}>
+          <TouchableOpacity 
+            onPress={() => setShowSafetyPlan(false)}
+            accessibilityLabel="Back to crisis resources"
+            accessibilityRole="button"
+          >
             <Ionicons name="arrow-back" size={24} color="white" />
           </TouchableOpacity>
-          <Text style={[styles.safetyPlanTitle, { color: 'white' }]}>Safety Plan</Text>
+          <Text 
+            style={[styles.safetyPlanTitle, { color: 'white' }]}
+            accessibilityRole="header"
+            accessibilityLevel={1}
+          >
+            Safety Plan
+          </Text>
         </View>
         <SafetyPlan />
       </View>
@@ -166,13 +176,24 @@ export default function CrisisScreen({ navigation }) {
       style={[styles.container, { backgroundColor: theme.background }]}
       contentContainerStyle={{ paddingBottom: 120 }}
     >
-      <View style={[styles.warningBanner, { backgroundColor: theme.primary + '20' }]}>
-        <Ionicons name="warning" size={24} color={theme.primary} />
-        <Text style={[styles.warningText, { color: theme.primary }]}>Immediate danger? Call 911</Text>
+      <View 
+        style={[styles.warningBanner, { backgroundColor: theme.primary + '20' }]}
+        accessible={true}
+        accessibilityRole="alert"
+        accessibilityLabel="Warning: Immediate danger? Call 911"
+      >
+        <Ionicons name="warning" size={24} color={theme.primary} accessible={false} />
+        <Text style={[styles.warningText, { color: theme.primary }]} accessible={false}>Immediate danger? Call 911</Text>
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Immediate Help</Text>
+        <Text 
+          style={[styles.sectionTitle, { color: theme.text }]}
+          accessibilityRole="header"
+          accessibilityLevel={2}
+        >
+          Immediate Help
+        </Text>
         {immediateHelp.map((item, index) => (
           <TouchableOpacity 
             key={index}
@@ -198,7 +219,13 @@ export default function CrisisScreen({ navigation }) {
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Crisis Resources</Text>
+        <Text 
+          style={[styles.sectionTitle, { color: theme.text }]}
+          accessibilityRole="header"
+          accessibilityLevel={2}
+        >
+          Crisis Resources
+        </Text>
         {crisisResources
           .sort((a, b) => a.priority - b.priority)
           .map((resource, index) => (
@@ -228,8 +255,20 @@ export default function CrisisScreen({ navigation }) {
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Local Resources</Text>
-        <TouchableOpacity onPress={findNearbyResources} activeOpacity={0.7}>
+        <Text 
+          style={[styles.sectionTitle, { color: theme.text }]}
+          accessibilityRole="header"
+          accessibilityLevel={2}
+        >
+          Local Resources
+        </Text>
+        <TouchableOpacity 
+          onPress={findNearbyResources} 
+          activeOpacity={0.7}
+          accessibilityLabel="Find Local Crisis Centers"
+          accessibilityHint="Locate nearby mental health facilities"
+          accessibilityRole="button"
+        >
           <Card style={styles.localCard}>
             <View style={[styles.iconCircle, { backgroundColor: theme.primary + '15' }]}>
               <Ionicons name="location" size={28} color={theme.primary} />
@@ -242,7 +281,13 @@ export default function CrisisScreen({ navigation }) {
           </Card>
         </TouchableOpacity>
         
-        <TouchableOpacity onPress={findNearestHospital} activeOpacity={0.7}>
+        <TouchableOpacity 
+          onPress={findNearestHospital} 
+          activeOpacity={0.7}
+          accessibilityLabel="Hospital Emergency Room"
+          accessibilityHint="Nearest emergency medical care"
+          accessibilityRole="button"
+        >
           <Card style={styles.localCard}>
             <View style={[styles.iconCircle, { backgroundColor: theme.primary + '15' }]}>
               <Ionicons name="medical" size={28} color={theme.primary} />
@@ -257,7 +302,13 @@ export default function CrisisScreen({ navigation }) {
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Crisis Actions</Text>
+        <Text 
+          style={[styles.sectionTitle, { color: theme.text }]}
+          accessibilityRole="header"
+          accessibilityLevel={2}
+        >
+          Crisis Actions
+        </Text>
         
         <TouchableOpacity
           onPress={() => setShowSafetyPlan(true)}
@@ -276,7 +327,13 @@ export default function CrisisScreen({ navigation }) {
         </TouchableOpacity>
 
         {emergencyContacts.length > 0 && (
-          <TouchableOpacity onPress={sendEmergencyAlert} activeOpacity={0.9}>
+          <TouchableOpacity 
+            onPress={sendEmergencyAlert} 
+            activeOpacity={0.9}
+            accessibilityLabel="Send Emergency Alert"
+            accessibilityHint="Sends your location and crisis message to emergency contacts"
+            accessibilityRole="button"
+          >
             <LinearGradient
               colors={['#FF6B35', '#E85A2A']}
               style={styles.alertButton}
@@ -289,19 +346,34 @@ export default function CrisisScreen({ navigation }) {
       </View>
 
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>Safety Reminders</Text>
-        <View style={[styles.safetyPlan, { backgroundColor: theme.card }]}>
+        <Text 
+          style={[styles.sectionTitle, { color: theme.text }]}
+          accessibilityRole="header"
+          accessibilityLevel={2}
+        >
+          Safety Reminders
+        </Text>
+        <View 
+          style={[styles.safetyPlan, { backgroundColor: theme.card }]}
+          accessible={true}
+          accessibilityRole="text"
+          accessibilityLabel={`Safety Reminders: ${safetyPlan.map((step, i) => `${i + 1}. ${step}`).join('. ')}`}
+        >
           {safetyPlan.map((step, index) => (
-            <View key={index} style={styles.safetyStep}>
-              <Text style={[styles.stepNumber, { backgroundColor: theme.primary }]}>{index + 1}</Text>
-              <Text style={[styles.stepText, { color: theme.text }]}>{step}</Text>
+            <View key={index} style={styles.safetyStep} accessible={false}>
+              <Text style={[styles.stepNumber, { backgroundColor: theme.primary }]} accessible={false}>{index + 1}</Text>
+              <Text style={[styles.stepText, { color: theme.text }]} accessible={false}>{step}</Text>
             </View>
           ))}
         </View>
       </View>
 
-      <View style={[styles.footer, { backgroundColor: theme.primary }]}>
-        <Text style={[styles.footerText, { color: 'white' }]}>
+      <View 
+        style={[styles.footer, { backgroundColor: theme.primary }]}
+        accessible={true}
+        accessibilityRole="text"
+      >
+        <Text style={[styles.footerText, { color: 'white' }]} accessible={false}>
           You are not alone. Help is available 24/7. Your life has value and meaning.
         </Text>
       </View>

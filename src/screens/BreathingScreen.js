@@ -147,12 +147,12 @@ export default function BreathingScreen({ navigation }) {
               transform: [{ scale: scaleAnim }],
             },
           ]}
-          accessible={true}
+          accessible={index === currentIndex}
           accessibilityLabel={isActive ? `${currentPhase.phase}, ${countdown} seconds remaining` : `${item.name} breathing circle, ready to start`}
           accessibilityHint={isActive ? currentPhase.instruction : `Tap start button to begin ${item.name} breathing exercise`}
           accessibilityLiveRegion="polite"
           accessibilityValue={{ text: isActive ? `${countdown}` : undefined }}
-          importantForAccessibility="yes"
+          importantForAccessibility={index === currentIndex ? "yes" : "no-hide-descendants"}
         >
           <LinearGradient
             colors={[item.color, item.color]}

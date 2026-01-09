@@ -122,12 +122,28 @@ export default function HomeScreen({ navigation }) {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.header}>
-          <Text style={[styles.title, { color: theme.text }]}>Welcome to Anchor</Text>
-          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>Your PTSD support companion</Text>
+          <Text 
+            style={[styles.title, { color: theme.text }]}
+            accessibilityRole="header"
+            accessibilityLevel={1}
+          >
+            Welcome to Anchor
+          </Text>
+          <Text 
+            style={[styles.subtitle, { color: theme.textSecondary }]}
+            accessibilityRole="text"
+          >
+            Your PTSD support companion
+          </Text>
           {todayMoodLogged && recentMood && (
-            <View style={[styles.moodStatus, { backgroundColor: theme.primary + '15' }]}>
-              <Ionicons name="checkmark-circle" size={18} color={theme.primary} />
-              <Text style={[styles.moodStatusText, { color: theme.primary }]}>
+            <View 
+              style={[styles.moodStatus, { backgroundColor: theme.primary + '15' }]}
+              accessible={true}
+              accessibilityRole="text"
+              accessibilityLabel={`Today's mood: ${recentMood.primaryEmoji ? `${recentMood.primary}` : recentMood.moodName}`}
+            >
+              <Ionicons name="checkmark-circle" size={18} color={theme.primary} accessible={false} />
+              <Text style={[styles.moodStatusText, { color: theme.primary }]} accessible={false}>
                 {recentMood.primaryEmoji ? `${recentMood.primaryEmoji} ${recentMood.primary}` : `Mood: ${recentMood.moodName}`}
               </Text>
             </View>
@@ -150,7 +166,13 @@ export default function HomeScreen({ navigation }) {
       )}
       
         <View style={styles.quickActions}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Quick Actions</Text>
+          <Text 
+            style={[styles.sectionTitle, { color: theme.text }]}
+            accessibilityRole="header"
+            accessibilityLevel={2}
+          >
+            Quick Actions
+          </Text>
           <View style={styles.actionGrid}>
             {quickActions.map((action, index) => (
               <TouchableOpacity 
@@ -174,8 +196,19 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         <View style={styles.dailyTipContainer}>
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Daily Reminders</Text>
-          <Text style={[styles.swipeHint, { color: theme.textTertiary }]}>Swipe to explore more reminders</Text>
+          <Text 
+            style={[styles.sectionTitle, { color: theme.text }]}
+            accessibilityRole="header"
+            accessibilityLevel={2}
+          >
+            Daily Reminders
+          </Text>
+          <Text 
+            style={[styles.swipeHint, { color: theme.textTertiary }]}
+            accessible={false}
+          >
+            Swipe to explore more reminders
+          </Text>
         </View>
         <SwipeableReminders />
 

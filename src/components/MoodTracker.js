@@ -69,14 +69,27 @@ const MoodTracker = memo(({ onMoodLogged, onDetailedLogRequest }) => {
     <View style={[styles.container, { backgroundColor: theme.card }]}>
       {showDetailedCTA ? (
         <View style={styles.ctaContainer}>
-          <Text style={[styles.ctaTitle, { color: theme.text }]}>✓ Mood logged</Text>
-          <Text style={[styles.ctaSubtitle, { color: theme.textSecondary }]}>Want to add more emotional detail?</Text>
+          <Text 
+            style={[styles.ctaTitle, { color: theme.text }]}
+            accessibilityRole="header"
+          >
+            ✓ Mood logged
+          </Text>
+          <Text 
+            style={[styles.ctaSubtitle, { color: theme.textSecondary }]}
+            accessibilityRole="text"
+          >
+            Want to add more emotional detail?
+          </Text>
           <TouchableOpacity
             onPress={() => {
               setShowDetailedCTA(false);
               onDetailedLogRequest && onDetailedLogRequest();
             }}
             activeOpacity={0.8}
+            accessibilityLabel="Add emotional details"
+            accessibilityRole="button"
+            accessibilityHint="Opens detailed mood logging form"
           >
             <LinearGradient
               colors={[theme.primaryGradientTop, theme.primaryGradientBottom]}
@@ -92,6 +105,8 @@ const MoodTracker = memo(({ onMoodLogged, onDetailedLogRequest }) => {
               // Also notify parent to hide the tracker
               onMoodLogged && onMoodLogged({ skipCTA: true });
             }}
+            accessibilityLabel="Skip detailed logging"
+            accessibilityRole="button"
           >
             <Text style={[styles.skipButtonText, { color: theme.textSecondary }]}>Skip</Text>
           </TouchableOpacity>
@@ -109,9 +124,13 @@ const MoodTracker = memo(({ onMoodLogged, onDetailedLogRequest }) => {
               selectedMood?.value === mood.value && { backgroundColor: mood.color + '20' }
             ]}
             onPress={() => setSelectedMood(mood)}
+            accessibilityLabel={`${mood.name} mood`}
+            accessibilityRole="button"
+            accessibilityState={{ selected: selectedMood?.value === mood.value }}
+            accessibilityHint={`Select ${mood.name} mood`}
           >
-            <Ionicons name={mood.icon} size={32} color={mood.color} />
-            <Text style={[styles.moodText, { color: mood.color }]}>{mood.name}</Text>
+            <Ionicons name={mood.icon} size={32} color={mood.color} accessible={false} />
+            <Text style={[styles.moodText, { color: mood.color }]} accessible={false}>{mood.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -127,12 +146,17 @@ const MoodTracker = memo(({ onMoodLogged, onDetailedLogRequest }) => {
             onChangeText={setNotes}
             multiline
             numberOfLines={3}
+            accessibilityLabel="Mood notes"
+            accessibilityHint="Optional notes about your mood"
           />
           
           <TouchableOpacity
             style={[styles.logButton, { backgroundColor: selectedMood.color }]}
             onPress={logMood}
             disabled={isLoading}
+            accessibilityLabel="Log mood"
+            accessibilityRole="button"
+            accessibilityState={{ disabled: isLoading }}
           >
             <Text style={styles.logButtonText}>
               {isLoading ? 'Logging...' : 'Log Mood'}
