@@ -41,9 +41,9 @@ export default function SwipeableReminders() {
       <View style={styles.cardInner}>
         <Card 
           variant="strong"
-          accessible={true}
+          accessible={index === currentIndex}
           accessibilityRole="text"
-          accessibilityLabel={`Daily reminder ${index + 1} of ${reminders.length}: ${item}`}
+          accessibilityLabel={`Daily reminder: ${item}`}
           accessibilityHint="Swipe left or right to see more reminders"
         >
           <View style={styles.quoteIcon}>
