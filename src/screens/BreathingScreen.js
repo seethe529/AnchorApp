@@ -220,6 +220,7 @@ export default function BreathingScreen({ navigation }) {
 
         <TouchableOpacity
           onPress={toggleActive}
+          accessible={index === currentIndex}
           accessibilityLabel={`${isActive ? 'Stop' : 'Start'} ${item.name} breathing exercise. Method ${index + 1} of ${breathingMethods.length}.`}
           accessibilityRole="button"
           accessibilityHint={`Double tap to ${isActive ? 'stop' : 'start'}. ${index > 0 ? 'Swipe up for previous method. ' : ''}${index < breathingMethods.length - 1 ? 'Swipe down for next method.' : ''}`}
