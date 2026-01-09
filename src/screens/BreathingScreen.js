@@ -222,27 +222,9 @@ export default function BreathingScreen({ navigation }) {
         <TouchableOpacity
           onPress={toggleActive}
           accessible={index === currentIndex}
-          accessibilityLabel={`${isActive ? 'Stop' : 'Start'} ${item.name} breathing exercise. Method ${index + 1} of ${breathingMethods.length}.`}
+          accessibilityLabel={`${isActive ? 'Stop' : 'Start'} ${item.name} breathing exercise`}
           accessibilityRole="button"
-          accessibilityHint={`Double tap to ${isActive ? 'stop' : 'start'}. ${index > 0 ? 'Swipe up for previous method. ' : ''}${index < breathingMethods.length - 1 ? 'Swipe down for next method.' : ''}`}
-          accessibilityActions={[
-            { name: 'activate', label: isActive ? 'Stop breathing exercise' : 'Start breathing exercise' },
-            ...(index > 0 ? [{ name: 'decrement', label: `Previous method: ${breathingMethods[index - 1].name}` }] : []),
-            ...(index < breathingMethods.length - 1 ? [{ name: 'increment', label: `Next method: ${breathingMethods[index + 1].name}` }] : [])
-          ]}
-          onAccessibilityAction={(event) => {
-            switch (event.nativeEvent.actionName) {
-              case 'activate':
-                toggleActive();
-                break;
-              case 'increment':
-                navigateToMethod(index + 1);
-                break;
-              case 'decrement':
-                navigateToMethod(index - 1);
-                break;
-            }
-          }}
+          accessibilityHint={`Double tap to ${isActive ? 'stop' : 'start'}`}
           activeOpacity={0.9}
           importantForAccessibility={index === currentIndex ? "yes" : "no-hide-descendants"}
         >
