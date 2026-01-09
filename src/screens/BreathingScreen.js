@@ -192,7 +192,7 @@ export default function BreathingScreen({ navigation }) {
 
         <View 
           style={styles.patternContainer}
-          accessible={true}
+          accessible={index === currentIndex}
           accessibilityRole="text"
           accessibilityLabel={`Breathing pattern: ${item.pattern.map(p => `${p.phase} ${p.duration} seconds`).join(', ')}`}
         >
@@ -254,7 +254,7 @@ export default function BreathingScreen({ navigation }) {
 
         <View 
           style={styles.paginationInline}
-          accessible={true}
+          accessible={index === currentIndex}
           accessibilityRole="text"
           accessibilityLabel={`Page ${index + 1} of ${breathingMethods.length}. Current method: ${item.name}. Swipe left or right to change methods.`}
         >
