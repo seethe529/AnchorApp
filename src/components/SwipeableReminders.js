@@ -45,6 +45,7 @@ export default function SwipeableReminders() {
           accessibilityRole="text"
           accessibilityLabel={`Daily reminder: ${item}`}
           accessibilityHint="Swipe left or right to see more reminders"
+          importantForAccessibility={index === currentIndex ? "yes" : "no-hide-descendants"}
         >
           <View style={styles.quoteIcon}>
             <Ionicons name="chatbox-ellipses" size={24} color={theme.primary} accessible={false} />

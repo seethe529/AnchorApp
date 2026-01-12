@@ -2,6 +2,44 @@
 
 All notable changes to Anchor PTSD Support App will be documented in this file.
 
+## [1.2.6] - Build 82 (Comprehensive Accessibility) - January 2025
+
+### Fixed - VoiceOver Navigation
+- Fixed critical VoiceOver navigation in BreathingScreen (only visible method accessible)
+- Fixed SwipeableReminders pagination (only visible reminder accessible)
+- Removed custom accessibilityActions in favor of standard three-finger swipe
+- Added helpful hint: "Use three-finger swipe to change methods"
+
+### Added - Accessibility Compliance
+- Added accessibility roles (header, alert, text) throughout all 7 screens
+- Grouped multi-element content (technique steps, citations) as single accessible elements
+- Added proper accessibility labels, hints, and states to all interactive elements
+- Marked decorative button children (icons, text) as accessible={false}
+- 20 comprehensive unit tests verifying accessibility logic
+- Full compliance with iOS/Android accessibility guidelines
+
+### Changed
+- Addresses first user review feedback requesting better blind user support
+- Improved screen reader experience across entire app
+
+## [1.2.5] - Build 75-76 (Customizable Reminders) - January 2025
+
+### Added - Customizable Notifications
+- Customizable mood check-in time (default 8:00 PM)
+- Customizable breathing intervals: 90, 120, 180, 240 minutes (default 90)
+- Full-width picker modals with dark mode support
+- Temp state for cancel button functionality
+- Background notification rescheduling to prevent modal lag
+- Respects platform-specific coverage (iOS: 3 days, Android: 7 days)
+
+### Changed - AI Improvements
+- Increased AI max_tokens from 200→800 to prevent response cutoff
+- Better handling of longer technique lists and crisis responses
+
+### Released
+- iOS v1.2.5 (Build 75) released to App Store
+- Android v1.2.5 (Build 76) released to Google Play
+
 ## [1.2.5] - Build 71 (UI Modernization Complete) - January 2025
 
 ### Changed - DisclaimerScreen Modernization

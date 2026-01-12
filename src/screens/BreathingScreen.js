@@ -69,14 +69,15 @@ export default function BreathingScreen({ navigation }) {
       setCurrentPhaseIndex(0);
       const newCycles = completedCycles + 1;
       setCompletedCycles(newCycles);
-      // Announce cycle completion for blind users
-      AccessibilityInfo.announceForAccessibility(`Cycle ${newCycles} completed`);
       logBreathingSession();
+      // Announce cycle completion AND next phase together for blind users
+      const firstPhase = currentMethod.pattern[0];
+      AccessibilityInfo.announceForAccessibility(`Cycle ${newCycles} completed. ${firstPhase.phase} for ${firstPhase.duration} seconds. ${firstPhase.instruction}`);
     } else {
       setCurrentPhaseIndex(nextPhaseIndex);
       // Announce phase change for blind users
       const nextPhase = currentMethod.pattern[nextPhaseIndex];
-      AccessibilityInfo.announceForAccessibility(`${nextPhase.phase}, ${nextPhase.instruction}`);
+      AccessibilityInfo.announceForAccessibility(`${nextPhase.phase} for ${nextPhase.duration} seconds. ${nextPhase.instruction}`);
     }
   };
 
@@ -87,6 +88,11 @@ export default function BreathingScreen({ navigation }) {
       setIsActive(true);
       setCurrentPhaseIndex(0);
       setCompletedCycles(0);
+      // Announce first phase for blind users with small delay to avoid VoiceOver button announcement overlap
+      const firstPhase = currentMethod.pattern[0];
+      setTimeout(() => {
+        AccessibilityInfo.announceForAccessibility(`${firstPhase.phase} for ${firstPhase.duration} seconds. ${firstPhase.instruction}`);
+      }, 500);
     } else {
       setIsActive(false);
       Animated.timing(scaleAnim, {
@@ -127,11 +133,16 @@ export default function BreathingScreen({ navigation }) {
 
   const onViewableItemsChanged = useRef(({ viewableItems }) => {
     if (viewableItems.length > 0) {
-      setCurrentIndex(viewableItems[0].index);
+      const newIndex = viewableItems[0].index;
+      setCurrentIndex(newIndex);
       setIsActive(false);
       setCurrentPhaseIndex(0);
       setCompletedCycles(0);
       scaleAnim.setValue(1);
+      // Android TalkBack: Announce method name when page changes
+      if (Platform.OS === 'android') {
+        AccessibilityInfo.announceForAccessibility(`${breathingMethods[newIndex].name} breathing exercise`);
+      }
     }
   }).current;
 
@@ -149,9 +160,7 @@ export default function BreathingScreen({ navigation }) {
           ]}
           accessible={index === currentIndex}
           accessibilityLabel={isActive ? `${currentPhase.phase}, ${countdown} seconds remaining` : `${item.name} breathing circle, ready to start`}
-          accessibilityHint={isActive ? currentPhase.instruction : `Tap start button to begin ${item.name} breathing exercise`}
-          accessibilityLiveRegion="polite"
-          accessibilityValue={{ text: isActive ? `${countdown}` : undefined }}
+          accessibilityHint={isActive ? "" : `Tap start button to begin ${item.name} breathing exercise`}
           importantForAccessibility={index === currentIndex ? "yes" : "no-hide-descendants"}
         >
           <LinearGradient
@@ -184,7 +193,8 @@ export default function BreathingScreen({ navigation }) {
         <View style={styles.instructionContainer}>
           <Text 
             style={[styles.instruction, { color: theme.textSecondary }]}
-            accessibilityElementsHidden={true}
+            accessible={isActive}
+            importantForAccessibility={isActive ? "yes" : "no"}
           >
             {isActive ? currentPhase.instruction : ' '}
           </Text>
@@ -212,7 +222,8 @@ export default function BreathingScreen({ navigation }) {
         <View style={styles.cyclesContainer}>
           <Text 
             style={styles.cyclesText}
-            accessible={completedCycles > 0}
+            accessible={isActive || completedCycles > 0}
+            importantForAccessibility={(isActive || completedCycles > 0) ? "yes" : "no"}
             accessibilityRole="text"
           >
             {isActive || completedCycles > 0 ? `Cycles completed: ${completedCycles}` : ' '}
@@ -222,7 +233,7 @@ export default function BreathingScreen({ navigation }) {
         <TouchableOpacity
           onPress={toggleActive}
           accessible={index === currentIndex}
-          accessibilityLabel={`${isActive ? 'Stop' : 'Start'} ${item.name} breathing exercise`}
+          accessibilityLabel={isActive ? 'Stop' : 'Start'}
           accessibilityRole="button"
           accessibilityHint={`Double tap to ${isActive ? 'stop' : 'start'}`}
           activeOpacity={0.9}
@@ -240,11 +251,11 @@ export default function BreathingScreen({ navigation }) {
 
         <View 
           style={styles.paginationInline}
-          accessible={index === currentIndex}
+          accessible={Platform.OS === 'ios' && index === currentIndex}
           accessibilityRole="text"
           accessibilityLabel={`Page ${index + 1} of ${breathingMethods.length}. Current method: ${item.name}.`}
-          accessibilityHint="Use three-finger swipe to change methods"
-          importantForAccessibility={index === currentIndex ? "yes" : "no-hide-descendants"}
+          accessibilityHint={Platform.OS === 'ios' ? "Use three-finger swipe to change methods" : "Use two-finger swipe to change methods"}
+          importantForAccessibility={Platform.OS === 'ios' && index === currentIndex ? "yes" : "no"}
         >
           {breathingMethods.map((method, methodIndex) => (
             <View

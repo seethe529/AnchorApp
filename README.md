@@ -107,7 +107,29 @@ npm run android # for Android
 - `src/utils/storage.js` - AsyncStorage wrapper with error handling
 - `src/services/openai.js` - OpenAI API integration
 
-## Recent Updates (Build 70 - Trauma-Informed Analytics)
+## Recent Updates (Build 82 - Accessibility)
+
+### Build 82 (v1.2.6) - Comprehensive Accessibility Improvements ✅ COMPLETE
+- ✅ Fixed critical VoiceOver navigation in BreathingScreen (only visible method accessible)
+- ✅ Fixed SwipeableReminders pagination (only visible reminder accessible)
+- ✅ Removed custom accessibilityActions in favor of standard three-finger swipe
+- ✅ Added accessibility roles (header, alert, text) throughout all 7 screens
+- ✅ Grouped multi-element content (technique steps, citations) as single accessible elements
+- ✅ Added proper accessibility labels, hints, and states to all interactive elements
+- ✅ Marked decorative button children (icons, text) as accessible={false}
+- ✅ 20 comprehensive unit tests verifying accessibility logic
+- ✅ Full compliance with iOS/Android accessibility guidelines
+- ✅ Addresses first user review feedback requesting better blind user support
+
+### Build 75-76 (v1.2.5) - Customizable Reminders ✅ COMPLETE
+- ✅ Customizable mood check-in time (default 8:00 PM)
+- ✅ Customizable breathing intervals: 90, 120, 180, 240 minutes (default 90)
+- ✅ Full-width picker modals with dark mode support
+- ✅ Temp state for cancel button functionality
+- ✅ Background notification rescheduling to prevent modal lag
+- ✅ Respects platform-specific coverage (iOS: 3 days, Android: 7 days)
+- ✅ Increased AI max_tokens from 200→800 to prevent response cutoff
+- ✅ Released to iOS App Store and Google Play production
 
 ### Build 70 - Trauma-Informed Analytics Improvements ✅ COMPLETE
 - ✅ Fixed double-counting bug: views and ratings now tracked separately
@@ -259,11 +281,11 @@ npm run android # for Android
 - Cross-platform testing and validation
 
 ### Version 1.4.0
+- Interactive exposure therapy tracker (user-requested feature)
 - Enhanced AI conversation capabilities with longer context
 - Personalized technique recommendations based on usage patterns
 - Apple Watch companion app
 - Data backup to iCloud
-- Customizable reminder times
 
 ### Version 2.0.0
 - Multi-language support (Spanish, French, German priority)
