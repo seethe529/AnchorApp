@@ -242,7 +242,8 @@ export default function BreathingScreen({ navigation }) {
           style={styles.paginationInline}
           accessible={index === currentIndex}
           accessibilityRole="text"
-          accessibilityLabel={`Page ${index + 1} of ${breathingMethods.length}. Current method: ${item.name}. Swipe left or right to change methods.`}
+          accessibilityLabel={`Page ${index + 1} of ${breathingMethods.length}. Current method: ${item.name}.`}
+          accessibilityHint="Use three-finger swipe to change methods"
           importantForAccessibility={index === currentIndex ? "yes" : "no-hide-descendants"}
         >
           {breathingMethods.map((method, methodIndex) => (
