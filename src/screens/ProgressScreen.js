@@ -181,9 +181,14 @@ export default function ProgressScreen({ navigation }) {
         Your Progress
       </Text>
       
-      <View style={[styles.infoCard, { backgroundColor: theme.card }]}>
-        <Ionicons name="information-circle-outline" size={20} color={theme.primary} style={styles.infoIcon} />
-        <Text style={[styles.infoText, { color: theme.textSecondary }]}>
+      <View 
+        style={[styles.infoCard, { backgroundColor: theme.card }]}
+        accessible={true}
+        accessibilityRole="text"
+        accessibilityLabel="Important reminder: Progress is not always a consistent incline. Some days are great, and some days can be difficult, but that doesn't mean you're not making progress. With PTSD, your mood may fluctuate based on triggers and daily experiences. Be patient with yourself."
+      >
+        <Ionicons name="information-circle-outline" size={20} color={theme.primary} style={styles.infoIcon} accessible={false} />
+        <Text style={[styles.infoText, { color: theme.textSecondary }]} accessible={false}>
           Progress is not always a consistent incline. Some days are great, and some days can be difficult, but that doesn't mean you're not making progress. With PTSD, your mood may fluctuate based on triggers and daily experiences. Be patient with yourself.
         </Text>
       </View>
