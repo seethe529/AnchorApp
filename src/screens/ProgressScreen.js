@@ -181,6 +181,13 @@ export default function ProgressScreen({ navigation }) {
         Your Progress
       </Text>
       
+      <View style={[styles.infoCard, { backgroundColor: theme.card }]}>
+        <Ionicons name="information-circle-outline" size={20} color={theme.primary} style={styles.infoIcon} />
+        <Text style={[styles.infoText, { color: theme.textSecondary }]}>
+          Progress is not always a consistent incline. Some days are great, and some days can be difficult, but that doesn't mean you're not making progress. With PTSD, your mood may fluctuate based on triggers and daily experiences. Be patient with yourself.
+        </Text>
+      </View>
+      
       <View style={[styles.chartContainer, { backgroundColor: theme.card }]}>
         <Text 
           style={[styles.chartTitle, { color: theme.text }]}
@@ -331,6 +338,9 @@ const styles = StyleSheet.create({
   statRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
   statLabel: { fontSize: 16 },
   statValue: { fontSize: 16, fontWeight: 'bold' },
+  infoCard: { marginHorizontal: 20, marginBottom: 10, padding: 15, borderRadius: 10, flexDirection: 'row', alignItems: 'flex-start' },
+  infoIcon: { marginRight: 10, marginTop: 2 },
+  infoText: { flex: 1, fontSize: 14, lineHeight: 20 },
   effectivenessRow: { marginBottom: 12 },
   effectivenessTechnique: { fontSize: 14, marginBottom: 4, flexWrap: 'wrap' },
   effectivenessBar: { height: 28, borderRadius: 14, position: 'relative', justifyContent: 'center' },
