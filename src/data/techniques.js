@@ -64,7 +64,7 @@ export const dbtCbtTechniques = {
     { 
       name: '5-4-3-2-1 Technique', 
       description: '5 things you see, 4 you hear, 3 you touch, 2 you smell, 1 you taste', 
-      example: 'Example: "I see my phone, a chair, the wall, a lamp, my hands. I hear traffic, a clock ticking, my breathing, birds. I touch my shirt, the couch, my hair. I smell coffee, fresh air. I taste mint from my gum."', 
+      example: 'Example: "I see my phone, a chair, the wall, a lamp, my hands. I hear traffic, a clock ticking, my breathing, birds. I touch my shirt (notice the texture), the couch (feel if it\'s soft or rough), my hair. I smell coffee, fresh air. I taste mint from my gum." Try to actually touch these things and notice different textures, especially something cold, as it can be very grounding. Also helpful: State the current date and time to orient yourself in the present.', 
       keywords: ['panic', 'panicked', 'panicking', 'overwhelmed', 'dissociation', 'flashback', 'triggered', 'unreal', 'detached', 'disconnected', 'grounding', 'present', 'senses', 'anxiety', 'fear', 'scared']
     },
     { 
@@ -106,19 +106,19 @@ export const dbtCbtTechniques = {
     {
       name: 'Safe Place Visualization',
       description: 'Imagine a place where you feel safe, calm, and protected, using all of your senses to make it vivid.',
-      example: 'Picture a quiet beach at sunset, notice the sound of waves, the colors in the sky, and the feeling of warm sand under your feet.',
+      example: 'Picture a quiet beach at sunset. See: the orange and pink colors in the sky, the waves rolling in. Hear: the sound of waves, seagulls calling. Touch: warm sand under your feet, a gentle breeze on your skin. Smell: the briny ocean air, sunscreen. Taste: the salt on your lips, or imagine eating an ice cream cone or boardwalk fries. Use all five senses (sight, sound, touch, smell, taste) to make it as real as possible.',
       keywords: ['safe', 'safety', 'visualization', 'imagery', 'flashback', 'triggered', 'fear', 'panic', 'comfort', 'calm', 'peaceful', 'protected', 'secure']
     },
     {
       name: 'Cold Grounding',
       description: 'Use cold temperature (water, ice, cool object) to quickly shift your body out of high emotional arousal.',
-      example: 'Hold an ice cube or run cool water over your wrists while taking slow breaths.',
+      example: 'Hold an ice cube or run cool water over your wrists while taking slow breaths. You can also hold a piece of ice or cold water bottle over your sternum to help stimulate the vagus nerve.',
       keywords: ['panic', 'panic attack', 'overwhelmed', 'crisis', 'reset', 'cold water', 'ice', 'cooling', 'TIPP', 'intense', 'emergency', 'losing it']
     },
     {
       name: 'Name 3 Things',
       description: 'Quickly orient yourself by naming three things you can see, hear, or feel in your present environment.',
-      example: 'Say to yourself: "I see the lamp, I hear the fan, I feel the chair under me."',
+      example: 'Say to yourself: "I see the lamp, I hear the fan, I feel the chair under me." Also helpful: State the current date and time ("It is Tuesday, January 14th, 2025, 10:30 AM") to ground yourself in the present moment.',
       keywords: ['grounding', 'dissociation', 'disconnected', 'unreal', 'flashback', 'overwhelmed', 'quick', 'fast', 'simple', 'present', 'here', 'now']
     }
   ],
@@ -126,13 +126,13 @@ export const dbtCbtTechniques = {
     { 
       name: 'TIPP', 
       description: 'Temperature, Intense exercise, Paced breathing, Paired muscle relaxation', 
-      example: 'Example: Splash cold water on your face or hold ice cubes. Do 20 jumping jacks. Practice slow breathing. Tense and release your muscles while breathing deeply.', 
+      example: 'Example: Splash cold water on your face or hold ice cubes. Do 20 jumping jacks. Practice slow breathing. Tense and release your muscles while breathing deeply. Note: For some people, intense exercise or extreme temperatures can increase heart rate and trigger fight-or-flight responses. If this happens to you, focus on paced breathing and muscle relaxation instead.', 
       keywords: ['crisis', 'intense', 'emergency', 'overwhelming', 'panic attack', 'losing it', 'can\'t cope', 'desperate', 'urgent', 'severe']
     },
     { 
       name: 'Distract with ACCEPTS', 
       description: 'Activities, Contributing, Comparisons, Emotions, Push away, Thoughts, Sensations', 
-      example: 'Example: Clean your room (Activity), text a friend support (Contributing), remember a harder time you survived (Comparisons), watch a funny video (Emotions), visualize putting worries in a box (Push away).', 
+      example: 'Example: Clean your room (Activity), text a friend support (Contributing), remember a harder time you survived (Comparisons), watch a funny video (Emotions), visualize putting worries in a box with a two-layer lock system (Push away - imagine locking it once, then adding a second lock for extra security), redirect your thoughts (Thoughts), focus on physical sensations like holding ice (Sensations).', 
       keywords: ['urges', 'impulse', 'distraction', 'coping', 'temptation', 'craving', 'avoid', 'redirect']
     },
     { 
@@ -150,7 +150,7 @@ export const dbtCbtTechniques = {
     {
       name: 'Pros and Cons',
       description: 'Write out the pros and cons of acting on an urge versus not acting, to help you pause and make a deliberate choice.',
-      example: 'List the pros and cons of sending an angry message right now versus waiting until you feel calmer.',
+      example: 'List the pros and cons of sending an angry message right now versus waiting until you feel calmer. Important: Wait 24 hours after experiencing intense emotions before making important decisions or reacting.',
       keywords: ['urge', 'impulse', 'decision', 'choice', 'pause', 'crisis', 'regret', 'self-control', 'temptation', 'acting out', 'consequences']
     }
   ],
