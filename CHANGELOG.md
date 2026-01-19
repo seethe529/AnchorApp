@@ -2,7 +2,32 @@
 
 All notable changes to Anchor PTSD Support App will be documented in this file.
 
-## [1.2.6] - Build 82 (Comprehensive Accessibility) - January 2025
+## [1.2.7] - Build 87 (EMDR Therapist Feedback) - January 2025
+
+### Changed - Enhanced Technique Guidance
+- **5-4-3-2-1 Technique**: Added texture awareness, cold items, and date/time grounding
+- **Cold Grounding**: Added sternum placement for vagus nerve stimulation
+- **Name 3 Things**: Added date/time orientation for grounding
+- **TIPP**: Added warning that intense exercise may trigger some users
+- **ACCEPTS (Push Away)**: Added two-layer lock containment visualization
+- **Pros and Cons**: Added 24-hour waiting rule for intense emotions
+- **Safe Place Visualization**: Listed all 5 senses explicitly with examples
+
+### Added - Progress Screen
+- Non-linear progress reminder with info card
+- Reassurance that fluctuating moods don't mean lack of progress
+- Trauma-informed messaging about PTSD recovery patterns
+- Full accessibility support for new content
+
+### Changed - Android Icon
+- Updated adaptive icon with more padding for Google Play Store requirements
+- Heart-anchor design with generous white space to prevent cropping
+
+### Documentation
+- Implemented professional EMDR therapist feedback
+- All changes based on clinical recommendations for PTSD support
+
+## [1.2.6] - Build 86 (Comprehensive Accessibility) - January 2025
 
 ### Fixed - VoiceOver Navigation
 - Fixed critical VoiceOver navigation in BreathingScreen (only visible method accessible)
