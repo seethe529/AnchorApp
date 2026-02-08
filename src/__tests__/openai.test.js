@@ -1,29 +1,44 @@
 import { sendMessageToOpenAI } from '../services/openai';
+import { storage } from '../utils/storage';
 
 global.fetch = jest.fn();
+
+jest.mock('../utils/storage', () => ({
+  storage: {
+    getItem: jest.fn(),
+    setItem: jest.fn()
+  }
+}));
+
+jest.mock('expo-device', () => ({
+  modelName: 'iPhone',
+  osVersion: '17.0'
+}));
 
 describe('OpenAI Service', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    storage.getItem.mockResolvedValue(null);
+    storage.setItem.mockResolvedValue(undefined);
   });
 
-  test('should send message and return response', async () => {
+  test('should send message to Vercel backend', async () => {
     fetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({
-        choices: [{ message: { content: 'AI response' } }]
+        message: 'AI response from Vercel'
       })
     });
 
     const response = await sendMessageToOpenAI('test message', []);
-    expect(response).toBe('AI response');
+    expect(response).toBe('AI response from Vercel');
     expect(fetch).toHaveBeenCalledWith(
-      expect.any(String),
+      'https://anchor-hdhkcdg9l-ryans-projects-1d0e75af.vercel.app/api/chat',
       expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({
           'Content-Type': 'application/json',
-          'Authorization': expect.stringContaining('Bearer')
+          'X-Device-ID': expect.any(String)
         })
       })
     );
@@ -36,22 +51,13 @@ describe('OpenAI Service', () => {
     expect(response).toContain('having trouble');
   });
 
-  test('should include conversation history', async () => {
-    fetch.mockResolvedValueOnce({
-      ok: true,
-      json: async () => ({
-        choices: [{ message: { content: 'AI response' } }]
-      })
-    });
-
-    const history = [
-      { type: 'user', text: 'previous message' },
-      { type: 'ai', text: 'previous response' }
-    ];
-
-    await sendMessageToOpenAI('new message', history);
+  test('should handle rate limiting', async () => {
+    // Send 6 messages quickly to trigger rate limit
+    for (let i = 0; i < 6; i++) {
+      await sendMessageToOpenAI('test', []);
+    }
     
-    const callBody = JSON.parse(fetch.mock.calls[0][1].body);
-    expect(callBody.messages.length).toBeGreaterThan(2);
+    const response = await sendMessageToOpenAI('test', []);
+    expect(response).toContain('sending messages too quickly');
   });
 });

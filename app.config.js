@@ -3,7 +3,7 @@ export default {
     name: "Anchor - PTSD Support",
     slug: "anchor-ptsd-support",
     owner: "ryan-charles-lingo",
-    version: "1.2.7",
+    version: "1.2.8",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",
@@ -15,10 +15,14 @@ export default {
     assetBundlePatterns: [
       "**/*"
     ],
+    packagerOpts: {
+      sourceExts: ["js", "json", "ts", "tsx", "jsx"],
+      assetExts: ["png", "jpg", "jpeg", "gif", "webp", "svg", "ttf", "otf", "woff", "woff2"]
+    },
     ios: {
       supportsTablet: false,
       bundleIdentifier: "com.anchor.ptsd-support",
-      buildNumber: "87",
+      buildNumber: "88",
       config: {
         usesNonExemptEncryption: false
       },
@@ -33,7 +37,7 @@ export default {
         backgroundColor: "#2E8B57"
       },
       package: "com.anchor.ptsdsupport",
-      versionCode: 87,
+      versionCode: 88,
       permissions: [
         "NOTIFICATIONS"
       ]
@@ -42,7 +46,7 @@ export default {
       favicon: "./assets/favicon.png"
     },
     extra: {
-      openaiApiKey: process.env.OPENAI_API_KEY || "",
+
       eas: {
         projectId: "9236cf4b-f063-48b4-9928-ed9f29fe5385"
       }

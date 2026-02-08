@@ -1,1 +1,6 @@
 screenshots/
+api/
+vercel.json
+.vercel/
+VERCEL_DEPLOY.md
+SECURITY_ARCHITECTURE.md
