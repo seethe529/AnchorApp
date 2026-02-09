@@ -102,7 +102,7 @@ export const sendMessageToOpenAI = async (message, conversationHistory = []) => 
   // Daily limit check
   const withinDailyLimit = await checkDailyLimit();
   if (!withinDailyLimit) {
-    return "You've reached today's free message limit (10 messages). This helps keep the service available for everyone. Premium users get unlimited messages. The Tools tab has offline techniques you can use anytime.";
+    return "You've reached today's message limit (10 messages). This helps keep the service available for everyone. The limit resets tomorrow, and the Tools tab has offline techniques you can use anytime.";
   }
   
   requestTimestamps.push(now);
