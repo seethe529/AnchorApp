@@ -19,8 +19,6 @@ dist/
 *.mobileprovision
 *.orig.*
 web-build/
-ios/
-android/
 
 # macOS
 .DS_Store
