@@ -8,25 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		3248D6B6899DD6C1028E2278 /* libPods-AnchorPTSDSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 331D5E47F4A35C89AAA17D2E /* libPods-AnchorPTSDSupport.a */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		722B25E8C0F0FA77B68A1124 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7174746153DC88263259C3 /* ExpoModulesProvider.swift */; };
+		B56FDCD9ACD6744C1A420102 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B6BC8D684873EB3E95B3A46 /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		C2E7C0D2FEA6E9E098A8A7F5 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 6657146A9FD76FEB84E2765C /* PrivacyInfo.xcprivacy */; };
+		F0705B20D152D7A5162A4367 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 8C103ED117D56EC3FA3F5252 /* PrivacyInfo.xcprivacy */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
-		FACB99BBE9F1142FA99ED1A6 /* libPods-AnchorPTSDSupport.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2493B3D0088483CCDB3E601D /* libPods-AnchorPTSDSupport.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		118CC395CB1F31A3D1FE2AE0 /* Pods-AnchorPTSDSupport.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnchorPTSDSupport.debug.xcconfig"; path = "Target Support Files/Pods-AnchorPTSDSupport/Pods-AnchorPTSDSupport.debug.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* AnchorPTSDSupport.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnchorPTSDSupport.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = AnchorPTSDSupport/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = AnchorPTSDSupport/Info.plist; sourceTree = "<group>"; };
-		1F7174746153DC88263259C3 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-AnchorPTSDSupport/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		2493B3D0088483CCDB3E601D /* libPods-AnchorPTSDSupport.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AnchorPTSDSupport.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5EF15777E5D3DBC71D30848B /* Pods-AnchorPTSDSupport.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnchorPTSDSupport.release.xcconfig"; path = "Target Support Files/Pods-AnchorPTSDSupport/Pods-AnchorPTSDSupport.release.xcconfig"; sourceTree = "<group>"; };
-		6657146A9FD76FEB84E2765C /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = AnchorPTSDSupport/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		331D5E47F4A35C89AAA17D2E /* libPods-AnchorPTSDSupport.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AnchorPTSDSupport.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B6BC8D684873EB3E95B3A46 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-AnchorPTSDSupport/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		5FF6AC8D3DFBA1E84802E985 /* Pods-AnchorPTSDSupport.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnchorPTSDSupport.release.xcconfig"; path = "Target Support Files/Pods-AnchorPTSDSupport/Pods-AnchorPTSDSupport.release.xcconfig"; sourceTree = "<group>"; };
+		8C103ED117D56EC3FA3F5252 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = AnchorPTSDSupport/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = AnchorPTSDSupport/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
+		D01E7D0143700EC864640812 /* Pods-AnchorPTSDSupport.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AnchorPTSDSupport.debug.xcconfig"; path = "Target Support Files/Pods-AnchorPTSDSupport/Pods-AnchorPTSDSupport.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = AnchorPTSDSupport/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* AnchorPTSDSupport-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "AnchorPTSDSupport-Bridging-Header.h"; path = "AnchorPTSDSupport/AnchorPTSDSupport-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FACB99BBE9F1142FA99ED1A6 /* libPods-AnchorPTSDSupport.a in Frameworks */,
+				3248D6B6899DD6C1028E2278 /* libPods-AnchorPTSDSupport.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,7 +53,15 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				6657146A9FD76FEB84E2765C /* PrivacyInfo.xcprivacy */,
+				8C103ED117D56EC3FA3F5252 /* PrivacyInfo.xcprivacy */,
+			);
+			name = AnchorPTSDSupport;
+			sourceTree = "<group>";
+		};
+		1C099EFB4FD8A5A9BC2F2E90 /* AnchorPTSDSupport */ = {
+			isa = PBXGroup;
+			children = (
+				4B6BC8D684873EB3E95B3A46 /* ExpoModulesProvider.swift */,
 			);
 			name = AnchorPTSDSupport;
 			sourceTree = "<group>";
@@ -62,24 +70,24 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				2493B3D0088483CCDB3E601D /* libPods-AnchorPTSDSupport.a */,
+				331D5E47F4A35C89AAA17D2E /* libPods-AnchorPTSDSupport.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		32721F50A734B47CB6A7C377 /* ExpoModulesProviders */ = {
+		37A58A292B7A373F962595A7 /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				C99D302CE7EC7CB78014F617 /* AnchorPTSDSupport */,
+				1C099EFB4FD8A5A9BC2F2E90 /* AnchorPTSDSupport */,
 			);
 			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
-		646CBC0564068470F204E156 /* Pods */ = {
+		77B1635A7616146A2FC2A222 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				118CC395CB1F31A3D1FE2AE0 /* Pods-AnchorPTSDSupport.debug.xcconfig */,
-				5EF15777E5D3DBC71D30848B /* Pods-AnchorPTSDSupport.release.xcconfig */,
+				D01E7D0143700EC864640812 /* Pods-AnchorPTSDSupport.debug.xcconfig */,
+				5FF6AC8D3DFBA1E84802E985 /* Pods-AnchorPTSDSupport.release.xcconfig */,
 			);
 			name = Pods;
 			path = Pods;
@@ -99,8 +107,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				646CBC0564068470F204E156 /* Pods */,
-				32721F50A734B47CB6A7C377 /* ExpoModulesProviders */,
+				77B1635A7616146A2FC2A222 /* Pods */,
+				37A58A292B7A373F962595A7 /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -124,14 +132,6 @@
 			path = AnchorPTSDSupport/Supporting;
 			sourceTree = "<group>";
 		};
-		C99D302CE7EC7CB78014F617 /* AnchorPTSDSupport */ = {
-			isa = PBXGroup;
-			children = (
-				1F7174746153DC88263259C3 /* ExpoModulesProvider.swift */,
-			);
-			name = AnchorPTSDSupport;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -140,13 +140,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "AnchorPTSDSupport" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				92004C1497A757E312FF886E /* [Expo] Configure project */,
+				90E4A5E0CB67B07E49180DCB /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				770A9CF1C5B059CBA5488451 /* [CP] Embed Pods Frameworks */,
+				C658A797B0D06F10B686E9EA /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +196,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				C2E7C0D2FEA6E9E098A8A7F5 /* PrivacyInfo.xcprivacy in Resources */,
+				F0705B20D152D7A5162A4367 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,28 +242,6 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		770A9CF1C5B059CBA5488451 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AnchorPTSDSupport/Pods-AnchorPTSDSupport-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/React-Core-prebuilt/React.framework/React",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ReactNativeDependencies/ReactNativeDependencies.framework/ReactNativeDependencies",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativeDependencies.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AnchorPTSDSupport/Pods-AnchorPTSDSupport-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -304,7 +282,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AnchorPTSDSupport/Pods-AnchorPTSDSupport-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		92004C1497A757E312FF886E /* [Expo] Configure project */ = {
+		90E4A5E0CB67B07E49180DCB /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -328,6 +306,28 @@
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-AnchorPTSDSupport/expo-configure-project.sh\"\n";
 		};
+		C658A797B0D06F10B686E9EA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AnchorPTSDSupport/Pods-AnchorPTSDSupport-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/React-Core-prebuilt/React.framework/React",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ReactNativeDependencies/ReactNativeDependencies.framework/ReactNativeDependencies",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativeDependencies.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AnchorPTSDSupport/Pods-AnchorPTSDSupport-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -336,7 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				722B25E8C0F0FA77B68A1124 /* ExpoModulesProvider.swift in Sources */,
+				B56FDCD9ACD6744C1A420102 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,12 +345,12 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 118CC395CB1F31A3D1FE2AE0 /* Pods-AnchorPTSDSupport.debug.xcconfig */;
+			baseConfigurationReference = D01E7D0143700EC864640812 /* Pods-AnchorPTSDSupport.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = AnchorPTSDSupport/AnchorPTSDSupport.entitlements;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -362,7 +362,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.9;
+				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -381,19 +381,19 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5EF15777E5D3DBC71D30848B /* Pods-AnchorPTSDSupport.release.xcconfig */;
+			baseConfigurationReference = 5FF6AC8D3DFBA1E84802E985 /* Pods-AnchorPTSDSupport.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = AnchorPTSDSupport/AnchorPTSDSupport.entitlements;
-				CURRENT_PROJECT_VERSION = 90;
+				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = AnchorPTSDSupport/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.9;
+				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
