@@ -3,7 +3,7 @@ export default {
     name: "Anchor - PTSD Support",
     slug: "anchor-ptsd-support",
     owner: "ryan-charles-lingo",
-    version: "1.2.9",
+    version: "1.2.10",
     orientation: "portrait",
     icon: "./assets/icon.png",
     userInterfaceStyle: "automatic",
@@ -22,7 +22,7 @@ export default {
     ios: {
       supportsTablet: false,
       bundleIdentifier: "com.anchor.ptsd-support",
-      buildNumber: "90",
+      buildNumber: "91",
       config: {
         usesNonExemptEncryption: false
       },
@@ -37,7 +37,7 @@ export default {
         backgroundColor: "#2E8B57"
       },
       package: "com.anchor.ptsdsupport",
-      versionCode: 90,
+      versionCode: 91,
       permissions: [
         "NOTIFICATIONS"
       ]

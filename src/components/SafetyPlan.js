@@ -130,6 +130,22 @@ export default function SafetyPlan() {
     );
   };
 
+  const formatPhoneNumber = (phone) => {
+    // Remove all non-digit characters
+    const digits = phone.replace(/\D/g, '');
+    
+    // Format as XXX-XXX-XXXX
+    if (digits.length === 10) {
+      return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
+    }
+    // Format as X-XXX-XXX-XXXX for 11 digits (with country code)
+    if (digits.length === 11) {
+      return `${digits.slice(0, 1)}-${digits.slice(1, 4)}-${digits.slice(4, 7)}-${digits.slice(7)}`;
+    }
+    // Return as-is if not standard length
+    return phone;
+  };
+
   const addContact = (section) => {
     Alert.prompt(
       'Add Contact',
@@ -154,7 +170,7 @@ export default function SafetyPlan() {
                           [section]: [...prev[section], { 
                             id: Date.now().toString(), 
                             name: name.trim(), 
-                            phone: phone.trim() 
+                            phone: formatPhoneNumber(phone.trim())
                           }]
                         }));
                       }
@@ -247,7 +263,7 @@ export default function SafetyPlan() {
             </Text>
           ) : (
             plan[section.key].map((item) => (
-              <View key={item.id} style={[styles.listItem, { backgroundColor: theme.background }]}>
+              <View key={item.id} style={styles.listItem}>
                 {section.type === 'contact' ? (
                   <>
                     <View style={styles.contactInfo}>
@@ -366,9 +382,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'space-between',
-    padding: 12, 
-    borderRadius: 8, 
-    marginBottom: 8 
+    paddingVertical: 10,
+    paddingHorizontal: 4,
+    marginBottom: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(128, 128, 128, 0.1)'
   },
   listItemText: { flex: 1, fontSize: 16 },
   removeButton: { 
