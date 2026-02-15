@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Linking } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, Linking, Modal, TextInput, Platform, KeyboardAvoidingView } from 'react-native';
 import { useIsFocused } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { secureStorage, STORAGE_KEYS } from '../utils/storage';
@@ -18,6 +18,11 @@ export default function SafetyPlan() {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalType, setModalType] = useState('item');
+  const [modalSection, setModalSection] = useState(null);
+  const [modalValue, setModalValue] = useState('');
+  const [tempContactName, setTempContactName] = useState('');
 
   useEffect(() => {
     if (isFocused) {
@@ -29,7 +34,6 @@ export default function SafetyPlan() {
     try {
       const savedPlan = await secureStorage.getItem(STORAGE_KEYS.SAFETY_PLAN);
       if (savedPlan) {
-        // Migrate old string format to new array format
         const migratedPlan = {
           warningSigns: migrateToArray(savedPlan.warningSigns, 'warningSigns'),
           copingStrategies: migrateToArray(savedPlan.copingStrategies, 'copingStrategies'),
@@ -40,7 +44,6 @@ export default function SafetyPlan() {
         };
         setPlan(migratedPlan);
         
-        // Save migrated format
         if (needsMigration(savedPlan)) {
           await secureStorage.setItem(STORAGE_KEYS.SAFETY_PLAN, migratedPlan);
         }
@@ -53,19 +56,15 @@ export default function SafetyPlan() {
   };
 
   const migrateToArray = (data, sectionKey) => {
-    // Already an array
     if (Array.isArray(data)) {
       return data;
     }
     
-    // Old string format - convert to array
     if (typeof data === 'string' && data.trim()) {
       const lines = data.split('\n').filter(line => line.trim());
       
-      // Contact sections need name/phone parsing
       if (sectionKey === 'socialContacts' || sectionKey === 'professionalContacts') {
         return lines.map((line, index) => {
-          // Try to parse "Name - Phone" or "Name: Phone" format
           const match = line.match(/^(.+?)\s*[-:]\s*(.+)$/);
           if (match) {
             return {
@@ -74,7 +73,6 @@ export default function SafetyPlan() {
               phone: match[2].trim()
             };
           }
-          // Fallback: treat whole line as text item
           return {
             id: `migrated-${Date.now()}-${index}`,
             text: line.trim()
@@ -82,14 +80,12 @@ export default function SafetyPlan() {
         });
       }
       
-      // Regular list items
       return lines.map((line, index) => ({
         id: `migrated-${Date.now()}-${index}`,
         text: line.trim()
       }));
     }
     
-    // Empty or undefined
     return [];
   };
 
@@ -108,83 +104,134 @@ export default function SafetyPlan() {
     }
   };
 
-  const addItem = (section) => {
-    Alert.prompt(
-      'Add Item',
-      `Add a new item to ${sections.find(s => s.key === section)?.title}`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Add',
-          onPress: (text) => {
-            if (text && text.trim()) {
-              setPlan(prev => ({
-                ...prev,
-                [section]: [...prev[section], { id: Date.now().toString(), text: text.trim() }]
-              }));
-            }
-          }
-        }
-      ],
-      'plain-text'
-    );
-  };
-
   const formatPhoneNumber = (phone) => {
-    // Remove all non-digit characters
     const digits = phone.replace(/\D/g, '');
     
-    // Format as XXX-XXX-XXXX
     if (digits.length === 10) {
       return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`;
     }
-    // Format as X-XXX-XXX-XXXX for 11 digits (with country code)
     if (digits.length === 11) {
       return `${digits.slice(0, 1)}-${digits.slice(1, 4)}-${digits.slice(4, 7)}-${digits.slice(7)}`;
     }
-    // Return as-is if not standard length
     return phone;
   };
 
-  const addContact = (section) => {
-    Alert.prompt(
-      'Add Contact',
-      'Enter name',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Next',
-          onPress: (name) => {
-            if (name && name.trim()) {
-              Alert.prompt(
-                'Add Phone Number',
-                'Enter phone number',
-                [
-                  { text: 'Cancel', style: 'cancel' },
-                  {
-                    text: 'Add',
-                    onPress: (phone) => {
-                      if (phone && phone.trim()) {
-                        setPlan(prev => ({
-                          ...prev,
-                          [section]: [...prev[section], { 
-                            id: Date.now().toString(), 
-                            name: name.trim(), 
-                            phone: formatPhoneNumber(phone.trim())
-                          }]
-                        }));
-                      }
-                    }
-                  }
-                ],
-                'plain-text'
-              );
+  const addItem = (section) => {
+    if (Platform.OS === 'ios') {
+      Alert.prompt(
+        'Add Item',
+        `Add a new item to ${sections.find(s => s.key === section)?.title}`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Add',
+            onPress: (text) => {
+              if (text && text.trim()) {
+                setPlan(prev => ({
+                  ...prev,
+                  [section]: [...prev[section], { id: Date.now().toString(), text: text.trim() }]
+                }));
+              }
             }
           }
-        }
-      ],
-      'plain-text'
-    );
+        ],
+        'plain-text'
+      );
+    } else {
+      setModalType('item');
+      setModalSection(section);
+      setModalValue('');
+      setModalVisible(true);
+    }
+  };
+
+  const addContact = (section) => {
+    if (Platform.OS === 'ios') {
+      Alert.prompt(
+        'Add Contact',
+        'Enter name',
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Next',
+            onPress: (name) => {
+              if (name && name.trim()) {
+                Alert.prompt(
+                  'Add Phone Number',
+                  'Enter phone number',
+                  [
+                    { text: 'Cancel', style: 'cancel' },
+                    {
+                      text: 'Add',
+                      onPress: (phone) => {
+                        if (phone && phone.trim()) {
+                          setPlan(prev => ({
+                            ...prev,
+                            [section]: [...prev[section], { 
+                              id: Date.now().toString(), 
+                              name: name.trim(), 
+                              phone: formatPhoneNumber(phone.trim())
+                            }]
+                          }));
+                        }
+                      }
+                    }
+                  ],
+                  'plain-text'
+                );
+              }
+            }
+          }
+        ],
+        'plain-text'
+      );
+    } else {
+      setModalType('contact-name');
+      setModalSection(section);
+      setModalValue('');
+      setTempContactName('');
+      setModalVisible(true);
+    }
+  };
+
+  const handleModalSubmit = () => {
+    if (modalType === 'item') {
+      if (modalValue.trim()) {
+        setPlan(prev => ({
+          ...prev,
+          [modalSection]: [...prev[modalSection], { id: Date.now().toString(), text: modalValue.trim() }]
+        }));
+        setModalVisible(false);
+        setModalValue('');
+      }
+    } else if (modalType === 'contact-name') {
+      if (modalValue.trim()) {
+        setTempContactName(modalValue.trim());
+        setModalType('contact-phone');
+        setModalValue('');
+      }
+    } else if (modalType === 'contact-phone') {
+      if (modalValue.trim()) {
+        setPlan(prev => ({
+          ...prev,
+          [modalSection]: [...prev[modalSection], { 
+            id: Date.now().toString(), 
+            name: tempContactName, 
+            phone: formatPhoneNumber(modalValue.trim())
+          }]
+        }));
+        setModalVisible(false);
+        setModalValue('');
+        setTempContactName('');
+      }
+    }
+  };
+
+  const handleModalCancel = () => {
+    setModalVisible(false);
+    setModalValue('');
+    setTempContactName('');
+    setModalType('item');
   };
 
   const removeItem = (section, id) => {
@@ -224,6 +271,18 @@ export default function SafetyPlan() {
     { key: 'reasonsToLive', title: 'Reasons for Living', icon: 'heart', type: 'list' }
   ];
 
+  const getModalTitle = () => {
+    if (modalType === 'item') return 'Add Item';
+    if (modalType === 'contact-name') return 'Add Contact';
+    return 'Add Phone Number';
+  };
+
+  const getModalPlaceholder = () => {
+    if (modalType === 'item') return 'Enter item';
+    if (modalType === 'contact-name') return 'Enter name';
+    return 'Enter phone number';
+  };
+
   if (isLoading) {
     return (
       <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
@@ -233,138 +292,185 @@ export default function SafetyPlan() {
   }
 
   return (
-    <ScrollView 
-      style={[styles.container, { backgroundColor: theme.background }]}
-      contentContainerStyle={{ paddingBottom: 120 }}
-    >
-      <View style={[styles.header, { backgroundColor: theme.card }]}>
-        <Text style={[styles.title, { color: theme.primary }]}>Personal Safety Plan</Text>
-        <TouchableOpacity
-          style={[styles.editButton, { backgroundColor: theme.primary }]}
-          onPress={() => isEditing ? saveSafetyPlan() : setIsEditing(true)}
-          accessibilityLabel={isEditing ? 'Save safety plan' : 'Edit safety plan'}
-          accessibilityHint={isEditing ? 'Saves your changes to the safety plan' : 'Allows you to edit your safety plan'}
-          accessibilityRole="button"
-        >
-          <Ionicons name={isEditing ? 'checkmark' : 'create'} size={24} color="white" />
-        </TouchableOpacity>
-      </View>
+    <>
+      <ScrollView 
+        style={[styles.container, { backgroundColor: theme.background }]}
+        contentContainerStyle={{ paddingBottom: 120 }}
+      >
+        <View style={[styles.header, { backgroundColor: theme.card }]}>
+          <Text style={[styles.title, { color: theme.primary }]}>Personal Safety Plan</Text>
+          <TouchableOpacity
+            style={[styles.editButton, { backgroundColor: theme.primary }]}
+            onPress={() => isEditing ? saveSafetyPlan() : setIsEditing(true)}
+            accessibilityLabel={isEditing ? 'Save safety plan' : 'Edit safety plan'}
+            accessibilityHint={isEditing ? 'Saves your changes to the safety plan' : 'Allows you to edit your safety plan'}
+            accessibilityRole="button"
+          >
+            <Ionicons name={isEditing ? 'checkmark' : 'create'} size={24} color="white" />
+          </TouchableOpacity>
+        </View>
 
-      {sections.map((section) => (
-        <View key={section.key} style={[styles.section, { backgroundColor: theme.card }]}>
-          <View style={styles.sectionHeader}>
-            <Ionicons name={section.icon} size={24} color={theme.primary} />
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>{section.title}</Text>
-          </View>
-          
-          {plan[section.key].length === 0 ? (
-            <Text style={[styles.emptyText, { color: theme.textTertiary }]}>
-              {isEditing ? 'Tap + to add items' : 'No items added yet'}
-            </Text>
-          ) : (
-            plan[section.key].map((item) => (
-              <View key={item.id} style={styles.listItem}>
-                {section.type === 'contact' ? (
-                  <>
-                    <View style={styles.contactInfo}>
-                      <Text style={[styles.contactName, { color: theme.text }]}>{item.name}</Text>
-                      <Text style={[styles.contactPhone, { color: theme.textSecondary }]}>{item.phone}</Text>
-                    </View>
-                    <View style={styles.contactActions}>
-                      <TouchableOpacity
-                        style={[styles.actionButton, { backgroundColor: theme.primary }]}
-                        onPress={() => callContact(item.phone)}
-                        accessibilityLabel={`Call ${item.name}`}
-                        accessibilityRole="button"
-                      >
-                        <Ionicons name="call" size={18} color="white" />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={[styles.actionButton, { backgroundColor: theme.primary }]}
-                        onPress={() => textContact(item.phone)}
-                        accessibilityLabel={`Text ${item.name}`}
-                        accessibilityRole="button"
-                      >
-                        <Ionicons name="chatbubble" size={18} color="white" />
-                      </TouchableOpacity>
-                      {isEditing && (
+        {sections.map((section) => (
+          <View key={section.key} style={[styles.section, { backgroundColor: theme.card }]}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name={section.icon} size={24} color={theme.primary} />
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{section.title}</Text>
+            </View>
+            
+            {plan[section.key].length === 0 ? (
+              <Text style={[styles.emptyText, { color: theme.textTertiary }]}>
+                {isEditing ? 'Tap + to add items' : 'No items added yet'}
+              </Text>
+            ) : (
+              plan[section.key].map((item) => (
+                <View key={item.id} style={styles.listItem}>
+                  {section.type === 'contact' ? (
+                    <>
+                      <View style={styles.contactInfo}>
+                        <Text style={[styles.contactName, { color: theme.text }]}>{item.name}</Text>
+                        <Text style={[styles.contactPhone, { color: theme.textSecondary }]}>{item.phone}</Text>
+                      </View>
+                      <View style={styles.contactActions}>
                         <TouchableOpacity
-                          style={[styles.actionButton, { backgroundColor: '#e74c3c' }]}
-                          onPress={() => removeItem(section.key, item.id)}
-                          accessibilityLabel={`Remove ${item.name}`}
+                          style={[styles.actionButton, { backgroundColor: theme.primary }]}
+                          onPress={() => callContact(item.phone)}
+                          accessibilityLabel={`Call ${item.name}`}
                           accessibilityRole="button"
                         >
-                          <Ionicons name="trash" size={18} color="white" />
+                          <Ionicons name="call" size={18} color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[styles.actionButton, { backgroundColor: theme.primary }]}
+                          onPress={() => textContact(item.phone)}
+                          accessibilityLabel={`Text ${item.name}`}
+                          accessibilityRole="button"
+                        >
+                          <Ionicons name="chatbubble" size={18} color="white" />
+                        </TouchableOpacity>
+                        {isEditing && (
+                          <TouchableOpacity
+                            style={[styles.actionButton, { backgroundColor: '#e74c3c' }]}
+                            onPress={() => removeItem(section.key, item.id)}
+                            accessibilityLabel={`Remove ${item.name}`}
+                            accessibilityRole="button"
+                          >
+                            <Ionicons name="trash" size={18} color="white" />
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    </>
+                  ) : (
+                    <>
+                      <Text style={[styles.listItemText, { color: theme.text }]}>{item.text}</Text>
+                      {isEditing && (
+                        <TouchableOpacity
+                          style={[styles.removeButton, { backgroundColor: '#e74c3c' }]}
+                          onPress={() => removeItem(section.key, item.id)}
+                          accessibilityLabel="Remove item"
+                          accessibilityRole="button"
+                        >
+                          <Ionicons name="close" size={18} color="white" />
                         </TouchableOpacity>
                       )}
-                    </View>
-                  </>
-                ) : (
-                  <>
-                    <Text style={[styles.listItemText, { color: theme.text }]}>{item.text}</Text>
-                    {isEditing && (
-                      <TouchableOpacity
-                        style={[styles.removeButton, { backgroundColor: '#e74c3c' }]}
-                        onPress={() => removeItem(section.key, item.id)}
-                        accessibilityLabel="Remove item"
-                        accessibilityRole="button"
-                      >
-                        <Ionicons name="close" size={18} color="white" />
-                      </TouchableOpacity>
-                    )}
-                  </>
-                )}
-              </View>
-            ))
-          )}
+                    </>
+                  )}
+                </View>
+              ))
+            )}
 
-          {isEditing && (
-            <TouchableOpacity
-              style={[styles.addButton, { borderColor: theme.primary }]}
-              onPress={() => section.type === 'contact' ? addContact(section.key) : addItem(section.key)}
-              accessibilityLabel={`Add ${section.type === 'contact' ? 'contact' : 'item'}`}
-              accessibilityRole="button"
-            >
-              <Ionicons name="add" size={24} color={theme.primary} />
-              <Text style={[styles.addButtonText, { color: theme.primary }]}>
-                Add {section.type === 'contact' ? 'Contact' : 'Item'}
-              </Text>
-            </TouchableOpacity>
-          )}
+            {isEditing && (
+              <TouchableOpacity
+                style={[styles.addButton, { borderColor: theme.primary }]}
+                onPress={() => section.type === 'contact' ? addContact(section.key) : addItem(section.key)}
+                accessibilityLabel={`Add ${section.type === 'contact' ? 'contact' : 'item'}`}
+                accessibilityRole="button"
+              >
+                <Ionicons name="add" size={24} color={theme.primary} />
+                <Text style={[styles.addButtonText, { color: theme.primary }]}>
+                  Add {section.type === 'contact' ? 'Contact' : 'Item'}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ))}
+
+        <View style={[styles.emergencySection, { backgroundColor: 'rgba(46, 139, 87, 0.15)' }]}>
+          <Text style={[styles.emergencyTitle, { color: theme.primary }]}>Emergency Contacts</Text>
+          <TouchableOpacity 
+            style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
+            onPress={() => Linking.openURL('tel:988')}
+            accessibilityLabel="National Suicide Prevention Lifeline, 988"
+            accessibilityHint="Call for immediate crisis support"
+            accessibilityRole="button"
+          >
+            <Text style={styles.emergencyText}>National Suicide Prevention Lifeline: 988</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
+            onPress={() => Linking.openURL('sms:741741&body=HOME')}
+            accessibilityLabel="Crisis Text Line, Text HOME to 741741"
+            accessibilityHint="Send a text message for crisis support"
+            accessibilityRole="button"
+          >
+            <Text style={styles.emergencyText}>Crisis Text Line: Text HOME to 741741</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
+            onPress={() => Linking.openURL('tel:18002738255')}
+            accessibilityLabel="Veterans Crisis Line, 1-800-273-8255"
+            accessibilityHint="Call for veteran-specific crisis support"
+            accessibilityRole="button"
+          >
+            <Text style={styles.emergencyText}>Veterans Crisis Line: 1-800-273-8255</Text>
+          </TouchableOpacity>
         </View>
-      ))}
+      </ScrollView>
 
-      <View style={[styles.emergencySection, { backgroundColor: 'rgba(46, 139, 87, 0.15)' }]}>
-        <Text style={[styles.emergencyTitle, { color: theme.primary }]}>Emergency Contacts</Text>
-        <TouchableOpacity 
-          style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
-          onPress={() => Linking.openURL('tel:988')}
-          accessibilityLabel="National Suicide Prevention Lifeline, 988"
-          accessibilityHint="Call for immediate crisis support"
-          accessibilityRole="button"
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={handleModalCancel}
+      >
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalOverlay}
         >
-          <Text style={styles.emergencyText}>National Suicide Prevention Lifeline: 988</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
-          onPress={() => Linking.openURL('sms:741741&body=HOME')}
-          accessibilityLabel="Crisis Text Line, Text HOME to 741741"
-          accessibilityHint="Send a text message for crisis support"
-          accessibilityRole="button"
-        >
-          <Text style={styles.emergencyText}>Crisis Text Line: Text HOME to 741741</Text>
-        </TouchableOpacity>
-        <TouchableOpacity 
-          style={[styles.emergencyButton, { backgroundColor: theme.primary }]}
-          onPress={() => Linking.openURL('tel:18002738255')}
-          accessibilityLabel="Veterans Crisis Line, 1-800-273-8255"
-          accessibilityHint="Call for veteran-specific crisis support"
-          accessibilityRole="button"
-        >
-          <Text style={styles.emergencyText}>Veterans Crisis Line: 1-800-273-8255</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+          <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
+            <Text style={[styles.modalTitle, { color: theme.text }]}>{getModalTitle()}</Text>
+            <TextInput
+              style={[styles.modalInput, { 
+                backgroundColor: theme.background, 
+                color: theme.text,
+                borderColor: theme.primary 
+              }]}
+              placeholder={getModalPlaceholder()}
+              placeholderTextColor={theme.textTertiary}
+              value={modalValue}
+              onChangeText={setModalValue}
+              autoFocus={true}
+              keyboardType={modalType === 'contact-phone' ? 'phone-pad' : 'default'}
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, { backgroundColor: theme.textSecondary }]}
+                onPress={handleModalCancel}
+              >
+                <Text style={styles.modalButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, { backgroundColor: theme.primary }]}
+                onPress={handleModalSubmit}
+              >
+                <Text style={styles.modalButtonText}>
+                  {modalType === 'contact-name' ? 'Next' : 'Add'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </Modal>
+    </>
   );
 }
 
@@ -419,5 +525,50 @@ const styles = StyleSheet.create({
   emergencySection: { margin: 10, padding: 15, borderRadius: 10 },
   emergencyTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
   emergencyButton: { padding: 12, borderRadius: 8, marginBottom: 8 },
-  emergencyText: { color: 'white', fontSize: 16, textAlign: 'center' }
+  emergencyText: { color: 'white', fontSize: 16, textAlign: 'center' },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  modalContent: {
+    width: '85%',
+    padding: 20,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center'
+  },
+  modalInput: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    marginBottom: 20
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12
+  },
+  modalButton: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center'
+  },
+  modalButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600'
+  }
 });
