@@ -100,6 +100,7 @@ npm run android # for Android
 - `src/components/OnboardingTour.js` - 5-slide welcome tour with accessibility
 - `src/components/MoodTracker.js` - Quick 5-point mood logging
 - `src/components/DetailedMoodLog.js` - Enhanced emotion tracking with intensity and notes
+- `src/components/SafetyPlan.js` - Interactive safety plan with contact management
 
 ### Context & Utils
 - `src/context/ThemeContext.js` - Global dark/light theme with design tokens
@@ -107,7 +108,28 @@ npm run android # for Android
 - `src/utils/storage.js` - AsyncStorage wrapper with error handling
 - `src/services/openai.js` - OpenAI API integration
 
-## Recent Updates (Build 82 - Accessibility)
+## Recent Updates (Build 92 - Interactive Safety Plan)
+
+### Build 90-92 (v1.2.9-1.2.11) - Interactive Safety Plan ✅ COMPLETE
+- ✅ Converted Safety Plan from text fields to interactive list-based UI
+- ✅ Tap-to-call and tap-to-text buttons for emergency contacts
+- ✅ Automatic phone number formatting (XXX-XXX-XXXX)
+- ✅ Add/remove functionality for all sections
+- ✅ Simplified visual design with divider lines (trauma-informed, less overwhelming)
+- ✅ Automatic data migration from old string format to new array format
+- ✅ Cross-platform modal support (iOS: Alert.prompt, Android: custom modal)
+- ✅ Full accessibility support with VoiceOver/TalkBack
+- ✅ No new permissions required (uses standard tel:// and sms:// URL schemes)
+- ✅ 18 comprehensive unit tests covering all functionality
+
+### Build 88-89 (v1.2.7-1.2.8) - Secure AI Backend ✅ COMPLETE
+- ✅ Vercel serverless backend proxy to protect OpenAI API key
+- ✅ Client-side and server-side rate limiting (5 req/min, 10 msg/day per device)
+- ✅ Device fingerprinting via expo-device for rate limit enforcement
+- ✅ Compassionate error messages for rate limits
+- ✅ Phone number validation for crisis resources
+- ✅ Removed API key from client-side code
+- ✅ Cost control: ~$10-18/month for 100 users
 
 ### Build 82 (v1.2.6) - Comprehensive Accessibility Improvements ✅ COMPLETE
 - ✅ Fixed critical VoiceOver navigation in BreathingScreen (only visible method accessible)
