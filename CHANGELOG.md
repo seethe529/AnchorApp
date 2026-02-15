@@ -2,6 +2,53 @@
 
 All notable changes to Anchor PTSD Support App will be documented in this file.
 
+## [1.2.11] - Build 90-92 (Interactive Safety Plan) - February 2025
+
+### Added - Interactive Safety Plan
+- Converted Safety Plan from text fields to interactive list-based UI
+- Tap-to-call and tap-to-text buttons for emergency contacts
+- Automatic phone number formatting (XXX-XXX-XXXX for 10 digits, X-XXX-XXX-XXXX for 11 digits)
+- Add/remove functionality for all sections (Warning Signs, Coping Strategies, Social Support, Professional Contacts, Environment Safety, Reasons for Living)
+- Cross-platform modal support (iOS: Alert.prompt, Android: custom modal with TextInput)
+- Automatic data migration from old string format to new array format
+- Smart contact parsing for "Name - Phone" format during migration
+
+### Changed - Trauma-Informed Design
+- Simplified visual design with subtle divider lines instead of individual card boxes
+- Less visually overwhelming for users in crisis
+- Reduced padding and spacing for cleaner appearance
+- Maintains full accessibility support with VoiceOver/TalkBack
+
+### Fixed
+- Phone number consistency across all contact entries
+- Android compatibility (Alert.prompt doesn't exist on Android)
+- Data preservation during migration from old Safety Plan format
+
+### Technical
+- No new permissions required (uses standard tel:// and sms:// URL schemes)
+- 18 comprehensive unit tests covering functionality and migration
+- Platform-specific implementation (Platform.OS checks)
+
+## [1.2.8] - Build 88-89 (Secure AI Backend) - February 2025
+
+### Added - Secure Backend Infrastructure
+- Vercel serverless backend proxy to protect OpenAI API key
+- Client-side rate limiting (5 requests/minute, 10 messages/day per device)
+- Server-side rate limiting with device fingerprinting via expo-device
+- Compassionate error messages for rate limit scenarios
+- Phone number validation for crisis resources
+- Cost control: ~$10-18/month for 100 users
+
+### Security
+- Removed OpenAI API key from client-side code
+- API key now stored securely in Vercel environment variables
+- Device-based rate limiting prevents abuse
+- No user authentication required (privacy-focused)
+
+### Changed
+- AI Agent now calls Vercel backend instead of OpenAI directly
+- Max tokens increased to 800 for complete responses
+
 ## [1.2.7] - Build 87 (EMDR Therapist Feedback) - January 2025
 
 ### Changed - Enhanced Technique Guidance
