@@ -1,6 +1,6 @@
 {
   "name": "anchor-ptsd-app",
-  "version": "1.2.10",
+  "version": "1.2.11",
   "main": "expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
