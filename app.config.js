@@ -37,7 +37,7 @@ export default {
         backgroundColor: "#2E8B57"
       },
       package: "com.anchor.ptsdsupport",
-      versionCode: 92,
+      versionCode: 93,
       permissions: [
         "NOTIFICATIONS"
       ]

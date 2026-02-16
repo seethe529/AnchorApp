@@ -277,6 +277,12 @@ export default function SafetyPlan() {
     return 'Add Phone Number';
   };
 
+  const getModalSubtitle = () => {
+    if (!modalSection) return '';
+    const section = sections.find(s => s.key === modalSection);
+    return section ? section.title : '';
+  };
+
   const getModalPlaceholder = () => {
     if (modalType === 'item') return 'Enter item';
     if (modalType === 'contact-name') return 'Enter name';
@@ -438,6 +444,9 @@ export default function SafetyPlan() {
         >
           <View style={[styles.modalContent, { backgroundColor: theme.card }]}>
             <Text style={[styles.modalTitle, { color: theme.text }]}>{getModalTitle()}</Text>
+            {getModalSubtitle() && (
+              <Text style={[styles.modalSubtitle, { color: theme.textSecondary }]}>{getModalSubtitle()}</Text>
+            )}
             <TextInput
               style={[styles.modalInput, { 
                 backgroundColor: theme.background, 
@@ -545,6 +554,11 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
+    marginBottom: 5,
+    textAlign: 'center'
+  },
+  modalSubtitle: {
+    fontSize: 14,
     marginBottom: 15,
     textAlign: 'center'
   },
