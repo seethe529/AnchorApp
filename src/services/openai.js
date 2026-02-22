@@ -111,7 +111,7 @@ export const sendMessageToOpenAI = async (message, conversationHistory = []) => 
     const deviceId = await getDeviceId();
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT },
-      ...conversationHistory.slice(-6).map(msg => ({
+      ...conversationHistory.slice(-16).map(msg => ({
         role: msg.type === 'user' ? 'user' : 'assistant',
         content: msg.text
       })),
