@@ -102,8 +102,57 @@ const BREATHING_REMINDER_MESSAGES = [
   "Breathe in calm, breathe out tension.",
   "With each breath, return to this moment.",
   "Let the next breath be simple and easy.",
-  "Take one breath without trying to change anything."
+  "Take one breath without trying to change anything.",
+  "Your breath is always available — use it now.",
+  "Let your inhale fill you with steadiness.",
+  "Breathe and notice: you are here, you are present.",
+  "One mindful breath can interrupt anxiety's momentum.",
+  "Let your exhale release what you're holding onto.",
+  "Breathe into your belly — let it rise and fall naturally.",
+  "Your breath is a tool you carry everywhere.",
+  "Let this breath be an anchor in uncertainty.",
+  "Soften your chest and breathe without effort.",
+  "Notice the pause between breaths — rest there.",
+  "Let your breath remind you: this too shall pass.",
+  "Breathe slowly and feel your heartbeat calm.",
+  "One gentle breath can shift your entire nervous system.",
+  "Let your breath be a refuge when thoughts feel overwhelming.",
+  "Inhale peace, exhale worry.",
+  "Your breath connects you to the present moment.",
+  "Let each exhale soften your grip on tension.",
+  "Breathe and give yourself permission to just be.",
+  "Notice how your breath moves through your body.",
+  "Let your breathing be effortless and natural.",
+  "One slow breath can create space between you and your thoughts.",
+  "Your breath is a bridge back to calm.",
+  "Let your inhale be deep, your exhale be long.",
+  "Breathe and remind yourself: I am safe in this moment.",
+  "Let your breath ground you like roots in the earth.",
+  "Notice the coolness of air as you inhale.",
+  "Your breath can help you ride out difficult emotions.",
+  "Let each breath be a small act of self-care.",
+  "Breathe and feel your feet on the ground.",
+  "One conscious breath brings you back to now.",
+  "Let your breath soften the edges of stress.",
+  "Inhale courage, exhale fear.",
+  "Your breath is a constant companion in healing.",
+  "Let your breathing slow down racing thoughts.",
+  "Notice how your body relaxes with each exhale.",
+  "Breathe and trust that you can handle this moment.",
+  "Let your breath create a pause in the chaos.",
+  "One deep breath can shift your perspective.",
+  "Your breath reminds you that you're alive and okay.",
+  "Let each inhale bring fresh energy, each exhale release fatigue.",
+  "Breathe and notice: you are stronger than you think.",
+  "Let your breath be gentle with you today.",
+  "One mindful breath is an act of radical self-compassion.",
+  "Your breath can help you tolerate distress.",
+  "Let your breathing be your safe place right now.",
+  "Breathe and know: this feeling is temporary.",
+  "Let each breath remind you of your resilience.",
+  "Your breath is always working to support you."
 ];
+
 
 /*************************************************
  * CONFIGURATION
@@ -255,6 +304,18 @@ export const cancelMoodReminder = async () => {
 };
 
 /*************************************************
+ * SHUFFLE ALGORITHM FOR MESSAGE VARIETY
+ *************************************************/
+export const shuffleMessages = (messages) => {
+  const shuffled = [...messages];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
+/*************************************************
  * BREATHING REMINDER — HOURLY
  *************************************************/
 export const scheduleBreathingReminder = async (intervalMinutes = 90) => {
@@ -277,6 +338,10 @@ export const scheduleBreathingReminder = async (intervalMinutes = 90) => {
     
     console.log(`📊 [NOTIF] Platform: ${Platform.OS}, Interval: ${intervalMinutes}min, Per day: ${notificationsPerDay}, Coverage: ${coverageDays} days, Total: ${breathingCount}`);
 
+    // Shuffle messages for maximum variety - no repeats until all 150 are seen
+    const shuffledMessages = shuffleMessages(BREATHING_REMINDER_MESSAGES);
+    console.log(`🔀 [NOTIF] Shuffled ${shuffledMessages.length} unique messages for variety`);
+
     const now = Date.now();
     let scheduled = 0;
     
@@ -291,14 +356,14 @@ export const scheduleBreathingReminder = async (intervalMinutes = 90) => {
         continue;
       }
       
-      const randomMessage = BREATHING_REMINDER_MESSAGES[
-        Math.floor(Math.random() * BREATHING_REMINDER_MESSAGES.length)
-      ];
+      // Use shuffled messages in order, cycling through if needed
+      const messageIndex = (i - 1) % shuffledMessages.length;
+      const message = shuffledMessages[messageIndex];
       
       const id = await Notifications.scheduleNotificationAsync({
         content: {
           title: "Breathing Break",
-          body: randomMessage,
+          body: message,
           data: { type: 'breathing_reminder' },
           sound: 'default',
           priority: Notifications.AndroidNotificationPriority.HIGH,
@@ -311,11 +376,12 @@ export const scheduleBreathingReminder = async (intervalMinutes = 90) => {
       
       if (scheduled === 1) {
         console.log(`📋 [NOTIF] First breathing reminder at: ${triggerDate.toLocaleString()}`);
-        console.log(`💬 [NOTIF] Sample message: "${randomMessage}"`);
+        console.log(`💬 [NOTIF] Sample message: "${message}"`);
       }
     }
 
     console.log(`✅ [NOTIF] ${breathingCount} breathing reminders scheduled (every ${intervalMinutes} minutes, ${coverageDays} days coverage)`);
+    console.log(`🎲 [NOTIF] Using shuffled sequence - all ${shuffledMessages.length} messages will appear before any repeat`);
   } catch (e) {
     console.error('❌ [NOTIF] Breathing reminder schedule fail:', e);
   }
