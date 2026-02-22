@@ -62,9 +62,9 @@ describe('Notification System', () => {
       Notifications.scheduleNotificationAsync.mockResolvedValue('notification-id');
     });
 
-    it('should schedule 2 mood reminders for iOS', async () => {
+    it('should schedule 7 mood reminders for iOS', async () => {
       await scheduleMoodReminder();
-      expect(Notifications.scheduleNotificationAsync).toHaveBeenCalledTimes(2);
+      expect(Notifications.scheduleNotificationAsync).toHaveBeenCalledTimes(7);
     });
 
     it('should cancel existing mood reminders before scheduling', async () => {
@@ -129,9 +129,9 @@ describe('Notification System', () => {
       Notifications.scheduleNotificationAsync.mockResolvedValue('notification-id');
     });
 
-    it('should schedule 16 breathing reminders for iOS', async () => {
+    it('should schedule 48 breathing reminders for iOS', async () => {
       await scheduleBreathingReminder();
-      expect(Notifications.scheduleNotificationAsync).toHaveBeenCalledTimes(16);
+      expect(Notifications.scheduleNotificationAsync).toHaveBeenCalledTimes(48);
     });
 
     it('should cancel existing breathing reminders before scheduling', async () => {
@@ -170,11 +170,6 @@ describe('Notification System', () => {
         const actualTime = triggerDate.getTime();
         
         expect(actualTime).toBe(expectedTime);
-        
-        // Log for debugging
-        if (i < 3) {
-          console.log(`Notification ${i + 1}: Expected ${expectedTime}, Got ${actualTime}, Diff: ${actualTime - expectedTime}ms`);
-        }
       }
       
       // Verify intervals between consecutive notifications
@@ -189,11 +184,16 @@ describe('Notification System', () => {
       Date.now.mockRestore();
     });
 
-    it('should use randomized messages from message pool', async () => {
+    it('should use shuffled messages in sequential order (no random repeats)', async () => {
       await scheduleBreathingReminder();
       const calls = Notifications.scheduleNotificationAsync.mock.calls;
       const messages = calls.map(call => call[0].content.body);
-      expect(messages.length).toBe(16);
+      
+      // All 48 messages should be unique (no repeats before cycling)
+      const uniqueMessages = new Set(messages);
+      expect(uniqueMessages.size).toBe(48);
+      
+      // All messages should be strings
       messages.forEach(msg => {
         expect(typeof msg).toBe('string');
         expect(msg.length).toBeGreaterThan(0);
@@ -264,7 +264,7 @@ describe('Notification System', () => {
 
   describe('scheduleBreathingReminder - Platform Configuration', () => {
     it('should use platform-specific BREATHING_COUNT constant', () => {
-      // iOS: 16 notifications, Android: 112 notifications
+      // iOS: 48 notifications, Android: 112 notifications
       // This is tested indirectly through the iOS tests above
       // Platform.OS is evaluated at module load time, so we test the iOS path
       expect(true).toBe(true);
@@ -373,8 +373,7 @@ describe('Notification System', () => {
       expect(result.summary.breathingReminders).toBe(1);
       expect(result.rescheduleSystem.platform).toBe('ios');
       expect(result.rescheduleSystem.ios.method).toBe('setInterval timer');
-      expect(result.rescheduleSystem.ios.breathingCount).toBe(16);
-      expect(result.rescheduleSystem.ios.moodDays).toBe(2);
+      expect(result.rescheduleSystem.ios.coverageDays).toBe(3);
     });
 
     it('should export notification summary for Android', async () => {
@@ -386,8 +385,7 @@ describe('Notification System', () => {
       
       expect(result.rescheduleSystem.platform).toBe('android');
       expect(result.rescheduleSystem.android.method).toBe('AppState listener');
-      expect(result.rescheduleSystem.android.breathingCount).toBe(112);
-      expect(result.rescheduleSystem.android.moodDays).toBe(7);
+      expect(result.rescheduleSystem.android.coverageDays).toBe(7);
     });
 
     it('should include last reset date information', async () => {
@@ -450,7 +448,7 @@ describe('Notification System', () => {
     it('should use correct BREATHING_COUNT for iOS', () => {
       Platform.OS = 'ios';
       // This is tested indirectly through scheduleBreathingReminder
-      // iOS should schedule 16 breathing reminders
+      // iOS should schedule 48 breathing reminders
     });
 
     it('should use correct BREATHING_COUNT for Android', () => {
