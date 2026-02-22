@@ -79,7 +79,7 @@ npm run android # for Android
 ### Data Layer
 - `src/data/techniques.js` - 28 DBT/CBT techniques with enhanced suggestion algorithm
 - `src/data/citations.js` - Medical citations from authoritative sources
-- `src/data/dailyReminders.js` - 150+ trauma-informed daily reminders
+- `src/data/dailyReminders.js` - 180 trauma-informed daily reminders (CBT/DBT focused)
 - `src/data/breathingMethods.js` - 5 breathing exercise patterns
 - `src/data/emotionModel.js` - Emotion categories for detailed mood logging
 
@@ -104,11 +104,22 @@ npm run android # for Android
 
 ### Context & Utils
 - `src/context/ThemeContext.js` - Global dark/light theme with design tokens
-- `src/utils/notifications.js` - Notification scheduling and management
+- `src/utils/notifications.js` - Notification scheduling with shuffle algorithm (150 breathing messages)
 - `src/utils/storage.js` - AsyncStorage wrapper with error handling
-- `src/services/openai.js` - OpenAI API integration
+- `src/services/openai.js` - OpenAI API integration with 16-message context window
 
-## Recent Updates (Build 92 - Interactive Safety Plan)
+## Recent Updates (Build 94 - Message Variety & Context Improvements)
+
+### Build 94 (v1.2.12) - Message Variety & Context Improvements ✅ COMPLETE
+- ✅ Fisher-Yates shuffle algorithm for breathing reminders (no repeats until all 150 seen)
+- ✅ 52 new breathing reminder messages (98 → 150 total)
+- ✅ 30 new CBT/DBT daily reminders (150 → 180 total)
+- ✅ AI context window increased from 6 to 16 messages (better conversation continuity)
+- ✅ iOS: 48 unique breathing messages over 3 days
+- ✅ Android: All 150 unique messages over 7 days
+- ✅ 24 unit tests for shuffle algorithm (all passing)
+- ✅ 4 unit tests for context window (all passing)
+- ✅ No change to 10 messages/day limit
 
 ### Build 90-92 (v1.2.9-1.2.11) - Interactive Safety Plan ✅ COMPLETE
 - ✅ Converted Safety Plan from text fields to interactive list-based UI

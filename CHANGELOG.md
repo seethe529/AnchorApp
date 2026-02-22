@@ -2,6 +2,46 @@
 
 All notable changes to Anchor PTSD Support App will be documented in this file.
 
+## [1.2.12] - Build 94 (Message Variety & Context Improvements) - February 2025
+
+### Added - Shuffle Algorithm for Maximum Variety
+- Implemented Fisher-Yates shuffle algorithm for breathing reminder messages
+- All 150 breathing messages now seen before any repeat (eliminates random duplicates)
+- iOS (48 notifications): 48 unique messages over 3 days
+- Android (112 notifications): All 150 unique messages over 7 days, then cycles
+- Exported shuffleMessages() function for testing
+- 24 comprehensive unit tests for shuffle algorithm (all passing)
+
+### Added - Expanded Message Library
+- 52 new breathing reminder messages (98 → 150 total)
+- 30 new CBT/DBT-focused daily reminders (150 → 180 total)
+- New reminders include:
+  - DBT skills: TIPP, ACCEPTS, DEAR MAN, GIVE, PLEASE, Opposite Action, Radical Acceptance
+  - CBT techniques: Thought records, behavioral activation, exposure therapy, checking facts
+  - Mindfulness practices: Observe, describe, participate, wise mind
+  - Grounding and self-soothing techniques
+- All messages trauma-informed and PTSD-safe
+
+### Changed - AI Context Window
+- Increased AI conversation context from 6 to 16 messages (3 → 8 exchanges)
+- Better conversation continuity within 10 daily message limit
+- AI now remembers almost entire conversation for more coherent support
+- No change to 10 messages/day limit or rate limiting
+- 4 new unit tests verifying context window behavior
+
+### Technical
+- Sequential shuffled message selection replaces random selection
+- Modulo operator for cycling through shuffled messages
+- Client-side only change (no Vercel backend updates needed)
+- All 28 new tests passing (24 shuffle + 4 context window)
+
+### Benefits
+- Users experience maximum variety in notifications
+- No repetition fatigue from seeing same messages
+- More engaging and supportive notification experience
+- Longer, more meaningful AI conversations
+- Better utilization of daily message allowance
+
 ## [1.2.11] - Build 90-92 (Interactive Safety Plan) - February 2025
 
 ### Added - Interactive Safety Plan
