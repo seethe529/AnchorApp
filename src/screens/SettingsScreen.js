@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform, Linking, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Print from 'expo-print';
+import { File, Paths } from 'expo-file-system/next';
 import * as Sharing from 'expo-sharing';
 import WheelPicker from '../components/WheelPicker';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
@@ -475,11 +476,17 @@ export default function SettingsScreen({ navigation }) {
         link.click();
         Alert.alert('Success', 'Report exported successfully');
       } else {
-        // Mobile: Generate PDF and share
+        // Mobile: Generate PDF and share with a readable filename
         const { uri } = await Print.printToFileAsync({ html });
+        
+        // Rename to a friendly filename
+        const friendlyName = `Anchor Progress Report ${new Date().toISOString().split('T')[0]}.pdf`;
+        const destination = new File(Paths.cache, friendlyName);
+        const source = new File(uri);
+        source.move(destination);
 
         if (await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(uri, {
+          await Sharing.shareAsync(destination.uri, {
             mimeType: 'application/pdf',
             dialogTitle: 'Share Your Progress Report',
             UTI: 'com.adobe.pdf',
