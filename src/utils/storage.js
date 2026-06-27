@@ -89,5 +89,6 @@ export const STORAGE_KEYS = {
   USER_PREFERENCES: 'user_preferences',
   PROGRESS_DATA: 'progress_data',
   MEDICATION_REMINDERS: 'medication_reminders',
-  BREATHING_SESSIONS: 'breathing_sessions'
+  BREATHING_SESSIONS: 'breathing_sessions',
+  AI_MESSAGE_COUNT: 'ai_message_count'
 };

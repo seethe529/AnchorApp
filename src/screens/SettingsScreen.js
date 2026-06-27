@@ -216,7 +216,7 @@ export default function SettingsScreen({ navigation }) {
       const moodLogs = await storage.getItem(STORAGE_KEYS.MOOD_LOGS) || [];
       const techniqueUsage = await storage.getItem(STORAGE_KEYS.TECHNIQUE_USAGE) || [];
       const userPreferences = await storage.getItem(STORAGE_KEYS.USER_PREFERENCES) || {};
-      const conversationHistory = await storage.getItem('conversation_history') || [];
+      const aiMessageCount = await storage.getItem(STORAGE_KEYS.AI_MESSAGE_COUNT) || 0;
 
       // Filter by date range if specified
       const cutoffDate = daysBack ? new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000) : null;
@@ -412,8 +412,8 @@ export default function SettingsScreen({ navigation }) {
                     <div class="value">${averageMood}/5</div>
                   </div>
                   <div class="summary-item">
-                    <div class="label">AI Conversations</div>
-                    <div class="value">${conversationHistory.length}</div>
+                    <div class="label">AI Messages (all time)</div>
+                    <div class="value">${aiMessageCount}</div>
                   </div>
                 </div>
               `}
