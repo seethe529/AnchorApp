@@ -144,6 +144,21 @@ grep "CFBundleVersion" ios/AnchorPTSDSupport/Info.plist
 eas build --platform ios --profile production
 ```
 
+## Quick Build Command (Run Every Time)
+
+Before triggering an EAS build, **always** run this sequence:
+
+```bash
+rm -rf .expo node_modules/.cache
+npx expo prebuild --clean --platform ios
+git add ios/ && git commit -m "fix: regenerate ios/ with correct build number" && git push
+eas build --platform ios --profile production
+```
+
+This ensures the native `Info.plist` matches your `app.config.js` version and prevents wasted build credits.
+
+---
+
 ## Quick Checklist for Version Updates
 
 - [ ] Update `app.config.js` (version, buildNumber, versionCode)
