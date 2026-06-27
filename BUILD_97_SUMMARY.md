@@ -2,7 +2,7 @@
 
 **Date:** June 27, 2026  
 **Platform:** iOS & Android  
-**Version:** 1.2.14 (Build 97)  
+**Version:** 1.2.14 (Build 100)  
 **Status:** Submitted to TestFlight
 
 ---
@@ -18,7 +18,7 @@ Completely redesigned the export as a styled PDF progress report that users can 
 ### What's Included in the Report
 - **App logo and branding** — professional appearance with Anchor's green theme
 - **Date range selector** — Last 7 days, 30 days, 3 months, or All time
-- **Summary section** — mood entries, techniques used, average mood score, AI conversations
+- **Summary section** — mood entries, techniques used, average mood score, AI messages (lifetime)
 - **Mood history** — chronological list with mood names, dates, and user notes
 - **Technique usage** — deduplicated entries with effectiveness ratings
 - **Medical disclaimer** — clarifies data is self-reported, not a clinical record
@@ -28,13 +28,18 @@ Completely redesigned the export as a styled PDF progress report that users can 
 - Uses `expo-print` to generate PDF from HTML template
 - App icon embedded as base64 (no network needed)
 - `expo-sharing` for cross-platform share sheet
+- `expo-file-system/next` File API for friendly filename rename
 - Handles arbitrarily large datasets (no size limit issues)
 - Deduplication logic prevents showing technique entries twice
+- Handles repeat exports on same day (deletes existing file before rename)
+- Lifetime AI message counter (separate from capped conversation history)
 
 ### Dependencies Added
 - `expo-print` (~15.0.x)
 
 ### Files Changed
 - `src/screens/SettingsScreen.js` — complete export rewrite
+- `src/screens/AIAgentScreen.js` — added AI message counter increment
+- `src/utils/storage.js` — added AI_MESSAGE_COUNT storage key
 - `package.json` — added expo-print
-- `app.config.js` — version bump
+- `app.config.js` — version/build bump
