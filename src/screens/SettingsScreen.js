@@ -412,7 +412,7 @@ export default function SettingsScreen({ navigation }) {
                     <div class="value">${averageMood}/5</div>
                   </div>
                   <div class="summary-item">
-                    <div class="label">AI Messages (all time)</div>
+                    <div class="label">Messages Sent (all time)</div>
                     <div class="value">${aiMessageCount}</div>
                   </div>
                 </div>

@@ -50,9 +50,11 @@ export default function AIAgentScreen({ navigation }) {
       const updatedHistory = [...history, { ...msg, timestamp: new Date().toISOString() }].slice(-50);
       await storage.setItem('conversation_history', updatedHistory);
       
-      // Increment lifetime message counter
-      const count = await storage.getItem(STORAGE_KEYS.AI_MESSAGE_COUNT) || 0;
-      await storage.setItem(STORAGE_KEYS.AI_MESSAGE_COUNT, count + 1);
+      // Increment lifetime message counter (only for user messages)
+      if (msg.type === 'user') {
+        const count = await storage.getItem(STORAGE_KEYS.AI_MESSAGE_COUNT) || 0;
+        await storage.setItem(STORAGE_KEYS.AI_MESSAGE_COUNT, count + 1);
+      }
     } catch (error) {
       ErrorLogger.logStorageError(error, 'saveMessage');
     }
