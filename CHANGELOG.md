@@ -2,6 +2,28 @@
 
 All notable changes to Anchor PTSD Support App will be documented in this file.
 
+## [1.2.14] - Build 97 (PDF Progress Report Export) - June 2025
+
+### Changed - Export Redesigned as PDF Progress Report
+- Replaced JSON data export with a styled PDF progress report
+- Report includes app logo, green branding, and professional formatting
+- Summary section with mood entries, techniques used, average mood, and AI conversations
+- Mood history with dates, mood names, and user notes
+- Technique usage with effectiveness ratings (deduplicated entries)
+- Medical disclaimer clarifying data is self-reported, not a clinical record
+- Added date range selector: Last 7 days, 30 days, 3 months, or All time
+- PDF uses a friendly filename ("Anchor Progress Report 2026-06-27.pdf")
+- Uses expo-print for HTML-to-PDF generation (handles large datasets reliably)
+- Fixes issue where large exports would fail via Share.share() message size limits
+
+### Added
+- expo-print dependency for PDF generation
+- Embedded base64 app icon in PDF header
+
+### Fixed
+- Export no longer fails when user has accumulated large amounts of data
+- Removed duplicate technique entries in export (deduplication logic)
+
 ## [1.2.12] - Build 94 (Message Variety & Context Improvements) - February 2025
 
 ### Added - Shuffle Algorithm for Maximum Variety

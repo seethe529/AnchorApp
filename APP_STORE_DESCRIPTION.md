@@ -1,8 +1,10 @@
-# App Store Description - Build 54
+# App Store Description - Build 97
 
-## What's New in Version 1.2.0
+## What's New in Version 1.2.14
 
-Enhanced DBT/CBT technique library with 8 new evidence-based tools, expanded breathing reminders with 98 unique messages, and improved AI suggestion algorithm for better crisis support.
+**PDF Progress Report** — Export your mood and technique history as a beautifully formatted PDF. Choose a date range (7 days, 30 days, 3 months, or all time) and share the report with your therapist or healthcare provider. Includes summary statistics, mood history, and technique effectiveness.
+
+Also fixed an issue where data export could fail for long-time users with large amounts of data.
 
 ---
 
