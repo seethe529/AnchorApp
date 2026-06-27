@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert, Share, Platform, Linking, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { File, Paths } from 'expo-file-system/next';
+import * as Sharing from 'expo-sharing';
 import WheelPicker from '../components/WheelPicker';
 import { storage, secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, cancelMoodReminder, cancelBreathingReminder, debugListScheduled, exportScheduledNotifications } from '../utils/notifications';
@@ -204,61 +206,184 @@ export default function SettingsScreen({ navigation }) {
     );
   };
 
-  const exportData = async () => {
+  const exportData = async (daysBack = null) => {
     try {
       // Gather all user data
       const moodLogs = await storage.getItem(STORAGE_KEYS.MOOD_LOGS) || [];
       const techniqueUsage = await storage.getItem(STORAGE_KEYS.TECHNIQUE_USAGE) || [];
       const userPreferences = await storage.getItem(STORAGE_KEYS.USER_PREFERENCES) || {};
       const conversationHistory = await storage.getItem('conversation_history') || [];
-      
-      const exportData = {
-        exportDate: new Date().toISOString(),
-        appVersion: APP_VERSION,
-        data: {
-          moodLogs: moodLogs.map(log => ({
-            date: log.date,
-            mood: log.moodName,
-            value: log.mood,
-            notes: log.notes || '',
-            timestamp: log.timestamp
-          })),
-          techniqueUsage: techniqueUsage.map(usage => ({
-            technique: usage.technique,
-            category: usage.category,
-            effectiveness: usage.effectiveness,
-            date: usage.date,
-            timestamp: usage.timestamp
-          })),
-          conversationCount: conversationHistory.length,
-          preferences: userPreferences
-        },
-        summary: {
-          totalMoodLogs: moodLogs.length,
-          totalTechniquesUsed: techniqueUsage.length,
-          averageMood: moodLogs.length > 0 
-            ? (moodLogs.reduce((sum, log) => sum + log.mood, 0) / moodLogs.length).toFixed(2)
-            : 'N/A'
-        }
-      };
 
-      const jsonString = JSON.stringify(exportData, null, 2);
+      // Filter by date range if specified
+      const cutoffDate = daysBack ? new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000) : null;
       
+      const filteredMoodLogs = cutoffDate 
+        ? moodLogs.filter(log => new Date(log.timestamp || log.date) >= cutoffDate)
+        : moodLogs;
+      
+      const filteredTechniqueUsage = cutoffDate
+        ? techniqueUsage.filter(usage => new Date(usage.timestamp || usage.date) >= cutoffDate)
+        : techniqueUsage;
+      
+      // Build a human-readable text report
+      const exportDate = new Date().toLocaleDateString('en-US', { 
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+      });
+      const totalMoodLogs = filteredMoodLogs.length;
+      const averageMood = totalMoodLogs > 0 
+        ? (filteredMoodLogs.reduce((sum, log) => sum + log.mood, 0) / totalMoodLogs).toFixed(1)
+        : 'N/A';
+
+      let report = '';
+      report += '═══════════════════════════════════════════\n';
+      report += '       ANCHOR - Your Progress Report\n';
+      report += '═══════════════════════════════════════════\n\n';
+      report += `Exported: ${exportDate}\n`;
+      report += `App Version: ${APP_VERSION}\n`;
+      if (daysBack) {
+        report += `Date Range: Last ${daysBack <= 7 ? '7 days' : daysBack <= 30 ? '30 days' : '3 months'}\n`;
+      } else {
+        report += 'Date Range: All time\n';
+      }
+      report += '\n';
+      report += 'NOTICE: This report contains self-reported\n';
+      report += 'data from a wellness app. It is not a\n';
+      report += 'clinical or medical record. Mood scores\n';
+      report += 'are subjective and for personal tracking\n';
+      report += 'purposes only.\n\n';
+
+      // Summary
+      report += '───────────────────────────────────────────\n';
+      report += ' SUMMARY\n';
+      report += '───────────────────────────────────────────\n\n';
+
+      if (totalMoodLogs === 0 && filteredTechniqueUsage.length === 0) {
+        report += '  No data recorded yet. Start logging your\n';
+        report += '  mood and using techniques to see your\n';
+        report += '  progress here.\n\n';
+      } else {
+        const ratedCount = filteredTechniqueUsage.filter(u => u.effectiveness).length;
+        const unratedCount = filteredTechniqueUsage.filter(u => !u.effectiveness).length;
+        const uniqueSessions = ratedCount + filteredTechniqueUsage.filter(u => !u.effectiveness).filter(unrated => 
+          !filteredTechniqueUsage.some(rated => 
+            rated.effectiveness && rated.technique === unrated.technique &&
+            Math.abs(new Date(rated.timestamp) - new Date(unrated.timestamp)) < 5 * 60 * 1000
+          )
+        ).length;
+        report += `  Total Mood Entries:      ${totalMoodLogs}\n`;
+        report += `  Techniques Used:         ${uniqueSessions}\n`;
+        report += `  Average Mood Score:      ${averageMood}/5\n`;
+        report += `  AI Conversations:        ${conversationHistory.length}\n\n`;
+      }
+
+      // Mood Log History
+      if (totalMoodLogs > 0) {
+        report += '───────────────────────────────────────────\n';
+        report += ' MOOD HISTORY\n';
+        report += '───────────────────────────────────────────\n\n';
+        
+        const sortedLogs = [...filteredMoodLogs].sort((a, b) => 
+          new Date(b.timestamp || b.date) - new Date(a.timestamp || a.date)
+        );
+
+        sortedLogs.forEach(log => {
+          const date = new Date(log.timestamp || log.date).toLocaleDateString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric'
+          });
+          const mood = log.moodName || `${log.mood}/5`;
+          report += `  ${date}  —  ${mood}`;
+          if (log.notes) {
+            report += `\n    Notes: ${log.notes}`;
+          }
+          report += '\n';
+        });
+        report += '\n';
+      }
+
+      // Technique Usage — deduplicate by showing rated entries when available,
+      // falling back to unrated entries for techniques used without a rating
+      const ratedEntries = filteredTechniqueUsage.filter(u => u.effectiveness);
+      const unratedEntries = filteredTechniqueUsage.filter(u => !u.effectiveness);
+      
+      // Keep unrated entries only if there's no matching rated entry at the same timestamp (within 5 min)
+      const dedupedTechniques = [...ratedEntries];
+      unratedEntries.forEach(unrated => {
+        const hasMatchingRated = ratedEntries.some(rated => 
+          rated.technique === unrated.technique &&
+          Math.abs(new Date(rated.timestamp) - new Date(unrated.timestamp)) < 5 * 60 * 1000
+        );
+        if (!hasMatchingRated) {
+          dedupedTechniques.push(unrated);
+        }
+      });
+
+      if (dedupedTechniques.length > 0) {
+        report += '───────────────────────────────────────────\n';
+        report += ' TECHNIQUES USED\n';
+        report += '───────────────────────────────────────────\n\n';
+        
+        const sortedTechniques = [...dedupedTechniques].sort((a, b) => 
+          new Date(b.timestamp || b.date) - new Date(a.timestamp || a.date)
+        );
+
+        sortedTechniques.forEach(usage => {
+          const date = new Date(usage.timestamp || usage.date).toLocaleDateString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric'
+          });
+          const effectiveness = usage.effectiveness 
+            ? ` (effectiveness: ${usage.effectiveness}/5)` 
+            : '';
+          report += `  ${date}  —  ${usage.technique}${effectiveness}\n`;
+        });
+        report += '\n';
+      }
+
+      report += '───────────────────────────────────────────\n';
+      report += ' This report was generated by the Anchor app.\n';
+      report += ' Share it with your therapist or healthcare\n';
+      report += ' provider to support your treatment.\n';
+      report += '───────────────────────────────────────────\n';
+
       if (Platform.OS === 'web') {
         // Web: Download as file
-        const blob = new Blob([jsonString], { type: 'application/json' });
+        const blob = new Blob([report], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `anchor-data-${new Date().toISOString().split('T')[0]}.json`;
+        link.download = `anchor-progress-report-${new Date().toISOString().split('T')[0]}.txt`;
         link.click();
-        Alert.alert('Success', 'Data exported successfully');
+        Alert.alert('Success', 'Report exported successfully');
       } else {
-        // Mobile: Share
-        await Share.share({
-          message: jsonString,
-          title: 'Anchor App Data Export'
-        });
+        // Mobile: Write to temp file and share
+        const fileName = `Anchor Progress Report ${new Date().toISOString().split('T')[0]}.txt`;
+        const file = new File(Paths.cache, fileName);
+        
+        file.create();
+        file.write(report);
+
+        if (await Sharing.isAvailableAsync()) {
+          await Sharing.shareAsync(file.uri, {
+            mimeType: 'text/plain',
+            dialogTitle: 'Share Your Progress Report',
+            UTI: 'public.plain-text',
+          });
+        } else {
+          Alert.alert(
+            'Export Saved',
+            `Your report has been saved. File size: ${(report.length / 1024).toFixed(1)} KB`,
+          );
+        }
+
+        // Clean up temp file after a delay to ensure share completes
+        setTimeout(() => {
+          try {
+            if (file.exists) {
+              file.delete();
+            }
+          } catch (cleanupError) {
+            // Non-critical — cache will be cleared eventually
+          }
+        }, 60000);
       }
     } catch (error) {
       console.error('Export error:', error);
@@ -423,14 +548,26 @@ export default function SettingsScreen({ navigation }) {
         
         <TouchableOpacity 
           style={styles.actionButton} 
-          onPress={exportData}
-          accessibilityLabel="Export Data"
-          accessibilityHint="Share your data with healthcare provider"
+          onPress={() => {
+            Alert.alert(
+              'Export Progress Report',
+              'Choose a date range for your report:',
+              [
+                { text: 'Last 7 Days', onPress: () => exportData(7) },
+                { text: 'Last 30 Days', onPress: () => exportData(30) },
+                { text: 'Last 3 Months', onPress: () => exportData(90) },
+                { text: 'All Time', onPress: () => exportData(null) },
+                { text: 'Cancel', style: 'cancel' },
+              ]
+            );
+          }}
+          accessibilityLabel="Export Progress Report"
+          accessibilityHint="Share a readable progress report with your healthcare provider"
           accessibilityRole="button"
         >
           <Ionicons name="download" size={24} color={theme.primary} />
           <View style={styles.actionInfo}>
-            <Text style={[styles.actionTitle, { color: theme.text }]}>Export Data</Text>
+            <Text style={[styles.actionTitle, { color: theme.text }]}>Export Progress Report</Text>
             <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>Share with healthcare provider</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
