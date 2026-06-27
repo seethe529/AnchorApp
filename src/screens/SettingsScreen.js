@@ -482,6 +482,9 @@ export default function SettingsScreen({ navigation }) {
         // Rename to a friendly filename
         const friendlyName = `Anchor Progress Report ${new Date().toISOString().split('T')[0]}.pdf`;
         const destination = new File(Paths.cache, friendlyName);
+        if (destination.exists) {
+          destination.delete();
+        }
         const source = new File(uri);
         source.move(destination);
 
