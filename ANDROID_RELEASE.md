@@ -1,10 +1,10 @@
 # Android Release Documentation
 
 ## Version Information
-- **Current Version:** 1.2.0 (Build 61)
+- **Current Version:** 1.2.14 (Build 102)
 - **Platform:** Android (Google Play Store)
-- **Release Status:** Closed Alpha Testing
-- **iOS Version:** 1.2.0 (Build 54)
+- **Release Status:** Closed Testing
+- **iOS Version:** 1.2.14 (Build 102)
 
 ## Platform Differences
 
@@ -14,7 +14,7 @@
 ```javascript
 ios: {
   bundleIdentifier: "com.anchor.ptsd-support",
-  buildNumber: "54"
+  buildNumber: "102"
 }
 ```
 
@@ -22,7 +22,7 @@ ios: {
 ```javascript
 android: {
   package: "com.anchor.ptsdsupport",
-  versionCode: 60,
+  versionCode: 102,
   permissions: ["NOTIFICATIONS"]
 }
 ```
@@ -57,7 +57,22 @@ android: {
   - Long coverage: 112 breathing (7 days), 7 mood (7 days)
   - Handles users who don't open app frequently
 
-## Android-Specific Fixes (Builds 56-60)
+## Recent Builds
+
+### Build 102 (Current)
+- **PDF Progress Report Export** — replaces old JSON export
+- **Android date range picker** — two-step alert flow (Android only supports 3 buttons)
+- **Lifetime AI message counter** — tracks user messages sent (not capped like conversation history)
+- **Friendly PDF filename** — "Anchor Progress Report 2026-06-28.pdf"
+- **Repeat export fix** — no longer crashes when exporting multiple times same day
+- **Technique deduplication** — removes duplicate entries from reports
+
+### Build 61 (Previous Stable)
+- **Platform-Specific Notification Systems:** Separated iOS and Android notification logic
+- **Android:** Kept AppState listener for foreground checks
+- **Android Coverage:** 112 breathing (7 days), 7 mood (7 days) - infrequent app opens
+
+## Android-Specific Fixes (Builds 56-61)
 
 ### Build 56
 - Removed `USE_EXACT_ALARM` permission (Google Play rejection)
@@ -82,7 +97,7 @@ android: {
 - Extended breathing reminders from 16 (1 day) to 48 (3 days)
 - Checks user preferences before rescheduling
 
-### Build 61 (Current)
+### Build 61 (Previous)
 - **Platform-Specific Notification Systems:** Separated iOS and Android notification logic
 - **iOS:** Restored hourly setInterval timer (Build 54 system) with explicit cancellation
 - **Android:** Kept AppState listener for foreground checks
@@ -107,6 +122,8 @@ android: {
 - ✅ Crisis resources
 - ✅ Breathing exercises
 - ✅ Safety plan
+- ✅ PDF Export (date range picker, file sharing)
+- ✅ AI message counter
 
 ## Known Platform-Specific Issues
 
@@ -130,22 +147,29 @@ android: {
 
 ### Android Build Command
 ```bash
-eas build --platform android
+rm -rf .expo node_modules/.cache
+eas build --platform android --profile production --non-interactive
+```
+
+### Verify Build
+```bash
+eas build:list --platform android --limit 1
 ```
 
 ### Output
 - **File Type:** AAB (Android App Bundle)
-- **Upload To:** Google Play Console
-- **Build Time:** ~10-15 minutes
-- **Cost:** ~$5-10 per build (EAS credits)
+- **Upload To:** Google Play Console → Closed Testing
+- **Build Time:** ~8-12 minutes
+- **Download:** Use the Application Archive URL from `eas build:list`
 
 ### Release Process
 1. Build AAB with EAS
-2. Download from EAS dashboard
-3. Upload to Google Play Console → Closed Testing (Alpha)
-4. Add release notes
-5. Submit for review (1-24 hours)
-6. Share opt-in link with testers
+2. Verify build number with `eas build:list --platform android --limit 1`
+3. Download AAB from the Application Archive URL
+4. Upload to Google Play Console → Testing → Closed Testing
+5. Add release notes
+6. Submit for review (1-24 hours)
+7. Share opt-in link with testers
 
 ## Code Differences
 
@@ -207,14 +231,13 @@ else if (Platform.OS === 'android') {
 
 ### iOS
 - **Released:** November 2024
-- **Current Version:** 1.2.0 (Build 54)
-- **Status:** Live on App Store
+- **Current Version:** 1.2.14 (Build 102)
+- **Status:** Live on App Store / TestFlight
 
 ### Android
 - **Alpha Testing Started:** December 3, 2025
-- **Current Version:** 1.2.0 (Build 60)
-- **Expected Production:** December 17-20, 2025 (after 14-day testing)
-- **Status:** Closed Alpha Testing
+- **Current Version:** 1.2.14 (Build 102)
+- **Status:** Closed Testing
 
 ## Support & Troubleshooting
 
@@ -243,6 +266,6 @@ For Android-specific issues during testing, testers can provide feedback through
 
 ---
 
-**Last Updated:** December 5, 2025  
-**Document Version:** 1.1 (Build 61 - Platform-Specific Notifications)  
+**Last Updated:** June 28, 2026  
+**Document Version:** 1.2 (Build 102 - PDF Export & Android Fixes)  
 **Maintained By:** Development Team
