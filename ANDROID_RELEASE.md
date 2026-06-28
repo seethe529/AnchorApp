@@ -148,10 +148,8 @@ android: {
 ### Android Build Command
 ```bash
 rm -rf .expo node_modules/.cache
-# Make sure all changes are committed and pushed FIRST
-git status  # should show "nothing to commit, working tree clean"
-git log --oneline -1  # verify your version bump commit is the latest
-git push  # ensure remote is up to date
+npx expo prebuild --clean --platform android
+git add android/ && git commit -m "fix: regenerate android/ with correct versionCode" && git push
 # THEN build
 eas build --platform android --profile production --non-interactive
 ```
@@ -160,7 +158,7 @@ eas build --platform android --profile production --non-interactive
 ```bash
 eas build:list --platform android --limit 1
 ```
-Confirm the commit hash matches your version bump commit.
+Confirm the commit hash matches your version bump commit and versionCode is correct.
 
 ### Output
 - **File Type:** AAB (Android App Bundle)

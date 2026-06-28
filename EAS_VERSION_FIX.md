@@ -159,15 +159,18 @@ eas build --platform ios --profile production --non-interactive
 ### Android Only
 ```bash
 rm -rf .expo node_modules/.cache
+npx expo prebuild --clean --platform android
+git add android/ && git commit -m "fix: regenerate android/ with correct versionCode" && git push
 eas build --platform android --profile production --non-interactive
 ```
-Note: `android/` is gitignored so EAS runs prebuild automatically and reads versionCode from `app.config.js`. No need to commit the android folder.
+Note: `android/` is now tracked in git (same as `ios/`). Always regenerate and commit before building.
 
 ### Both Platforms
 ```bash
 rm -rf .expo node_modules/.cache
 npx expo prebuild --clean --platform ios
-git add ios/ && git commit -m "fix: regenerate ios/ with correct build number" && git push
+npx expo prebuild --clean --platform android
+git add ios/ android/ && git commit -m "fix: regenerate native folders with correct build number" && git push
 eas build --platform ios --profile production --non-interactive
 eas build --platform android --profile production --non-interactive
 ```
