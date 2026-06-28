@@ -21,6 +21,7 @@ export default function SettingsScreen({ navigation }) {
   const [preferences, setPreferences] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false);
   const [selectedHour, setSelectedHour] = useState(20);
   const [tempHour, setTempHour] = useState(20);
   const [showIntervalPicker, setShowIntervalPicker] = useState(false);
@@ -675,26 +676,7 @@ export default function SettingsScreen({ navigation }) {
                 ]
               );
             } else {
-              // Android Alert only supports 3 buttons, so use two-step
-              Alert.alert(
-                'Export Progress Report',
-                'Choose a date range for your report:',
-                [
-                  { text: 'Cancel', style: 'cancel' },
-                  { text: 'Recent', onPress: () => {
-                    Alert.alert(
-                      'Recent Data',
-                      'Select a range:',
-                      [
-                        { text: 'Last 7 Days', onPress: () => exportData(7) },
-                        { text: 'Last 30 Days', onPress: () => exportData(30) },
-                        { text: 'Last 3 Months', onPress: () => exportData(90) },
-                      ]
-                    );
-                  }},
-                  { text: 'All Time', onPress: () => exportData(null) },
-                ]
-              );
+              setShowExportModal(true);
             }
           }}
           accessibilityLabel="Export Progress Report"
@@ -913,6 +895,76 @@ export default function SettingsScreen({ navigation }) {
           </View>
         </Modal>
       )}
+
+      {/* Android Export Date Range Modal */}
+      {Platform.OS !== 'ios' && (
+        <Modal
+          visible={showExportModal}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowExportModal(false)}
+        >
+          <TouchableOpacity 
+            style={styles.exportModalOverlay} 
+            activeOpacity={1} 
+            onPress={() => setShowExportModal(false)}
+          >
+            <View style={[styles.exportModalContent, { backgroundColor: theme.card }]}>
+              <Text style={[styles.exportModalTitle, { color: theme.text }]}>
+                Export Progress Report
+              </Text>
+              <Text style={[styles.exportModalSubtitle, { color: theme.textSecondary }]}>
+                Choose a date range for your report:
+              </Text>
+
+              <TouchableOpacity
+                style={[styles.exportModalOption, { borderColor: theme.border || '#e0e0e0' }]}
+                onPress={() => { setShowExportModal(false); exportData(7); }}
+                accessibilityRole="button"
+                accessibilityLabel="Export last 7 days"
+              >
+                <Text style={[styles.exportModalOptionText, { color: theme.primary }]}>Last 7 Days</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.exportModalOption, { borderColor: theme.border || '#e0e0e0' }]}
+                onPress={() => { setShowExportModal(false); exportData(30); }}
+                accessibilityRole="button"
+                accessibilityLabel="Export last 30 days"
+              >
+                <Text style={[styles.exportModalOptionText, { color: theme.primary }]}>Last 30 Days</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.exportModalOption, { borderColor: theme.border || '#e0e0e0' }]}
+                onPress={() => { setShowExportModal(false); exportData(90); }}
+                accessibilityRole="button"
+                accessibilityLabel="Export last 3 months"
+              >
+                <Text style={[styles.exportModalOptionText, { color: theme.primary }]}>Last 3 Months</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.exportModalOption, { borderColor: theme.border || '#e0e0e0' }]}
+                onPress={() => { setShowExportModal(false); exportData(null); }}
+                accessibilityRole="button"
+                accessibilityLabel="Export all time"
+              >
+                <Text style={[styles.exportModalOptionText, { color: theme.primary }]}>All Time</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.exportModalCancel}
+                onPress={() => setShowExportModal(false)}
+                accessibilityRole="button"
+                accessibilityLabel="Cancel export"
+              >
+                <Text style={[styles.exportModalCancelText, { color: theme.textSecondary }]}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        </Modal>
+      )}
     </ScrollView>
   );
 }
@@ -1049,5 +1101,46 @@ const styles = StyleSheet.create({
   picker: {
     width: '100%',
     height: 200,
+  },
+  exportModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  exportModalContent: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 40,
+  },
+  exportModalTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  exportModalSubtitle: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  exportModalOption: {
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    alignItems: 'center',
+  },
+  exportModalOptionText: {
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  exportModalCancel: {
+    paddingVertical: 16,
+    marginTop: 8,
+    alignItems: 'center',
+  },
+  exportModalCancelText: {
+    fontSize: 16,
+    fontWeight: '500',
   },
 });
