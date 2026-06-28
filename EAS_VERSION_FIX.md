@@ -148,26 +148,52 @@ eas build --platform ios --profile production
 
 Before triggering an EAS build, **always** run this sequence:
 
+### iOS Only
 ```bash
 rm -rf .expo node_modules/.cache
 npx expo prebuild --clean --platform ios
 git add ios/ && git commit -m "fix: regenerate ios/ with correct build number" && git push
-eas build --platform ios --profile production
+eas build --platform ios --profile production --non-interactive
 ```
 
-This ensures the native `Info.plist` matches your `app.config.js` version and prevents wasted build credits.
+### Android Only
+```bash
+rm -rf .expo node_modules/.cache
+eas build --platform android --profile production --non-interactive
+```
+Note: `android/` is gitignored so EAS runs prebuild automatically and reads versionCode from `app.config.js`. No need to commit the android folder.
+
+### Both Platforms
+```bash
+rm -rf .expo node_modules/.cache
+npx expo prebuild --clean --platform ios
+git add ios/ && git commit -m "fix: regenerate ios/ with correct build number" && git push
+eas build --platform ios --profile production --non-interactive
+eas build --platform android --profile production --non-interactive
+```
+
+### Verify Builds After Completion
+```bash
+eas build:list --platform ios --limit 1
+eas build:list --platform android --limit 1
+```
+Confirm both show the correct version and build number before submitting.
+
+This ensures the native files match your `app.config.js` version and prevents wasted build credits.
 
 ---
 
 ## Quick Checklist for Version Updates
 
-- [ ] Update `app.config.js` (version, buildNumber, versionCode)
-- [ ] Update `package.json` (version)
+- [ ] Update `app.config.js` (buildNumber, versionCode — only bump version for App Store releases)
+- [ ] Update `package.json` (version — only for App Store releases)
 - [ ] Verify with `npx expo config --type public`
 - [ ] Clear caches: `rm -rf .expo node_modules/.cache`
-- [ ] Regenerate: `npx expo prebuild --clean --platform ios`
+- [ ] Regenerate iOS: `npx expo prebuild --clean --platform ios`
 - [ ] Verify Info.plist has correct version
 - [ ] Commit ios/ folder (if tracked)
+- [ ] Build both platforms
+- [ ] Verify builds with `eas build:list`
 - [ ] Build: `eas build --platform ios --profile production`
 
 ## Troubleshooting
