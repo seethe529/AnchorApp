@@ -662,17 +662,40 @@ export default function SettingsScreen({ navigation }) {
         <TouchableOpacity 
           style={styles.actionButton} 
           onPress={() => {
-            Alert.alert(
-              'Export Progress Report',
-              'Choose a date range for your report:',
-              [
-                { text: 'Last 7 Days', onPress: () => exportData(7) },
-                { text: 'Last 30 Days', onPress: () => exportData(30) },
-                { text: 'Last 3 Months', onPress: () => exportData(90) },
-                { text: 'All Time', onPress: () => exportData(null) },
-                { text: 'Cancel', style: 'cancel' },
-              ]
-            );
+            if (Platform.OS === 'ios') {
+              Alert.alert(
+                'Export Progress Report',
+                'Choose a date range for your report:',
+                [
+                  { text: 'Last 7 Days', onPress: () => exportData(7) },
+                  { text: 'Last 30 Days', onPress: () => exportData(30) },
+                  { text: 'Last 3 Months', onPress: () => exportData(90) },
+                  { text: 'All Time', onPress: () => exportData(null) },
+                  { text: 'Cancel', style: 'cancel' },
+                ]
+              );
+            } else {
+              // Android Alert only supports 3 buttons, so use two-step
+              Alert.alert(
+                'Export Progress Report',
+                'Choose a date range for your report:',
+                [
+                  { text: 'Cancel', style: 'cancel' },
+                  { text: 'Recent', onPress: () => {
+                    Alert.alert(
+                      'Recent Data',
+                      'Select a range:',
+                      [
+                        { text: 'Last 7 Days', onPress: () => exportData(7) },
+                        { text: 'Last 30 Days', onPress: () => exportData(30) },
+                        { text: 'Last 3 Months', onPress: () => exportData(90) },
+                      ]
+                    );
+                  }},
+                  { text: 'All Time', onPress: () => exportData(null) },
+                ]
+              );
+            }
           }}
           accessibilityLabel="Export Progress Report"
           accessibilityHint="Share a readable progress report with your healthcare provider"
