@@ -2,7 +2,7 @@
 
 This document tracks planned features, enhancements, and ideas for future versions of Anchor.
 
-**Current Status:** v1.2.14, Build 104 | iOS live on App Store | Android in Closed Testing  
+**Current Status:** v1.2.14, Build 104 | iOS live on App Store | Android live on Google Play  
 **Last Updated:** June 28, 2026
 
 ---
@@ -41,8 +41,8 @@ This document tracks planned features, enhancements, and ideas for future versio
 - ✅ Friendly PDF filename
 
 ### Platform (v1.2)
-- ✅ iOS App Store live
-- ✅ Android closed testing (Google Play)
+- ✅ iOS live on App Store
+- ✅ Android live on Google Play
 - ✅ Expo SDK 54 with React 19
 - ✅ EAS Build pipeline for both platforms
 - ✅ Centered adaptive icon for Android
