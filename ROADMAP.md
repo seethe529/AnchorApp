@@ -2,229 +2,153 @@
 
 This document tracks planned features, enhancements, and ideas for future versions of Anchor.
 
-**Current Status:** Build 33 (Modern UI) in testing, Build 20 live on App Store
+**Current Status:** v1.2.14, Build 104 | iOS live on App Store | Android in Closed Testing  
+**Last Updated:** June 28, 2026
 
 ---
 
-## Version 1.1.0 (Current Development)
+## ✅ Completed (v1.0 – v1.2.14)
 
-### ✅ Completed Features
-- **Modern UI Upgrade (Build 31-33):** Complete design system overhaul with iOS-style components
-- **Dark Mode (Build 14):** Global theme support with ThemeContext
-- **Enhanced Notifications (Build 12-20):** Midnight auto-reset system with date-based triggers
-- **Breathing Exercises (Build 10):** 5 swipeable methods with animations
-- **Medical Citations (Build 9):** Comprehensive citations from authoritative sources
-
-### High Priority (Remaining)
-
-#### 🛠️ Additional DBT/CBT Techniques
-
-**DBT-oriented:**
-- [ ] **Radical Acceptance** - Coping with unchangeable pain
-  - Description: Accepting reality as it is, not as you wish it to be
-  - Example: "I can't change what happened, but I can accept it and choose how to move forward"
-  - Keywords: acceptance, pain, unchangeable, reality
-
-- [ ] **Self-Validation** - Validating your own emotions
-  - Description: Acknowledging your feelings are valid without judgment
-  - Example: "It makes sense I feel this way given what I've been through. My feelings are valid."
-  - Keywords: validation, emotions, feelings, self-compassion
-
-- [ ] **Pros & Cons** - Weighing choices during distress
-  - Description: List pros and cons of tolerating distress vs. acting on urges
-  - Example: "Pros of staying calm: I won't regret my actions. Cons: It's uncomfortable right now."
-  - Keywords: decision, choice, urges, weighing
-
-**CBT-oriented:**
-- [ ] **Cognitive Defusion** - Labeling thoughts as "just thoughts"
-  - Description: Creating distance from thoughts by observing them objectively
-  - Example: "I'm having the thought that I'm worthless" vs "I am worthless"
-  - Keywords: thoughts, defusion, distance, observe
-
-- [ ] **Graded Exposure Plan** - Structured fear ladder
-  - Description: Create a hierarchy of feared situations from least to most anxiety-provoking
-  - Example: "0-10 scale: 2=Look at photo, 5=Drive past location, 8=Enter building, 10=Stay for 1 hour"
-  - Keywords: exposure, fear, hierarchy, gradual
-
-- [ ] **Problem-Solving Worksheet** - Step-by-step solutions
-  - Description: Define problem, brainstorm solutions, evaluate options, create action plan
-  - Example: "Problem: Feeling isolated. Solutions: 1) Join support group 2) Text a friend 3) Volunteer"
-  - Keywords: problem, solution, planning, action
-
-**Trauma-specific:**
-- [ ] **Safe Place Visualization** - Guided imagery for grounding
-  - Description: Imagine a safe, peaceful place in detail using all 5 senses
-  - Example: "Picture a beach: warm sand, sound of waves, smell of salt air, taste of coconut, feel of sun"
-  - Keywords: visualization, safe, imagery, grounding
-
-- [ ] **Body Scan** - Awareness of tension and release
-  - Description: Systematically notice sensations in each body part from head to toe
-  - Example: "Notice your forehead - any tension? Your jaw? Shoulders? Breathe into each area."
-  - Keywords: body, tension, awareness, scan, physical
-
-#### 💰 Monetization (If API Costs Become High)
-- [ ] Implement in-app purchase for AI Support
-- [ ] Keep all DBT/CBT tools free
-- [ ] Premium tier: $2.99 one-time unlock for AI Support
-- [ ] Add paywall screen for AI Support tab
-- [ ] Store purchase status locally
-- [ ] Set up product in App Store Connect
-
-### Medium Priority
-- [ ] Add onboarding tutorial for first-time users
-- [ ] Data backup to iCloud
-- [ ] Customizable reminder times
-- [ ] Enhanced AI conversation context (100+ messages)
-- [ ] Technique effectiveness recommendations
-
-### Low Priority
-- [ ] Export progress reports as PDF
-- [ ] Share anonymized progress with therapist
-- [ ] Customizable app theme colors
-
----
-
-## Version 1.2.0 (Future)
-
-### Features Under Consideration
-- [ ] Widget support (iOS 14+)
-- [ ] Apple Watch companion app
-- [ ] Siri shortcuts for quick technique access
-- [ ] **Internationalization (i18n)** - See detailed plan below
-- [ ] Community forum (moderated)
-- [ ] Therapist portal for tracking client progress
-
-### 🌍 Internationalization Plan (High Priority)
-
-**Problem:** Language barriers prevent people in crisis from accessing mental health support.
-
-**Solution Phases:**
-
-#### Phase 1: AI-Powered (Free, Immediate)
-- [ ] Update OpenAI system prompt to respond in user's language
-- [ ] Add language detection to AI Support
-- [ ] Test with Spanish, French, German, Arabic, Mandarin
-- **Cost:** $0 (OpenAI already supports 50+ languages)
-- **Impact:** AI Support becomes multilingual immediately
-
-#### Phase 2: Community Translation (Free, Crowdsourced)
-- [ ] Set up i18next framework
-- [ ] Create translation contribution guide
-- [ ] Open GitHub issues for each language
-- [ ] Accept pull requests from bilingual volunteers
-- [ ] Native speakers review and approve translations
-- **Cost:** $0 (volunteer-driven)
-- **Priority Languages:** Spanish, French, Arabic, Mandarin, German, Portuguese
-- **Impact:** Core app UI translated by community
-
-#### Phase 3: Professional Review (Paid, Quality Assurance)
-- [ ] Partner with mental health organizations for translation review
-- [ ] Reach out to veteran organizations (VA, international equivalents)
-- [ ] Apply for grants to fund professional translation
-- [ ] Seek pro-bono translation from mental health professionals
-- **Cost:** Seek grants/donations
-- **Impact:** Ensure clinical accuracy of mental health terminology
-
-#### Phase 4: Localized Crisis Resources
-- [ ] Research crisis hotlines by country
-- [ ] Add country detection
-- [ ] Display local emergency numbers (not just US)
-- [ ] Partner with international crisis organizations
-- **Examples:**
-  - Spain: 024 (Suicide Prevention)
-  - France: 3114 (Mental Health Crisis)
-  - Germany: 0800-1110111 (Telefonseelsorge)
-  - Australia: 13 11 14 (Lifeline)
-- **Cost:** $0 (research and data entry)
-- **Impact:** Life-saving for international users
-
-**Technical Implementation:**
-```javascript
-// Install: npm install i18next react-i18next
-// Auto-detect device language
-// Fallback to English if translation missing
-// ~5,000 words to translate
-```
-
-**Why This Matters:**
-- 75% of the world doesn't speak English
-- PTSD affects veterans and trauma survivors globally
-- Mental health crisis doesn't care about language barriers
-- Free app should be accessible to everyone
-
-**Call for Help:**
-- Seeking bilingual volunteers
-- Mental health professionals who can review translations
-- Partnerships with international veteran organizations
-- Grant opportunities for accessibility funding
-
----
-
-## Version 2.0.0 (Long-term Vision)
-
-### Major Features
-- [ ] AI-powered personalized technique recommendations
-- [ ] Integration with wearable devices (heart rate monitoring)
-- [ ] Peer support matching (optional, privacy-focused)
-- [ ] Professional therapist directory
-- [ ] Group therapy session scheduling
-- [ ] Advanced analytics and insights
-
----
-
-## Ideas & Suggestions
-
-### From Users
-- (Add user feedback here as it comes in)
-
-### From Team
-- Consider adding journaling feature
-- Explore integration with Apple Health
-- Research partnership with VA/veteran organizations
-- Investigate HIPAA compliance for therapist features
-
----
-
-## Completed Features
-
-### Version 1.1.0 (Builds 9-14)
-- ✅ **Dark Mode (Build 14):** Complete theme system with persistence
-- ✅ **Enhanced Notifications (Build 12):** iOS-compatible scheduling, auto-reschedule
-- ✅ **Breathing Exercises (Build 10):** 5 swipeable methods with haptic feedback
-- ✅ **Medical Citations (Build 9):** Harvard, Mayo Clinic, APA, VA sources
-
-### Version 1.0.0 (Released November 2025)
-- ✅ 30+ DBT/CBT techniques across 6 categories
-- ✅ AI Support with OpenAI GPT-4 integration
-- ✅ Mood tracking and progress analytics
-- ✅ Safety plan with secure storage
+### Core Features (v1.0)
+- ✅ 28 evidence-based DBT/CBT techniques across 6 categories
+- ✅ AI Support with OpenAI GPT-4o-mini (10 messages/day, 16-message context)
+- ✅ Mood tracking with charts and progress analytics
+- ✅ Safety plan with encrypted secure storage
 - ✅ Crisis resources with location services
 - ✅ Offline functionality
-- ✅ Data export feature
-- ✅ Accessibility support (VoiceOver)
-- ✅ Error handling and logging
+- ✅ Accessibility support (VoiceOver, TalkBack)
 - ✅ App rating prompt
+
+### Breathing & Techniques (v1.1)
+- ✅ 5 swipeable breathing methods with animations and haptics
+- ✅ Medical citations from Harvard, Mayo Clinic, APA, VA
+- ✅ Dark mode with ThemeContext
+- ✅ Modern UI overhaul with design system
+
+### Notifications (v1.1–1.2)
+- ✅ 150 unique breathing reminder messages (Fisher-Yates shuffle)
+- ✅ 180 daily CBT/DBT reminder messages
+- ✅ Platform-specific scheduling (iOS hourly, Android AppState)
+- ✅ Auto-reschedule on date change
+
+### Export & Data (v1.2.14)
+- ✅ PDF progress report export with app branding
+- ✅ Date range filter (7 days, 30 days, 3 months, All time)
+- ✅ Android bottom sheet date picker
+- ✅ Technique deduplication in reports
+- ✅ Lifetime AI message counter
+- ✅ Medical disclaimer in exports
+- ✅ Friendly PDF filename
+
+### Platform (v1.2)
+- ✅ iOS App Store live
+- ✅ Android closed testing (Google Play)
+- ✅ Expo SDK 54 with React 19
+- ✅ EAS Build pipeline for both platforms
+- ✅ Centered adaptive icon for Android
+
+---
+
+## 🔜 Next Up (v1.3)
+
+### High Priority
+
+#### Share Report with Therapist
+- [ ] Allow user to email PDF directly from the app
+- [ ] Add therapist email to settings for quick sharing
+- [ ] Optional: recurring scheduled exports
+
+#### Onboarding Tutorial
+- [ ] First-time user walkthrough
+- [ ] Highlight key features (mood logging, AI, techniques, breathing)
+- [ ] Skippable but accessible from Settings
+
+#### Customizable Reminder Times
+- [ ] Let users set their own breathing reminder interval
+- [ ] Let users choose mood check-in time (not just 8 PM)
+- [ ] Per-day scheduling
+
+### Medium Priority
+
+#### Enhanced AI Conversation
+- [ ] Voice input support
+- [ ] Context-aware technique suggestions based on mood history
+- [ ] Sentiment analysis to detect escalation
+
+#### Data Backup
+- [ ] iCloud backup for iOS
+- [ ] Google Drive backup for Android
+- [ ] Data portability (GDPR compliance)
+
+#### Widget Support
+- [ ] iOS widget for quick mood log
+- [ ] iOS widget for breathing exercise shortcut
+- [ ] Android widget equivalent
+
+---
+
+## 🔮 Future (v2.0)
+
+### Internationalization (i18n)
+- [ ] AI responds in user's detected language (OpenAI already supports this)
+- [ ] i18next framework for UI translation
+- [ ] Community translation contributions
+- [ ] Localized crisis resources by country
+- [ ] Priority: Spanish, French, Arabic, Mandarin, German, Portuguese
+
+### Wearable Integration
+- [ ] Apple Watch companion (quick breathing, mood log, crisis button)
+- [ ] Heart rate integration for stress detection
+- [ ] Haptic breathing guidance on watch
+
+### Advanced Analytics
+- [ ] ML-based technique recommendations ("what works for you")
+- [ ] Mood pattern detection and alerts
+- [ ] Weekly/monthly insight summaries
+- [ ] Correlation analysis (mood vs. technique usage)
+
+### Social Features (Privacy-First)
+- [ ] Anonymous peer support groups
+- [ ] Share techniques (not personal data)
+- [ ] Therapist portal for tracking client progress (with consent)
+- [ ] Professional therapist directory
+
+### Monetization (If API Costs Require)
+- [ ] Keep all DBT/CBT tools free
+- [ ] Premium tier for unlimited AI messages ($2.99 one-time)
+- [ ] Store purchase status locally
+
+---
+
+## Technical Debt
+
+- [ ] Migrate to TypeScript
+- [ ] Increase test coverage to 90%+
+- [ ] Refactor ToolsScreen (too large)
+- [ ] Extract reusable components
+- [ ] Optimize FlatList rendering in ProgressScreen
+- [ ] Add performance monitoring
+- [ ] Reduce app bundle size
+
+---
+
+## Ideas & Feedback
+
+- Journaling feature
+- Apple Health integration
+- Partnership with VA/veteran organizations
+- Siri shortcuts for quick technique access
+- HIPAA compliance for therapist features
 
 ---
 
 ## Notes
 
-- **Priority levels** can change based on user feedback
-- **Version numbers** are tentative and may shift
-- **User feedback** will heavily influence roadmap priorities
-- **API costs** will determine monetization timeline
-- **Apple review feedback** may require immediate changes
+- Priority levels shift based on user feedback and App Store reviews
+- API costs will determine monetization timeline
+- Apple/Google review feedback may require immediate changes
+- Distribution certificate expires November 19, 2026 — renew before then
 
 ---
 
-## How to Contribute Ideas
-
-1. Open an issue on GitHub with the `enhancement` label
-2. Describe the feature and why it would help users
-3. Include any relevant research or examples
-4. Tag with priority level (high/medium/low)
-
----
-
-**Last Updated:** November 2025 (Build 14)  
-**Next Review:** After v1.1.0 release and user feedback analysis
+**Next Review:** After v1.2.14 is live on both stores and user feedback is collected
