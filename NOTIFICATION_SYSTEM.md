@@ -3,7 +3,7 @@
 ## Overview
 Anchor uses a platform-specific notification system optimized for iOS and Android's different behaviors and constraints.
 
-**Version:** Build 64 (December 2025)
+**Version:** Build 104 (June 2026)
 
 ---
 
@@ -122,16 +122,35 @@ const DEV_MODE = false; // Set to true for testing
 // Platform-specific coverage
 const MOOD_DAYS = 7; // Both platforms: 7-day mood coverage
 const BREATHING_COUNT = DEV_MODE ? 3 : (Platform.OS === 'ios' ? 48 : 112);
-  // iOS: 48 (3 days) - stays under 64 notification limit (48+7=55)
-  // Android: 112 (7 days) - no platform limit
-const BREATHING_INTERVAL = DEV_MODE ? 60 : 5400; // seconds (90 minutes)
+  // iOS: 48 (3 days at default 90-min interval) - stays under 64 notification limit
+  // Android: 112 (7 days at default 90-min interval) - no platform limit
+const BREATHING_INTERVAL = DEV_MODE ? 60 : 5400; // seconds (90 minutes default)
 ```
 
-### Dev Mode
-When `DEV_MODE = true`:
-- **Breathing:** 3 notifications, 60-second intervals
-- **Mood:** 2 notifications
-- **Purpose:** Fast testing without waiting hours
+### User-Configurable Settings
+The notification system reads user preferences from `user_preferences` storage:
+- **`breathingInterval`** — interval in minutes (default: 90)
+- **`moodReminderTime`** — time string like "20:00" (default: 8 PM)
+
+When rescheduling (in App.js), the system uses saved preferences:
+```javascript
+const interval = prefs.breathingInterval || 90;
+await scheduleBreathingReminder(interval);
+
+const timeString = prefs.moodReminderTime || '20:00';
+const [hour] = timeString.split(':').map(Number);
+await scheduleMoodReminder({ hour, minute: 0 });
+```
+
+### Dynamic Calculation
+`scheduleBreathingReminder(intervalMinutes)` dynamically calculates:
+```javascript
+const notificationsPerDay = Math.floor((24 * 60) / intervalMinutes);
+const coverageDays = Platform.OS === 'ios' ? 3 : 7;
+const breathingCount = notificationsPerDay * coverageDays;
+```
+
+This means changing the interval adjusts the notification count automatically while respecting platform coverage limits.
 
 ---
 
@@ -139,12 +158,13 @@ When `DEV_MODE = true`:
 
 ### 1. Breathing Reminders
 - **Title:** "Breathing Break"
-- **Body:** Randomized from 98 DBT/CBT-inspired messages
+- **Body:** Randomized from 150 DBT/CBT-inspired messages (Fisher-Yates shuffle)
 - **Data:** `{ type: 'breathing_reminder' }`
 - **Priority:** HIGH (Android)
-- **Category:** 'reminder' (health notification)
+- **Category:** 'reminder'
 - **Trigger:** Date-based (exact time)
-- **Scheduling:** Millisecond-based calculation for exact 90-minute intervals
+- **Scheduling:** Millisecond-based calculation from current time + (interval × index)
+- **Shuffle:** All 150 messages appear before any repeat (full cycle)
 
 **Example Messages:**
 - "Take one mindful breath and return to center."
@@ -156,8 +176,8 @@ When `DEV_MODE = true`:
 - **Body:** "How are you feeling today? Take a moment to log your mood."
 - **Data:** `{ type: 'mood_reminder' }`
 - **Priority:** HIGH (Android)
-- **Category:** 'reminder' (health notification)
-- **Trigger:** Date-based (8:00 PM daily)
+- **Category:** 'reminder'
+- **Trigger:** Date-based (user-configured time, default 8 PM)
 - **Safety:** Skips past dates to prevent immediate firing
 
 ---
@@ -191,15 +211,19 @@ if (prefs.moodReminders) await scheduleMoodReminder();
 ### Storage Key: `user_preferences`
 ```javascript
 {
-  breathingReminders: true,  // User enabled breathing reminders
-  moodReminders: true        // User enabled mood reminders
+  breathingReminders: true,      // User enabled breathing reminders
+  moodReminders: true,           // User enabled mood reminders
+  breathingInterval: 90,         // Minutes between breathing reminders (default 90)
+  moodReminderTime: '20:00'      // Time for daily mood reminder (default 8 PM)
 }
 ```
 
 ### Behavior
 - Rescheduling checks user preferences before scheduling
+- Uses custom interval and time if set, otherwise defaults
 - If disabled, notifications are cancelled but not rescheduled
 - User can toggle in Settings → Notifications
+- User can change interval and time in Settings
 
 ---
 
@@ -398,7 +422,20 @@ All notification operations log to console with emoji prefixes:
 
 ## Version History
 
-### Build 64 (Current)
+### Build 104 (Current - June 2026)
+- User-configurable breathing interval and mood reminder time
+- Dynamic notification count calculation based on interval
+- `scheduleBreathingReminder(intervalMinutes)` accepts parameter
+- `scheduleMoodReminder({ hour, minute })` accepts custom time
+- App.js reads preferences and passes to schedule functions
+- 150 breathing messages (expanded from 98)
+
+### Build 94 (February 2026)
+- Fisher-Yates shuffle algorithm for breathing messages
+- All 150 messages seen before any repeat (eliminates random duplicates)
+- Exported `shuffleMessages()` function for testing
+
+### Build 64
 - Fixed export notifications button with proper error handling
 - All notification functionality stable and tested
 
@@ -443,8 +480,8 @@ All notification operations log to console with emoji prefixes:
 
 ---
 
-**Document Version:** 2.1  
-**Last Updated:** December 2025  
+**Document Version:** 3.0  
+**Last Updated:** June 2026  
 **Maintained By:** Development Team
 
 ---
