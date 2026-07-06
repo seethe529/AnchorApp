@@ -1,85 +1,161 @@
 # Anchor PTSD Support App - Technical Architecture
 
 ## Overview
-Anchor is a React Native mobile application built with Expo, designed to provide evidence-based mental health support for veterans and individuals with PTSD. The app combines DBT/CBT therapeutic techniques with AI-powered support and crisis resources.
+Anchor is a React Native mobile application built with Expo, designed to provide evidence-based mental health support for veterans and individuals with PTSD. The app combines DBT/CBT therapeutic techniques with AI-powered conversational support, breathing exercises, mood tracking, and crisis resources.
+
+**Version:** 1.2.14 (Build 104)  
+**Platforms:** iOS (App Store) and Android (Google Play)  
+**Last Updated:** June 28, 2026
+
+---
 
 ## Technology Stack
 
 ### Core Framework
-- **React Native** with **Expo SDK 54**
-- **React Navigation** for routing and navigation
-- **React Hooks** for state management (useState, useEffect, useCallback, useMemo)
-- **Hermes** JavaScript engine for optimized performance
+- **React Native 0.81.5** with **Expo SDK 54**
+- **React 19.1.0** with Hooks-based architecture
+- **Hermes** JavaScript engine
+- **React Navigation 6** (Stack + Bottom Tabs)
 
-### Key Libraries
-- **expo-notifications** - Push notifications and reminders
-- **expo-haptics** - Tactile feedback for user interactions
-- **expo-secure-store** - Encrypted storage for sensitive data (Safety Plan)
-- **@react-native-async-storage/async-storage** - Local data persistence
-- **react-native-chart-kit** - Data visualization for progress tracking
-- **@expo/vector-icons** - Ionicons icon set
+### Key Dependencies
+| Category | Library | Purpose |
+|----------|---------|---------|
+| Navigation | @react-navigation/bottom-tabs, stack, native | Tab + Stack navigation |
+| Storage | @react-native-async-storage/async-storage | Local data persistence |
+| Security | expo-secure-store | Encrypted storage (Safety Plan) |
+| Notifications | expo-notifications | Mood & breathing reminders |
+| UI | expo-linear-gradient, expo-blur, react-native-modal | Visual effects |
+| Charts | react-native-chart-kit, react-native-svg | Progress analytics |
+| Haptics | expo-haptics | Tactile feedback |
+| Location | expo-location | Crisis center finder |
+| Export | expo-print, expo-sharing, expo-file-system | PDF report generation |
+| Audio | expo-av | Sound effects |
+| Sensors | expo-sensors | Device sensors |
+| Review | expo-store-review | App rating prompts |
 
-### AI Integration
-- **OpenAI API** (GPT-4) for conversational support
-- Custom trauma-informed system prompts
-- Rate limiting and error handling
-- Graceful offline fallbacks
+### Backend
+- **Vercel Serverless Functions** — OpenAI API proxy with rate limiting
+- **OpenAI GPT-4o-mini** — AI conversational support
+
+### Build & Deployment
+- **EAS Build** — Cloud builds for iOS and Android
+- **EAS Submit** — App Store and Play Console submission
+- **Vercel** — Backend API deployment
+
+---
 
 ## Architecture
 
-### Data Layer
+### Project Structure
 ```
-src/
-├── data/
-│   ├── techniques.js       # 19 DBT/CBT techniques database
-│   ├── citations.js        # Medical citations from authoritative sources
-│   └── dailyReminders.js   # 150+ trauma-informed reminders
-├── utils/
-│   ├── storage.js          # AsyncStorage wrapper with error handling
-│   ├── notifications.js    # Notification scheduling and management
-│   ├── errorLogger.js      # Centralized error logging
-│   └── appRating.js        # App Store rating prompts
-└── services/
-    └── openai.js           # OpenAI API integration
-```
-
-### Screen Architecture
-```
-src/screens/
-├── HomeScreen.js           # Dashboard with quick actions
-├── ToolsScreen.js          # DBT/CBT technique browser
-├── AIAgentScreen.js        # Conversational AI support
-├── BreathingScreen.js      # Swipeable breathing exercises
-├── CrisisScreen.js         # Emergency resources
-├── ProgressScreen.js       # Analytics and mood tracking
-├── SettingsScreen.js       # App configuration with theme toggle
-├── ResourcesScreen.js      # Medical citations and sources
-└── DisclaimerScreen.js     # First-launch medical disclaimer
+AnchorApp/
+├── App.js                    # Root component, navigation, notification scheduling
+├── app.config.js             # Expo configuration (versions, permissions, icons)
+├── eas.json                  # EAS build/submit configuration
+├── vercel.json               # Vercel deployment config
+├── api/
+│   └── chat.js              # Vercel serverless OpenAI proxy
+├── src/
+│   ├── screens/             # 9 screen components
+│   ├── components/          # 11 reusable components
+│   ├── context/             # Theme context (light/dark mode)
+│   ├── data/                # Static app data (techniques, breathing, etc.)
+│   ├── services/            # External service integrations
+│   ├── utils/               # Utility functions
+│   └── __tests__/           # 23 test files
+├── ios/                     # Native iOS project (tracked in git)
+├── android/                 # Native Android project (tracked in git)
+└── assets/                  # Icons, splash screen, images
 ```
 
-### Component Structure
+### Screens (9)
+| Screen | Purpose |
+|--------|---------|
+| HomeScreen | Dashboard with quick actions (mood, crisis, grounding) |
+| ToolsScreen | 28 DBT/CBT technique browser with categories |
+| AIAgentScreen | Conversational AI support (GPT-4o-mini) |
+| BreathingScreen | 5 swipeable breathing methods with animations |
+| CrisisScreen | Emergency resources, hotlines, location services |
+| ProgressScreen | Mood charts, technique analytics, streaks |
+| SettingsScreen | Preferences, notifications, export, data management |
+| ResourcesScreen | Medical citations and sources |
+| DisclaimerScreen | First-launch medical disclaimer |
+
+### Components (11)
+| Component | Purpose |
+|-----------|---------|
+| BreathingExercise | Animated breathing guide (stack screen) |
+| Button | Themed button with gradient and press animation |
+| Card | Themed card container with shadows |
+| DetailedMoodLog | Extended mood entry with notes |
+| ErrorBoundary | React error boundary for crash recovery |
+| MoodTracker | 5-point mood logging interface |
+| OfflineIndicator | Network status banner |
+| OnboardingTour | First-time user walkthrough |
+| SafetyPlan | Crisis safety planning tool (secure storage) |
+| SwipeableReminders | Swipeable daily affirmation cards |
+| WheelPicker | Custom wheel/number picker for settings |
+
+### Data Layer (5 files)
+| File | Content |
+|------|---------|
+| techniques.js | 28 DBT/CBT techniques across 6 categories, synonym mapping (40+ phrases), weighted suggestion algorithm |
+| breathingMethods.js | 5 breathing methods (Box, 4-7-8, Resonant, Physiological Sigh, Triangle) |
+| dailyReminders.js | 196 daily affirmations/reminders (PTSD-focused, DBT skill references) |
+| emotionModel.js | Hierarchical emotion wheel (6 primary → secondary → tertiary) |
+| citations.js | 22 evidence-based citations + technique-to-citation mapping |
+
+### Services (1 file)
+| Service | Purpose |
+|---------|---------|
+| openai.js | Client-side OpenAI service — sends messages to Vercel proxy, handles errors |
+
+### Utilities (5 files)
+| Utility | Purpose |
+|---------|---------|
+| storage.js | AsyncStorage wrapper + SecureStore wrapper + STORAGE_KEYS constants |
+| notifications.js | Notification scheduling (150 breathing messages, mood reminders) |
+| errorLogger.js | Centralized error logging with user-friendly messages |
+| appRating.js | App Store/Play Store rating prompt triggers |
+| dataValidation.js | Input validation utilities |
+
+### Context (1 file)
+| Context | Purpose |
+|---------|---------|
+| ThemeContext.js | Light/dark theme provider with design tokens (colors, typography, spacing, shadows) |
+
+---
+
+## Navigation Flow
+
 ```
-src/components/
-├── MoodTracker.js          # 5-point mood logging with notes
-├── BreathingCircle.js      # Animated breathing guide component
-├── SafetyPlan.js           # Crisis safety planning tool
-├── ErrorBoundary.js        # Crash recovery
-└── OfflineIndicator.js     # Network status banner
+App (ThemeProvider)
+└── AppContent (ErrorBoundary + SafeAreaProvider + OfflineIndicator)
+    └── Stack Navigator
+        ├── Disclaimer → (first launch only)
+        ├── Onboarding → (first launch only)
+        ├── MainApp (Bottom Tab Navigator)
+        │   ├── Home
+        │   ├── Tools
+        │   ├── AI (Support Chat)
+        │   ├── Crisis
+        │   ├── Progress
+        │   └── Settings
+        ├── Breathing (from Home quick action)
+        ├── BreathingMethods (full breathing screen)
+        ├── Safety Plan (from Crisis or Home)
+        └── Resources (from Settings or Tools)
 ```
 
-### Context & State Management
-```
-src/context/
-└── ThemeContext.js         # Global dark/light theme management
-```
+---
 
 ## Key Technical Features
 
 ### 1. Local-First Data Architecture
-- **All data stored locally** using AsyncStorage
-- No cloud sync without explicit user consent
-- HIPAA-aware design principles
-- Secure storage for sensitive information (Safety Plan)
+- All user data stored locally (AsyncStorage)
+- Sensitive data encrypted (expo-secure-store for Safety Plan)
+- No cloud sync — privacy by design
+- No analytics or tracking SDKs
 
 **Storage Keys:**
 ```javascript
@@ -87,352 +163,275 @@ STORAGE_KEYS = {
   MOOD_LOGS: 'mood_logs',
   TECHNIQUE_USAGE: 'technique_usage',
   SAFETY_PLAN: 'safety_plan',
-  SETTINGS: 'settings',
-  CONVERSATION_HISTORY: 'conversation_history',
-  THEME_PREFERENCE: 'theme_preference',
+  EMERGENCY_CONTACTS: 'emergency_contacts',
+  USER_PREFERENCES: 'user_preferences',
+  PROGRESS_DATA: 'progress_data',
+  MEDICATION_REMINDERS: 'medication_reminders',
   BREATHING_SESSIONS: 'breathing_sessions',
-  NOTIFICATION_SETTINGS: 'notification_settings'
+  AI_MESSAGE_COUNT: 'ai_message_count'
 }
 ```
 
-### 2. Performance Optimizations
-- **React.memo** for expensive components (MoodTracker, technique cards)
-- **useMemo** for computed values (filtered techniques, chart data)
-- **useCallback** for event handlers to prevent unnecessary re-renders
-- **Lazy loading** for heavy screens
-- **Optimized list rendering** with FlatList where appropriate
+### 2. AI Support Architecture
 
-### 3. Offline-First Design
-- All core features work without internet
-- AI Support gracefully degrades with helpful error messages
-- Crisis resources cached locally
-- 10-second timeout on API calls
-- Network status indicator
-
-### 4. Accessibility (WCAG 2.1 Level AA)
-- VoiceOver/TalkBack support throughout
-- Semantic HTML roles (button, text, header)
-- Accessibility labels and hints on all interactive elements
-- Keyboard navigation support
-- High contrast text (WCAG AAA compliant)
-- Dynamic type support
-
-### 5. Error Handling
-- **ErrorBoundary** component catches React errors
-- **ErrorLogger** utility for centralized logging
-- User-friendly error messages
-- Graceful API failure handling
-- Storage error recovery
-
-### 6. Dark Mode Implementation
-
-**ThemeContext:**
-```javascript
-- Light and dark theme definitions
-- Global theme state management
-- Theme persistence across app restarts
-- Dynamic color switching for all components
-```
-
-**Features:**
-- Toggle in Settings under "Appearance"
-- All screens adapt to current theme
-- Trauma-informed color palette
-- Charts and visualizations theme-aware
-- Accessibility compliant in both modes
-
-### 7. Breathing Exercises Architecture
-
-**Features:**
-- 5 breathing methods: Box, 4-7-8, Resonant, Physiological Sigh, Triangle
-- Horizontal swipe navigation between methods
-- Animated breathing circle with smooth transitions
-- Haptic feedback on phase changes
-- Session tracking and history storage
-- Theme-aware visual design
-
-**Technical Implementation:**
-```javascript
-- FlatList with horizontal pagination
-- Animated API for breathing circle
-- Expo Haptics for tactile feedback
-- AsyncStorage for session history
-- Timer-based phase transitions
-```
-
-### 8. AI Support Architecture
-
-**System Prompt:**
-```javascript
-- Trauma-informed responses
+**Backend (api/chat.js — Vercel Serverless):**
+- Model: GPT-4o-mini
+- Rate limit: 5 requests/minute per device
+- Daily limit: 10 messages/day (free tier)
+- Max message length: 500 characters
+- Max response tokens: 800
+- Trauma-informed system prompt
 - Crisis detection and escalation
-- Technique suggestions based on context
-- Empathetic, non-judgmental tone
-- Clear boundaries (not a therapist)
-```
+- API key secured as environment variable (never in client)
 
-**Features:**
-- Conversation history (last 50 messages)
-- Rate limiting (10 requests/minute)
-- 10-second timeout
+**Client (src/services/openai.js + AIAgentScreen):**
+- 16-message context window (last 8 exchanges)
+- Conversation history capped at 50 messages in storage
+- Lifetime message counter (user messages only)
+- 10-second timeout with graceful fallback
 - Offline detection
 - Quick help buttons for common needs
+- Technique suggestion engine with synonym mapping
 
-### 9. Midnight Auto-Reset Notification System (Build 20+)
+### 3. Notification System (Platform-Specific)
 
-**Features:**
-- Opt-in notification permissions (default off)
-- Daily mood check-in reminders (8:00 PM, 7 days)
-- Breathing exercise reminders (90-minute intervals, 16 notifications)
-- Silent midnight reset notification regenerates all notifications automatically
-- 25 randomized DBT/CBT breathing reminder messages
-- Debug notification viewer in Settings
+**iOS:**
+- AppState listener + hourly setInterval backup
+- Reschedules on date change
+- Explicit cancellation before reschedule (prevents duplicates)
+- 16 breathing reminders per day (configurable interval)
+- 2-day mood reminder coverage
 
-**Technical Implementation:**
-- Date-based triggers only (no interval triggers, no AppState listeners)
-- Self-perpetuating system via midnight reset
-- Zero immediate firing, zero spam
-- DEV_MODE flag for testing (3 notifications/60s) vs production (16/90min)
+**Android:**
+- AppState listener with 5-minute debounce
+- Reschedules when app comes to foreground after date change
+- 112 breathing reminders (7-day coverage)
+- 7-day mood reminder coverage
+- No exact alarm permission (Google Play policy)
 
-### 10. Medical Citations (Apple Guideline 1.4.1)
-- Citations from Harvard Medical School, Mayo Clinic, APA, VA
-- Clickable source links on every technique
-- Dedicated Resources & Citations screen
-- formatCitation() utility for consistent formatting
-- All URLs verified and working
+**Shared:**
+- 150 unique breathing messages (Fisher-Yates shuffle — no repeats)
+- 180 unique daily mood reminders
+- Custom reminder time and interval (user-configurable)
+- Opt-in permissions (default off)
+
+### 4. PDF Progress Report Export
+
+**Flow:** User taps Export → Selects date range → HTML template rendered → PDF generated → Share sheet
+
+**Technical details:**
+- `expo-print` converts HTML to PDF
+- `expo-file-system/next` (File API) for friendly filename rename
+- `expo-sharing` for cross-platform share sheet
+- App icon embedded as base64 in PDF header
+- Date range filtering (7 days, 30 days, 3 months, All time)
+- Technique deduplication logic
+- Handles repeat exports (deletes existing file before rename)
+- iOS: Native Alert with 5 options
+- Android: Bottom sheet Modal (Alert only supports 3 buttons)
+
+### 5. Breathing Exercises
+
+- 5 methods with distinct patterns
+- Horizontal FlatList with paginated swiping
+- Animated.timing for breathing circle expansion/contraction
+- AccessibilityInfo.announceForAccessibility for VoiceOver phase cues
+- Only current method's elements are focusable (hides off-screen items)
+- Haptic feedback on phase transitions
+- Session logging to AsyncStorage
+
+### 6. Theme System
+
+- ThemeContext provides `useTheme()` hook globally
+- Light and dark themes with complete color definitions
+- Design tokens: typography, spacing, borderRadius, shadows
+- Persists preference to AsyncStorage
+- NavigationContainer theme synced with app theme
+- All components use dynamic theme colors
+
+### 7. Accessibility (WCAG 2.1 Level AA)
+- VoiceOver (iOS) and TalkBack (Android) support
+- accessibilityRole, accessibilityLabel, accessibilityHint on all interactive elements
+- accessibilityState for toggles/checkboxes
+- Header levels (accessibilityLevel 1, 2) for screen structure
+- importantForAccessibility to hide off-screen paginated content
+- AccessibilityInfo.announceForAccessibility for dynamic updates
+- Minimum 44pt touch targets
+- High contrast text in both themes
+
+### 8. Error Handling
+- ErrorBoundary wraps entire app (crash recovery)
+- ErrorLogger utility with context-specific logging
+- User-friendly error messages (never raw errors)
+- Storage error recovery (returns null, logs error)
+- API timeout handling (10s)
+- Offline graceful degradation
+
+---
 
 ## Data Flow
 
-### Mood Tracking Flow
+### Mood Tracking
 ```
-User logs mood → MoodTracker component
-  ↓
-Validates input (1-5 scale + optional notes)
-  ↓
-Saves to AsyncStorage (MOOD_LOGS key)
-  ↓
-Updates ProgressScreen charts
-  ↓
-Triggers app rating prompt (after 5 uses)
+User logs mood → MoodTracker → Validates (1-5 + optional notes)
+  → Saves to AsyncStorage (MOOD_LOGS) → Updates ProgressScreen charts
+  → Triggers app rating prompt (after 5 uses)
 ```
 
-### Technique Usage Flow
+### Technique Usage
 ```
-User selects technique → ToolsScreen
-  ↓
-Logs usage with timestamp
-  ↓
-Displays technique with citation
-  ↓
-User rates effectiveness (1-5)
-  ↓
-Saves to AsyncStorage (TECHNIQUE_USAGE key)
-  ↓
-Updates Progress analytics
+User selects technique → ToolsScreen → Logs usage with timestamp
+  → User rates effectiveness (1-5, optional)
+  → Saves to AsyncStorage (TECHNIQUE_USAGE)
+  → Deduplication in export (rated entry takes precedence over unrated within 5 min)
 ```
 
-### AI Support Flow
+### AI Conversation
 ```
-User sends message → AIAgentScreen
-  ↓
-Checks network connectivity
-  ↓
-Sends to OpenAI API with system prompt
-  ↓
-Receives response (or timeout after 10s)
-  ↓
-Saves conversation to AsyncStorage
-  ↓
-Displays response with auto-scroll
+User sends message → AIAgentScreen → Checks network
+  → POST to Vercel proxy (api/chat.js) → Rate limit check → Daily limit check
+  → Forward to OpenAI (GPT-4o-mini) → Return response
+  → Save both messages to conversation_history (capped at 50)
+  → Increment AI_MESSAGE_COUNT (user messages only)
 ```
+
+### Export
+```
+User taps Export → Date range picker (Alert on iOS / Modal on Android)
+  → Filter data by date range → Build HTML template with branding
+  → expo-print generates PDF → Rename to friendly filename
+  → expo-sharing opens share sheet
+```
+
+---
 
 ## Security & Privacy
 
-### Data Protection
-- **No analytics or tracking** - Zero third-party analytics
-- **No cloud storage** - All data stays on device
-- **Encrypted storage** - Secure Store for Safety Plan
-- **No PII collection** - App doesn't collect personal information
-- **HTTPS only** - All API calls use secure connections
+- **No analytics/tracking** — zero third-party SDKs
+- **No cloud storage** — all data on device
+- **Encrypted storage** — expo-secure-store for Safety Plan
+- **No PII collection** — app doesn't collect personal information
+- **HTTPS only** — all API calls use secure connections
+- **API key server-side** — OpenAI key on Vercel, never in client bundle
+- **Rate limiting** — prevents API abuse (5/min, 10/day)
+- **Device ID** — anonymous, used only for rate limiting
 
-### API Key Management
-- OpenAI API key stored as EAS secret
-- Never exposed in client code
-- Environment-specific configuration
-- Rate limiting to prevent abuse
+---
 
 ## Build & Deployment
 
-### Current Build Status
-- **Current Version:** 1.1.0
-- **Current Build:** 21 (in development)
-- **Last Released:** Build 17 (App Store)
-- **Last TestFlight:** Build 20
-
-### EAS Build Configuration
+### Configuration
 ```javascript
 // eas.json
 {
+  "cli": { "appVersionSource": "local" },
   "build": {
     "production": {
-      "ios": {
-        "buildNumber": "21",
-        "bundleIdentifier": "com.anchor.ptsd-support"
-      }
+      "autoIncrement": false,
+      "ios": { "image": "latest" },
+      "android": { "buildType": "app-bundle" }
     }
   }
 }
 ```
 
-### App Configuration
-```javascript
-// app.config.js
-{
-  version: "1.1.0",
-  buildNumber: "21",
-  supportsTablet: false,  // iPhone only
-  permissions: [
-    "NSLocationWhenInUseUsageDescription",  // Crisis center finder
-    "NSUserNotificationsUsageDescription"   // Mood and breathing reminders
-  ]
-}
+### Build Process
+```bash
+# 1. Bump build number in app.config.js
+# 2. Regenerate native folders
+rm -rf .expo node_modules/.cache
+npx expo prebuild --clean --platform ios
+npx expo prebuild --clean --platform android
+# 3. Commit and push
+git add ios/ android/ app.config.js
+git commit -m "chore: bump build" && git push
+# 4. Build
+eas build --platform ios --profile production --non-interactive
+eas build --platform android --profile production --non-interactive
+# 5. Verify
+eas build:list --platform ios --limit 1
+eas build:list --platform android --limit 1
 ```
+
+### Submission
+- **iOS:** `eas submit --platform ios --latest`
+- **Android:** Download .aab from EAS → Upload to Play Console
+
+### Key Notes
+- `ios/` and `android/` are tracked in git for reliable version control
+- Always regenerate native folders before building (prevents version mismatch)
+- `appVersionSource: "local"` ensures EAS reads from native files, not remote cache
+- Distribution certificate expires November 19, 2026
+
+---
 
 ## Testing
 
-### Test Coverage
-- **26 unit tests** covering core functionality
-- **Jest** test framework
+### Framework
+- **Jest 29** with **jest-expo** preset
 - **React Native Testing Library** for component tests
-- Mock external dependencies (OpenAI, AsyncStorage)
-- 80%+ coverage on critical paths
+- 23 test files covering core functionality
 
 ### Test Categories
 ```
 src/__tests__/
-├── AIAgentScreen.test.js    # AI conversation logic
-├── CrisisScreen.test.js     # Emergency features
-├── MoodTracker.test.js      # Mood logging
-└── ProgressScreen.test.js   # Analytics calculations
+├── accessibility.test.js          # VoiceOver/TalkBack compliance
+├── AIAgentScreen.test.js          # AI conversation logic
+├── breathing-accessibility.test.js # Breathing screen a11y
+├── CrisisScreen.test.js           # Emergency features
+├── customizable-reminders.test.js # Reminder scheduling
+├── dataValidation.test.js         # Input validation
+├── ExportModal.test.js            # PDF export, date filtering, dedup
+├── MoodTracker.test.js            # Mood logging
+├── notifications.test.js          # Notification system
+├── openai.test.js                 # AI service
+├── ProgressAnalytics.test.js      # Analytics calculations
+├── ProgressScreen.test.js         # Progress display
+├── SafetyPlan.*.test.js           # Safety plan (multiple files)
+├── shuffle-algorithm.test.js      # Message randomization
+├── storage.test.js                # Storage utilities
+└── techniques.test.js             # Technique data
 ```
 
-## Performance Metrics
+---
 
-- **App size:** ~15MB (optimized with Hermes)
+## Performance
+
+- **App size:** ~15MB (Hermes optimized)
 - **Cold start:** <2 seconds
-- **Technique load:** <100ms
 - **AI response:** 2-5 seconds (network dependent)
-- **Memory usage:** ~50MB average
-- **Battery impact:** Minimal (no background processes)
-
-## Apple App Store Compliance
-
-### Medical App Requirements (Guideline 1.4.1)
-- ✅ Medical citations from authoritative sources
-- ✅ Clickable source links on every technique
-- ✅ Dedicated Resources & Citations screen
-- ✅ Clear educational disclaimer
-- ✅ Not marketed as medical device
-
-### Privacy & Permissions
-- ✅ Location permission with clear explanation (Crisis center finder)
-- ✅ Notification permission with clear explanation (Mood reminders)
-- ✅ Privacy policy hosted on GitHub Pages
-- ✅ No data collection without consent
-
-### Accessibility Requirements
-- ✅ VoiceOver support throughout
-- ✅ Accessibility labels on all interactive elements
-- ✅ WCAG 2.1 Level AA compliance
-- ✅ High contrast text
-- ✅ Keyboard navigation
-
-### Design Guidelines (HIG)
-- ✅ Standard iOS navigation patterns
-- ✅ Proper spacing and typography
-- ✅ Native iOS components
-- ✅ Consistent visual hierarchy
-- ✅ iPhone-only (iPad disabled)
-
-## Future Technical Enhancements
-
-### Planned for v1.1
-- Fix notification scheduling
-- Enhanced AI conversation context
-- Technique recommendation algorithm
-- Data export improvements
-- Multi-language support
-
-### Potential Features
-- End-to-end encryption for cloud sync
-- Wearable device integration (Apple Watch)
-- Voice input for AI support
-- Offline AI with local LLM
-- Progressive Web App (PWA) version
-
-## Lessons Learned
-
-### Apple App Store Compliance
-- **Medical citations required** - Health apps need authoritative sources
-- **Clear disclaimers** - Must state it's not medical advice
-- **Permission explanations** - Every permission needs clear justification
-- **iPad support** - Disable if not optimized
-- **Accessibility** - VoiceOver support is critical
-
-### Technical Challenges Solved
-1. **Offline AI graceful degradation** - 10s timeout + helpful error messages
-2. **Citation management** - Centralized citations.js with formatCitation()
-3. **Performance optimization** - React.memo + useMemo for smooth scrolling
-4. **Error recovery** - ErrorBoundary prevents full app crashes
-5. **Storage reliability** - Wrapper with error handling and validation
-
-## Development Timeline
-
-- **Initial Development:** 2 weeks
-- **Apple Rejections:** 3 iterations (Builds 1, 5, 7)
-- **Citation Implementation:** Build 8-9
-- **Total Time to Approval:** ~1 month
-- **Final Build:** Build 9 (Approved November 2025)
-
-## Open Source
-
-Anchor is open source (MIT License) to help others build mental health apps. The codebase demonstrates:
-- Production-ready React Native architecture
-- HIPAA-aware design patterns
-- Accessibility best practices
-- Apple App Store compliance
-- Offline-first mobile development
-
-**Repository:** https://github.com/seethe529/AnchorApp
+- **PDF generation:** <1 second
+- **Memory:** ~50MB average
+- **Battery:** Minimal (no persistent background processes)
 
 ---
 
-## Tech Stack Summary
+## App Store Compliance
 
-**Frontend:**
-- React Native + Expo SDK 54
-- React Navigation
-- React Hooks (useState, useEffect, useCallback, useMemo)
+### Apple (Guidelines 1.4.1, 5.1)
+- ✅ Medical citations from Harvard, Mayo Clinic, APA, VA
+- ✅ Educational disclaimer (not a medical device)
+- ✅ Privacy policy
+- ✅ Location/notification permissions with clear explanations
+- ✅ No encryption declaration (usesNonExemptEncryption: false)
+- ✅ VoiceOver accessibility
 
-**Backend/Services:**
-- OpenAI GPT-4 API
-- AsyncStorage for local data
-- Expo Secure Store for encrypted data
-
-**Development:**
-- Jest for testing
-- EAS for builds and deployment
-- Git for version control
-
-**Key Principles:**
-- Privacy-first (local storage)
-- Offline-capable
-- Accessible (WCAG 2.1 AA)
-- Evidence-based (medical citations)
-- User-focused (simple, clean UI)
+### Google Play
+- ✅ No SCHEDULE_EXACT_ALARM permission (policy compliance)
+- ✅ Adaptive icon properly centered
+- ✅ NOTIFICATIONS permission only
+- ✅ Privacy policy
+- ✅ Content rating appropriate
 
 ---
 
-**Last Updated:** November 2025 (Build 21)
-**Status:** Build 17 live on App Store, Build 21 in development
-**License:** MIT
+## Repository
+
+**GitHub:** https://github.com/seethe529/AnchorApp  
+**License:** MIT  
+**Owner:** Ryan Charles Lingo (Individual Developer)  
+**Apple Team ID:** X57B3HGZ6U
+
+---
+
+**Last Updated:** June 28, 2026 (Build 104)
