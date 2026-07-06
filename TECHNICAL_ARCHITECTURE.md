@@ -196,24 +196,31 @@ STORAGE_KEYS = {
 ### 3. Notification System (Platform-Specific)
 
 **iOS:**
-- AppState listener + hourly setInterval backup
+- AppState listener (foreground check) + hourly setInterval backup
 - Reschedules on date change
 - Explicit cancellation before reschedule (prevents duplicates)
-- 16 breathing reminders per day (configurable interval)
-- 2-day mood reminder coverage
+- 48 breathing reminders (3-day coverage at default 90-min interval)
+- 7-day mood reminder coverage
+- Stays under iOS 64 notification limit
 
 **Android:**
 - AppState listener with 5-minute debounce
 - Reschedules when app comes to foreground after date change
-- 112 breathing reminders (7-day coverage)
+- 112 breathing reminders (7-day coverage at default 90-min interval)
 - 7-day mood reminder coverage
 - No exact alarm permission (Google Play policy)
+- Android notification channel: "Breathing Reminders" (HIGH importance)
 
 **Shared:**
-- 150 unique breathing messages (Fisher-Yates shuffle — no repeats)
-- 180 unique daily mood reminders
-- Custom reminder time and interval (user-configurable)
+- 150 unique breathing messages (Fisher-Yates shuffle — no repeats until all seen)
+- Configurable breathing interval (default 90 minutes, user-adjustable)
+- Configurable mood reminder time (default 8 PM, user-adjustable)
+- Date-based triggers (not interval-based)
+- Notification types tagged with `data.type`: `mood_reminder`, `breathing_reminder`
+- Cancellation by type (filters scheduled notifications by type before removing)
 - Opt-in permissions (default off)
+- Web platform skipped entirely (no notification support)
+- Debug export tool in Settings for troubleshooting
 
 ### 4. PDF Progress Report Export
 
