@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 /*************************************************
  * DBT + CBT BREATHING REMINDER MESSAGES
  *************************************************/
-const BREATHING_REMINDER_MESSAGES = [
+export const BREATHING_REMINDER_MESSAGES = [
   "Take one mindful breath and return to center.",
   "Pause. Notice one thing you can see, one thing you can feel.",
   "Breathe slowly — move into your Wise Mind.",
@@ -150,7 +150,10 @@ const BREATHING_REMINDER_MESSAGES = [
   "Let your breathing be your safe place right now.",
   "Breathe and know: this feeling is temporary.",
   "Let each breath remind you of your resilience.",
-  "Your breath is always working to support you."
+  "Your breath is always working to support you.",
+  "Let your next breath be unhurried and full.",
+  "Pause here — one breath is all this moment asks of you.",
+  "Your breath can hold you steady until this passes."
 ];
 
 
@@ -430,6 +433,25 @@ export const clearAllNotifications = async () => {
 };
 
 /*************************************************
+ * RESCHEDULE DECISION LOGIC (shared by iOS + Android)
+ *************************************************/
+// Compares full calendar dates (not just day-of-month) so a reopen a month
+// apart on the same day-of-month is still detected as a day change.
+export const shouldResetNotifications = (lastReset, now = new Date()) => {
+  return now.toDateString() !== lastReset;
+};
+
+// Single source of truth for what should be (re)scheduled, so the master
+// "notifications" toggle is always respected regardless of which code path
+// triggers the reschedule.
+export const getReschedulePlan = (prefs = {}) => {
+  return {
+    breathing: Boolean(prefs.notifications && prefs.breathingReminders),
+    mood: Boolean(prefs.notifications && prefs.moodReminders),
+  };
+};
+
+/*************************************************
  * DEBUG — LIST ALL SCHEDULED NOTIFICATIONS
  *************************************************/
 export const debugListScheduled = async () => {
@@ -473,10 +495,10 @@ export const exportScheduledNotifications = async () => {
     
     // Get last reset date from storage
     const { storage } = require('./storage');
-    const lastReset = await storage.getItem('last_reset') || 0;
+    const lastReset = await storage.getItem('last_reset') || '';
     const now = new Date();
-    const currentDate = now.getDate();
-    
+    const currentDate = now.toDateString();
+
     return {
       exportDate: new Date().toISOString(),
       totalScheduled: scheduled.length,

@@ -18,7 +18,7 @@ import BreathingExercise from './src/components/BreathingExercise';
 import BreathingScreen from './src/screens/BreathingScreen';
 import SafetyPlan from './src/components/SafetyPlan';
 
-import { scheduleBreathingReminder, scheduleMoodReminder, cancelBreathingReminder, cancelMoodReminder } from './src/utils/notifications';
+import { scheduleBreathingReminder, scheduleMoodReminder, cancelBreathingReminder, cancelMoodReminder, shouldResetNotifications, getReschedulePlan } from './src/utils/notifications';
 import { storage } from './src/utils/storage';
 import ErrorBoundary from './src/components/ErrorBoundary';
 import ErrorLogger from './src/utils/errorLogger';
@@ -100,30 +100,31 @@ function AppContent() {
       
       const checkAndReschedule = async () => {
         if (isRescheduling) return;
-        
+
         const now = new Date();
-        const last = await storage.getItem("last_reset") || 0;
+        const last = await storage.getItem("last_reset") || '';
         const prefs = await storage.getItem('user_preferences') || {};
 
-        if (now.getDate() !== last) {
+        if (shouldResetNotifications(last, now)) {
           isRescheduling = true;
           console.log('🌙 [APP] iOS: Date changed, resetting notifications');
           try {
             await cancelBreathingReminder();
             await cancelMoodReminder();
-            
-            // Use saved custom settings
-            if (prefs.breathingReminders) {
+
+            // Use saved custom settings, respecting the master notifications toggle
+            const plan = getReschedulePlan(prefs);
+            if (plan.breathing) {
               const interval = prefs.breathingInterval || 90;
               await scheduleBreathingReminder(interval);
             }
-            if (prefs.moodReminders) {
+            if (plan.mood) {
               const timeString = prefs.moodReminderTime || '20:00';
               const [hour] = timeString.split(':').map(Number);
               await scheduleMoodReminder({ hour, minute: 0 });
             }
-            
-            await storage.setItem("last_reset", now.getDate());
+
+            await storage.setItem("last_reset", now.toDateString());
           } finally {
             isRescheduling = false;
           }
@@ -154,26 +155,28 @@ function AppContent() {
         }
         lastCheck = now;
 
-        const currentDate = new Date().getDate();
-        const last = await storage.getItem("last_reset") || 0;
+        const nowDate = new Date();
+        const currentDate = nowDate.toDateString();
+        const last = await storage.getItem("last_reset") || '';
         const prefs = await storage.getItem('user_preferences') || {};
 
-        if (currentDate !== last) {
+        if (shouldResetNotifications(last, nowDate)) {
           console.log('🌙 [APP] Android: Date changed, resetting notifications');
           await cancelBreathingReminder();
           await cancelMoodReminder();
-          
-          // Use saved custom settings
-          if (prefs.breathingReminders) {
+
+          // Use saved custom settings, respecting the master notifications toggle
+          const plan = getReschedulePlan(prefs);
+          if (plan.breathing) {
             const interval = prefs.breathingInterval || 90;
             await scheduleBreathingReminder(interval);
           }
-          if (prefs.moodReminders) {
+          if (plan.mood) {
             const timeString = prefs.moodReminderTime || '20:00';
             const [hour] = timeString.split(':').map(Number);
             await scheduleMoodReminder({ hour, minute: 0 });
           }
-          
+
           await storage.setItem("last_reset", currentDate);
         } else {
           console.log('✅ [APP] Android: Date unchanged, no reschedule needed');
@@ -198,7 +201,7 @@ function AppContent() {
       // Initialize last_reset if not set
       const lastReset = await storage.getItem("last_reset");
       if (!lastReset) {
-        await storage.setItem("last_reset", new Date().getDate());
+        await storage.setItem("last_reset", new Date().toDateString());
       }
     } catch (error) {
       ErrorLogger.log(error, 'App initialization');

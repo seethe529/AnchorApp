@@ -1,124 +1,56 @@
-import { AppState } from 'react-native';
-import { scheduleBreathingReminder, scheduleMoodReminder, cancelBreathingReminder, cancelMoodReminder } from '../utils/notifications';
-import { storage } from '../utils/storage';
+import { shouldResetNotifications, getReschedulePlan } from '../utils/notifications';
 
-jest.mock('../utils/notifications');
-jest.mock('../utils/storage');
-
-describe.skip('Android AppState Notification Workflow', () => {
-  let appStateListener;
-  
-  beforeEach(() => {
-    jest.clearAllMocks();
-    
-    // Capture the AppState listener
-    AppState.addEventListener = jest.fn((event, callback) => {
-      appStateListener = callback;
-      return { remove: jest.fn() };
-    });
+// App.js drives its iOS/Android reschedule-on-foreground logic entirely
+// through these two pure functions, so testing them directly exercises the
+// real decision logic without needing to mount the full App component tree.
+describe('shouldResetNotifications', () => {
+  it('should NOT reset when opening the app on the same day', () => {
+    const now = new Date('2026-01-06T10:00:00');
+    expect(shouldResetNotifications(now.toDateString(), now)).toBe(false);
   });
 
-  it('should NOT reschedule when opening app on same day', async () => {
-    const currentDate = 6;
-    storage.getItem.mockImplementation((key) => {
-      if (key === 'last_reset') return Promise.resolve(currentDate);
-      if (key === 'user_preferences') return Promise.resolve({ breathingReminders: true, moodReminders: true });
-      return Promise.resolve(null);
-    });
-
-    // Simulate app going to background then foreground
-    await appStateListener('background');
-    await appStateListener('active');
-
-    expect(cancelBreathingReminder).not.toHaveBeenCalled();
-    expect(cancelMoodReminder).not.toHaveBeenCalled();
-    expect(scheduleBreathingReminder).not.toHaveBeenCalled();
-    expect(scheduleMoodReminder).not.toHaveBeenCalled();
+  it('should reset when opening the app on a new day', () => {
+    const last = new Date('2026-01-05T22:00:00').toDateString();
+    const now = new Date('2026-01-06T08:00:00');
+    expect(shouldResetNotifications(last, now)).toBe(true);
   });
 
-  it('should reschedule when opening app on new day', async () => {
-    const oldDate = 5;
-    const newDate = 6;
-    
-    storage.getItem.mockImplementation((key) => {
-      if (key === 'last_reset') return Promise.resolve(oldDate);
-      if (key === 'user_preferences') return Promise.resolve({ breathingReminders: true, moodReminders: true });
-      return Promise.resolve(null);
-    });
-
-    // Mock Date to return new day
-    const mockDate = new Date('2025-12-06T10:00:00');
-    jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-
-    await appStateListener('active');
-
-    expect(cancelBreathingReminder).toHaveBeenCalledTimes(1);
-    expect(cancelMoodReminder).toHaveBeenCalledTimes(1);
-    expect(scheduleBreathingReminder).toHaveBeenCalledTimes(1);
-    expect(scheduleMoodReminder).toHaveBeenCalledTimes(1);
-    expect(storage.setItem).toHaveBeenCalledWith('last_reset', newDate);
-
-    global.Date.mockRestore();
+  it('should reset across a same day-of-month collision a month apart', () => {
+    // Regression test: the old implementation compared getDate() only, so
+    // opening on the 15th of one month and again on the 15th of the next
+    // month looked like "no change" and silently skipped rescheduling.
+    const last = new Date('2026-01-15T09:00:00').toDateString();
+    const now = new Date('2026-02-15T09:00:00');
+    expect(shouldResetNotifications(last, now)).toBe(true);
   });
 
-  it('should respect 5-minute debounce when opening app multiple times', async () => {
-    const currentDate = 6;
-    storage.getItem.mockImplementation((key) => {
-      if (key === 'last_reset') return Promise.resolve(currentDate);
-      if (key === 'user_preferences') return Promise.resolve({ breathingReminders: true, moodReminders: true });
-      return Promise.resolve(null);
-    });
+  it('should reset when there is no stored last_reset value yet', () => {
+    const now = new Date('2026-01-06T10:00:00');
+    expect(shouldResetNotifications('', now)).toBe(true);
+  });
+});
 
-    // First open
-    await appStateListener('active');
-    const firstCallCount = storage.getItem.mock.calls.length;
-    
-    // Second open immediately (should be debounced)
-    await appStateListener('active');
-
-    // Should not make additional calls due to debounce
-    expect(storage.getItem.mock.calls.length).toBe(firstCallCount);
+describe('getReschedulePlan', () => {
+  it('should schedule both when notifications and both reminders are enabled', () => {
+    const plan = getReschedulePlan({ notifications: true, breathingReminders: true, moodReminders: true });
+    expect(plan).toEqual({ breathing: true, mood: true });
   });
 
-  it('should NOT reschedule if notifications are disabled', async () => {
-    const oldDate = 5;
-    
-    storage.getItem.mockImplementation((key) => {
-      if (key === 'last_reset') return Promise.resolve(oldDate);
-      if (key === 'user_preferences') return Promise.resolve({ breathingReminders: false, moodReminders: false });
-      return Promise.resolve(null);
-    });
-
-    const mockDate = new Date('2025-12-06T10:00:00');
-    jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-
-    await appStateListener('active');
-
-    expect(cancelBreathingReminder).toHaveBeenCalledTimes(1);
-    expect(cancelMoodReminder).toHaveBeenCalledTimes(1);
-    expect(scheduleBreathingReminder).not.toHaveBeenCalled();
-    expect(scheduleMoodReminder).not.toHaveBeenCalled();
-
-    global.Date.mockRestore();
+  it('should schedule neither when the master notifications toggle is off', () => {
+    // Regression test: previously the reschedule path only checked the
+    // sub-preference flags, so disabling "Enable Notifications" did not stop
+    // reminders from being silently rescheduled on the next day change.
+    const plan = getReschedulePlan({ notifications: false, breathingReminders: true, moodReminders: true });
+    expect(plan).toEqual({ breathing: false, mood: false });
   });
 
-  it('should handle user opening app during PTSD episode gracefully', async () => {
-    // User opens app multiple times in distress
-    const currentDate = 6;
-    storage.getItem.mockImplementation((key) => {
-      if (key === 'last_reset') return Promise.resolve(currentDate);
-      if (key === 'user_preferences') return Promise.resolve({ breathingReminders: true, moodReminders: true });
-      return Promise.resolve(null);
-    });
+  it('should respect individual reminder toggles when notifications are enabled', () => {
+    const plan = getReschedulePlan({ notifications: true, breathingReminders: true, moodReminders: false });
+    expect(plan).toEqual({ breathing: true, mood: false });
+  });
 
-    // Rapid app opens (panic/distress behavior)
-    await appStateListener('active');
-    await appStateListener('background');
-    await appStateListener('active');
-    await appStateListener('background');
-    await appStateListener('active');
-
-    // Should only trigger once due to debounce (no notification spam)
-    expect(storage.getItem).toHaveBeenCalledTimes(2); // Only first call
+  it('should default to neither scheduled when preferences are missing', () => {
+    expect(getReschedulePlan()).toEqual({ breathing: false, mood: false });
+    expect(getReschedulePlan({})).toEqual({ breathing: false, mood: false });
   });
 });

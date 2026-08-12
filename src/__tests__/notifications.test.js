@@ -8,8 +8,20 @@ import {
   cancelBreathingReminder,
   clearAllNotifications,
   exportScheduledNotifications,
+  BREATHING_REMINDER_MESSAGES,
 } from '../utils/notifications';
 import { storage } from '../utils/storage';
+
+describe('BREATHING_REMINDER_MESSAGES', () => {
+  it('should contain exactly 150 messages, matching NOTIFICATION_SYSTEM.md', () => {
+    expect(BREATHING_REMINDER_MESSAGES).toHaveLength(150);
+  });
+
+  it('should contain no duplicate messages', () => {
+    const unique = new Set(BREATHING_REMINDER_MESSAGES);
+    expect(unique.size).toBe(BREATHING_REMINDER_MESSAGES.length);
+  });
+});
 
 describe('Notification System', () => {
   beforeEach(() => {
@@ -341,7 +353,7 @@ describe('Notification System', () => {
 
   describe('exportScheduledNotifications', () => {
     beforeEach(() => {
-      storage.getItem = jest.fn().mockResolvedValue(5); // last_reset = 5
+      storage.getItem = jest.fn().mockResolvedValue('Mon Jan 05 2026'); // last_reset date string
     });
 
     it('should return null on web platform', async () => {
@@ -391,19 +403,18 @@ describe('Notification System', () => {
     it('should include last reset date information', async () => {
       Platform.OS = 'ios';
       Notifications.getAllScheduledNotificationsAsync.mockResolvedValue([]);
-      storage.getItem.mockResolvedValue(5);
-      
-      const mockDate = new Date();
-      mockDate.setDate(10);
-      jest.spyOn(global, 'Date').mockImplementation(() => mockDate);
-      
+      storage.getItem.mockResolvedValue('Mon Jan 05 2026');
+
+      const mockDate = new Date('2026-01-10T12:00:00');
+      jest.useFakeTimers().setSystemTime(mockDate);
+
       const result = await exportScheduledNotifications();
-      
-      expect(result.rescheduleSystem.lastResetDate).toBe(5);
-      expect(result.rescheduleSystem.currentDate).toBe(10);
+
+      expect(result.rescheduleSystem.lastResetDate).toBe('Mon Jan 05 2026');
+      expect(result.rescheduleSystem.currentDate).toBe(mockDate.toDateString());
       expect(result.rescheduleSystem.willResetToday).toBe(true);
-      
-      global.Date.mockRestore();
+
+      jest.useRealTimers();
     });
 
     it('should map notification details correctly', async () => {

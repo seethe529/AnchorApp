@@ -15,11 +15,13 @@ Anchor uses a platform-specific notification system optimized for iOS and Androi
 #### Rescheduling Mechanism
 - **Method:** Dual system - `AppState` listener + `setInterval` timer
 - **AppState Listener:** Checks immediately when app comes to foreground (no debounce)
-- **Hourly Timer:** Backup check every 1 hour (3600000ms) while app is open
-- **Trigger:** AppState fires on app open, timer runs continuously in background
-- **Check:** Compares current date with last reset date
+- **Hourly Timer:** Backup check every 1 hour (3600000ms) — **only while the app is in the foreground**
+- **Trigger:** AppState fires on app open; the timer only continues ticking while the app stays open and foregrounded
+- **Check:** Compares current calendar date with last reset date (see [Date Tracking](#date-tracking))
 - **Action:** If date changed, cancels all notifications and reschedules
-- **Rationale:** AppState provides immediate reschedule on app open, timer ensures coverage if app stays open
+- **Rationale:** AppState provides immediate reschedule on app open; the timer adds a second check if the app is kept open past the hour mark
+
+> ⚠️ **Not a true background task.** The app does not declare `UIBackgroundModes` and does not use `expo-task-manager`/`BGTaskScheduler`. React Native's JS runtime is suspended by iOS shortly after the app is backgrounded, so `setInterval` **stops firing once the app leaves the foreground** — it is not a background timer in the OS sense. In practice, iOS reschedule coverage comes almost entirely from the AppState listener firing on app open, same as Android. This is a deliberate, low-risk choice (avoids declaring background entitlements the app doesn't need for App Review), but earlier revisions of this doc described the timer as running "in the background," which was inaccurate.
 
 #### Coverage
 - **Breathing Reminders:** 48 notifications (3 days)
@@ -37,29 +39,45 @@ Anchor uses a platform-specific notification system optimized for iOS and Androi
 - **Impact:** 3-day breathing coverage instead of 7-day
 
 #### Rationale
-- iOS allows background timers to run
-- Hourly checks ensure notifications never expire
+- AppState-triggered reschedule on app open is the primary, reliable mechanism
+- The hourly timer is a secondary check for long foreground sessions, not a background guarantee
 - 3-day coverage balances user engagement with platform limits
 - 7-day mood reminders serve as engagement hook
 - Explicit cancellation prevents duplicate notification branches
 
 #### Code Location
 ```javascript
-// App.js - Lines ~88-125
+// App.js
 if (Platform.OS === 'ios') {
   let isRescheduling = false;
-  
+
   const checkAndReschedule = async () => {
     if (isRescheduling) return;
-    // Check date change and reschedule
+
+    const now = new Date();
+    const last = await storage.getItem("last_reset") || '';
+    const prefs = await storage.getItem('user_preferences') || {};
+
+    if (shouldResetNotifications(last, now)) {
+      isRescheduling = true;
+      await cancelBreathingReminder();
+      await cancelMoodReminder();
+
+      const plan = getReschedulePlan(prefs); // respects the master `notifications` toggle
+      if (plan.breathing) await scheduleBreathingReminder(prefs.breathingInterval || 90);
+      if (plan.mood) await scheduleMoodReminder(/* ... */);
+
+      await storage.setItem("last_reset", now.toDateString());
+      isRescheduling = false;
+    }
   };
 
   // Check when app comes to foreground
   const subscription = AppState.addEventListener('change', (nextAppState) => {
     if (nextAppState === 'active') checkAndReschedule();
   });
-  
-  // Hourly backup check
+
+  // Hourly backup check (foreground-only, see warning above)
   const timer = setInterval(checkAndReschedule, 3600000);
 
   return () => {
@@ -68,6 +86,8 @@ if (Platform.OS === 'ios') {
   };
 }
 ```
+
+`shouldResetNotifications` and `getReschedulePlan` live in `src/utils/notifications.js` and are shared between the iOS and Android branches, so both platforms make the reschedule decision the same way instead of duplicating (and potentially diverging on) the logic.
 
 ---
 
@@ -100,8 +120,30 @@ if (Platform.OS === 'ios') {
 
 #### Code Location
 ```javascript
-// App.js - Lines ~109-125
+// App.js
 else if (Platform.OS === 'android') {
+  let lastCheck = 0;
+  const checkAndReschedule = async () => {
+    const now = Date.now();
+    if (now - lastCheck < 300000) return; // 5-minute debounce
+    lastCheck = now;
+
+    const nowDate = new Date();
+    const last = await storage.getItem("last_reset") || '';
+    const prefs = await storage.getItem('user_preferences') || {};
+
+    if (shouldResetNotifications(last, nowDate)) {
+      await cancelBreathingReminder();
+      await cancelMoodReminder();
+
+      const plan = getReschedulePlan(prefs); // respects the master `notifications` toggle
+      if (plan.breathing) await scheduleBreathingReminder(prefs.breathingInterval || 90);
+      if (plan.mood) await scheduleMoodReminder(/* ... */);
+
+      await storage.setItem("last_reset", nowDate.toDateString());
+    }
+  };
+
   const subscription = AppState.addEventListener('change', (nextAppState) => {
     if (nextAppState === 'active') {
       checkAndReschedule();
@@ -189,9 +231,12 @@ This means changing the interval adjusts the notification count automatically wh
 // iOS timer explicitly cancels before rescheduling
 await cancelBreathingReminder();
 await cancelMoodReminder();
-// Then reschedule
-if (prefs.breathingReminders) await scheduleBreathingReminder();
-if (prefs.moodReminders) await scheduleMoodReminder();
+// Then reschedule — getReschedulePlan() gates on the master `notifications`
+// toggle as well as the individual reminder flags, so a disabled master
+// switch is respected even on the background reschedule path.
+const plan = getReschedulePlan(prefs);
+if (plan.breathing) await scheduleBreathingReminder(prefs.breathingInterval || 90);
+if (plan.mood) await scheduleMoodReminder(/* ... */);
 ```
 
 ### Why This Matters
@@ -211,6 +256,7 @@ if (prefs.moodReminders) await scheduleMoodReminder();
 ### Storage Key: `user_preferences`
 ```javascript
 {
+  notifications: true,           // Master toggle — must be true for anything to (re)schedule
   breathingReminders: true,      // User enabled breathing reminders
   moodReminders: true,           // User enabled mood reminders
   breathingInterval: 90,         // Minutes between breathing reminders (default 90)
@@ -219,9 +265,9 @@ if (prefs.moodReminders) await scheduleMoodReminder();
 ```
 
 ### Behavior
-- Rescheduling checks user preferences before scheduling
+- Rescheduling checks user preferences before scheduling, via `getReschedulePlan(prefs)`
 - Uses custom interval and time if set, otherwise defaults
-- If disabled, notifications are cancelled but not rescheduled
+- The master `notifications` flag is checked on **every** reschedule path (interactive Settings toggle and the background AppState/timer reschedule) — turning it off reliably stops future rescheduling, not just the currently-pending notifications
 - User can toggle in Settings → Notifications
 - User can change interval and time in Settings
 
@@ -230,14 +276,12 @@ if (prefs.moodReminders) await scheduleMoodReminder();
 ## Date Tracking
 
 ### Storage Key: `last_reset`
-- **Value:** Day of month (1-31)
+- **Value:** Full calendar date string, `Date.prototype.toDateString()` (e.g. `"Wed Aug 12 2026"`)
 - **Purpose:** Track when notifications were last rescheduled
-- **Check:** `now.getDate() !== last_reset`
+- **Check:** `shouldResetNotifications(lastReset, now)` in `src/utils/notifications.js`, i.e. `now.toDateString() !== lastReset`
 
-### Why Day of Month?
-- Simple comparison
-- Works across month boundaries
-- Resets daily at midnight
+### Why a Full Date String (not day-of-month)?
+An earlier version of this system stored only the day-of-month (1–31) and compared `now.getDate() !== last_reset`. That has a real collision bug: if the user doesn't open the app for close to a month and happens to reopen on the same day-of-month as their last open (e.g. opened on the 15th, next open is also the 15th, one or more months later), the comparison sees no change and **silently skips the reschedule** — notifications would stop refilling with no indication anything was wrong. Comparing full calendar dates via `toDateString()` removes this collision entirely while staying just as simple to compare (`!==` on two strings) and still resets naturally at local midnight.
 
 ---
 
@@ -248,33 +292,48 @@ if (prefs.moodReminders) await scheduleMoodReminder();
 exportScheduledNotifications()
 ```
 
-**Returns:**
+**Returns** (actual shape, from `src/utils/notifications.js`):
 ```json
 {
-  "exportDate": "2025-12-05T10:30:00.000Z",
-  "totalScheduled": 118,
+  "exportDate": "2026-08-12T10:30:00.000Z",
+  "totalScheduled": 55,
   "summary": {
-    "moodReminders": 2,
-    "breathingReminders": 16
+    "moodReminders": 7,
+    "breathingReminders": 48,
+    "midnightReset": 0
   },
   "rescheduleSystem": {
     "platform": "ios",
     "ios": {
       "method": "setInterval timer",
       "checkInterval": "3600000ms (1 hour)",
-      "breathingCount": 16,
-      "moodDays": 2
+      "coverageDays": 3,
+      "note": "Hourly timer checks date change while app is open, reschedules daily with 3-day coverage"
     },
     "android": {
       "method": "AppState listener",
       "checkInterval": "On app foreground",
-      "breathingCount": 112,
-      "moodDays": 7
-    }
+      "coverageDays": 7,
+      "note": "Checks date change when app comes to foreground, 7-day coverage for less frequent app opens"
+    },
+    "lastResetDate": "Wed Aug 12 2026",
+    "currentDate": "Wed Aug 12 2026",
+    "willResetToday": false
   },
-  "notifications": [...]
+  "debugTriggerSample": { "date": "2026-08-12T12:00:00.000Z" },
+  "notifications": [
+    {
+      "id": "notification-id",
+      "type": "breathing_reminder",
+      "title": "Breathing Break",
+      "body": "Take one mindful breath and return to center.",
+      "trigger": { "date": "2026-08-12T12:00:00.000Z" },
+      "triggerDate": "2026-08-12T12:00:00.000Z"
+    }
+  ]
 }
 ```
+`lastResetDate`/`currentDate` are full calendar date strings (see [Date Tracking](#date-tracking)); `willResetToday` is `true` when they differ, i.e. the next foreground/timer check will cancel and reschedule.
 
 ### Console Logging
 All notification operations log to console with emoji prefixes:
@@ -422,7 +481,14 @@ All notification operations log to console with emoji prefixes:
 
 ## Version History
 
-### Build 104 (Current - June 2026)
+### Unreleased (pending next build, post-104)
+- **Fixed:** Master `notifications` toggle is now respected by the background reschedule path (previously, turning off "Enable Notifications" would leave `breathingReminders`/`moodReminders` sub-flags untouched, so notifications silently came back on the next day-change check — see [User Preferences](#user-preferences))
+- **Fixed:** `last_reset` now stores a full calendar date string instead of day-of-month, removing a collision bug where reopening the app on the same day-of-month a month or more later would skip rescheduling entirely (see [Date Tracking](#date-tracking))
+- **Refactored:** Reschedule decision logic (`shouldResetNotifications`, `getReschedulePlan`) extracted into `src/utils/notifications.js` and shared by both the iOS and Android branches in `App.js`, so the two platforms can no longer drift out of sync with each other
+- **Fixed:** Breathing message bank restored to exactly 150 unique messages (was 147, despite this doc and the in-app shuffle comments claiming 150 since Build 94)
+- **Added:** Test coverage for the two fixes above (`src/__tests__/AppStateNotifications.test.js`, previously `describe.skip`'d and non-functional — it mocked `AppState.addEventListener` but never rendered anything that would call it)
+
+### Build 104 (June 2026)
 - User-configurable breathing interval and mood reminder time
 - Dynamic notification count calculation based on interval
 - `scheduleBreathingReminder(intervalMinutes)` accepts parameter
@@ -480,8 +546,8 @@ All notification operations log to console with emoji prefixes:
 
 ---
 
-**Document Version:** 3.0  
-**Last Updated:** June 2026  
+**Document Version:** 3.1  
+**Last Updated:** August 2026  
 **Maintained By:** Development Team
 
 ---
