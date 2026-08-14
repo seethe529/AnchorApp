@@ -691,7 +691,7 @@ export default function SettingsScreen({ navigation }) {
           <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
         </TouchableOpacity>
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.actionButton}
           onPress={exportNotifications}
           accessibilityLabel="Export Notifications"
@@ -704,8 +704,7 @@ export default function SettingsScreen({ navigation }) {
             <Text style={[styles.actionSubtitle, { color: theme.textSecondary }]}>View scheduled reminders</Text>
           </View>
           <Ionicons name="chevron-forward" size={24} color={theme.textTertiary} />
-        </TouchableOpacity>
-        {/* TESTING ONLY — remove or re-comment this button before shipping to production */}
+        </TouchableOpacity> */}
 
         <TouchableOpacity 
           style={styles.actionButton} 
