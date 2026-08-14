@@ -1,6 +1,6 @@
 # Privacy Policy for Anchor - PTSD Support
 
-**Last Updated:** November 2025
+**Last Updated:** August 12, 2026
 
 ## Introduction
 
@@ -31,8 +31,46 @@ All data is stored locally on your device using secure storage mechanisms:
 
 ## Third-Party Services
 
-### OpenAI API (Optional)
-If you use the AI Support feature, your messages are sent to OpenAI's API for processing. OpenAI's privacy policy applies to this data: https://openai.com/privacy
+### OpenAI API (Optional AI Support Feature)
+
+**What Data is Shared:**
+If you choose to use the AI Support feature, the text messages you type are shared with OpenAI's API to generate helpful mental health support responses.
+
+**What is NOT Shared:**
+- Your mood logs and history
+- Your safety plan
+- Your breathing exercise records
+- Your personal notes
+- Any other app data
+
+**How It Works:**
+1. You type a message in the AI Support screen
+2. Your message is sent securely (HTTPS/TLS encryption) through our Vercel backend server
+3. Our backend forwards it to OpenAI's API for processing
+4. OpenAI generates a response based on mental health support guidelines
+5. The response is sent back to your device
+
+**Rate Limiting:**
+To ensure service availability and responsible usage, we limit AI Support to 10 messages per day per device.
+
+**Data Retention:**
+- Anchor does NOT store your AI conversation messages on any server
+- Conversation history is stored only on your device
+- OpenAI processes messages according to their privacy policy and data retention terms
+- For OpenAI's data practices, see: https://openai.com/privacy
+
+**Your Control:**
+- This feature is entirely optional
+- All other app features work completely offline without any data sharing
+- You can choose not to use AI Support at any time
+- Deleting the app removes all local conversation history
+
+**Backend Security:**
+We use Vercel serverless functions as a secure proxy to:
+- Protect API keys from exposure
+- Add rate limiting and usage controls
+- Monitor for abuse
+- Ensure encrypted transmission
 
 ### Expo Services
 We use Expo for app development and updates. Expo may collect anonymous usage data. See Expo's privacy policy: https://expo.dev/privacy
