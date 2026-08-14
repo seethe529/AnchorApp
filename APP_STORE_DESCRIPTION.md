@@ -1,4 +1,4 @@
-# App Store Description - Build 107
+# App Store Description - Build 108
 
 ## Localizable Information
 
@@ -95,11 +95,11 @@ Your journey to healing matters. Download Anchor today.
 
 (newest first; copy the relevant entry into App Store Connect's "What's New in This Version" field)
 
-### Version 1.2.15 (Build 107) — current
+### Version 1.2.15 (Build 108) — current
 
 **Notification Reliability Improvements** — Fixed an issue where turning off notifications in Settings didn't always stick, and improved how the app tracks reminder scheduling so breathing and mood check-ins keep working reliably even if you haven't opened the app in a while.
 
-Also restored the full variety of breathing reminder messages (150 unique messages).
+Also restored the full variety of breathing reminder messages (150 unique messages), and cleaned up formatting in AI Support chat responses.
 
 ### Version 1.2.14 (Build 97)
 
