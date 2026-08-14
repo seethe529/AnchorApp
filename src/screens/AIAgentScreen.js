@@ -107,6 +107,15 @@ export default function AIAgentScreen({ navigation }) {
 
 
 
+  const renderFormattedText = (text) => {
+    return text.split(/(\*\*[^*]+\*\*)/g).map((part, index) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        return <Text key={index} style={styles.boldText}>{part.slice(2, -2)}</Text>;
+      }
+      return part;
+    });
+  };
+
   const formatCategory = (category) => {
     return category.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
@@ -187,7 +196,7 @@ export default function AIAgentScreen({ navigation }) {
             accessibilityRole="text"
           >
             <Text style={[styles.messageText, msg.type === 'user' ? styles.userText : { color: theme.text }]}>
-              {msg.text}
+              {renderFormattedText(msg.text)}
             </Text>
           </View>
         ))}
@@ -320,6 +329,7 @@ const styles = StyleSheet.create({
   userMessage: { alignSelf: 'flex-end', backgroundColor: '#2E845D' },
   aiMessage: { alignSelf: 'flex-start', ...designTokens.shadows.card },
   messageText: { fontSize: 16, lineHeight: 22 },
+  boldText: { fontWeight: '700' },
   userText: { color: 'white' },
   aiText: {},
   typingText: { fontStyle: 'italic' },
