@@ -128,19 +128,63 @@ To test AI Support:
 The app is designed to help users manage PTSD symptoms between therapy sessions, not replace professional care.
 ```
 
-**Build 107 Update Notes** (append to the standing notes above for this submission):
-```
-Build 107 — Notification Reliability Fix
+**App Review Notes — Version History** (newest first; copy the relevant entry into App Store Connect's "Notes" field for that submission):
 
+### Version 1.2.15 (Build 107) — current
+```
 This build fixes a bug where disabling notifications in Settings didn't always take effect. No new permissions, screens, or UI changes.
 
 To verify:
-1. Go to Settings → Notifications
-2. Enable "Enable Notifications" (grants permission) and turn on both "Daily Mood Check-ins" and "Breathing Reminders"
-3. Toggle "Enable Notifications" OFF
-4. Confirm both sub-toggles show as disabled
 
-No login or account required. All data is stored locally on device.
+	•	Go to Settings → Notifications
+	•	Enable "Enable Notifications" (grants permission) and turn on both "Daily Mood Check-ins" and "Breathing Reminders"
+	•	Toggle "Enable Notifications" OFF
+	•	Confirm both sub-toggles show as disabled
+
+No login required. No backend services needed for this feature.
+
+Thank you for reviewing Anchor!
+
+The Anchor PTSD Support Team
+```
+
+### Version 1.2.14 (Build 97)
+```
+This update redesigns the data export feature. To test:
+1. Open the app and accept the disclaimer
+2. Log a mood entry (Home screen > mood buttons)
+3. Use a technique (Tools tab > tap any technique > complete it)
+4. Go to Settings tab > "Export Progress Report"
+5. Select any date range
+6. A PDF will be generated and the share sheet will appear
+
+No login required. No backend services needed for this feature.
+
+Thank you for reviewing Anchor!
+
+The Anchor PTSD Support Team
+```
+
+### Version 1.2.8
+```
+This update includes backend infrastructure improvements for better reliability and performance. No changes to user-facing features or functionality.
+
+All features work without login or account creation. The AI chat feature is optional and can be tested by tapping "AI Support" from the home screen.
+```
+
+### Version 1.2.0
+```
+Testing the new features in v1.2.0:
+
+• New techniques: Go to Tools screen, scroll to see 8 new DBT/CBT techniques
+• Breathing reminders: Enable notifications in Settings to receive varied reminder messages
+• Emergency contacts: Tap crisis hotline buttons in Crisis screen to verify they dial correctly
+
+All features work without login. App is ready for immediate testing.
+
+Thank you for reviewing Anchor!
+
+The Anchor PTSD Support Team
 ```
 
 ### 9. Privacy Questionnaire
