@@ -130,18 +130,27 @@ The app is designed to help users manage PTSD symptoms between therapy sessions,
 
 **App Review Notes — Version History** (newest first; copy the relevant entry into App Store Connect's "Notes" field for that submission):
 
-### Version 1.2.15 (Build 107) — current
+### Version 1.2.15 (Build 108) — current
 ```
-This build fixes a bug where disabling notifications in Settings didn't always take effect. No new permissions, screens, or UI changes.
+This build fixes two issues. No new permissions or screens.
 
-To verify:
+1. Notifications — disabling notifications in Settings didn't always take effect.
+2. AI Support chat — responses sometimes displayed raw formatting characters (e.g. **word**) instead of bold text.
+
+To verify notifications:
 
 	•	Go to Settings → Notifications
 	•	Enable "Enable Notifications" (grants permission) and turn on both "Daily Mood Check-ins" and "Breathing Reminders"
 	•	Toggle "Enable Notifications" OFF
 	•	Confirm both sub-toggles show as disabled
 
-No login required. No backend services needed for this feature.
+To verify AI Support formatting:
+
+	•	Go to the AI Support tab
+	•	Send a message such as "What are some grounding techniques?"
+	•	Confirm the response renders with proper bold text, not literal asterisks
+
+No login required.
 
 Thank you for reviewing Anchor!
 
