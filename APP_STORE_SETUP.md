@@ -128,6 +128,21 @@ To test AI Support:
 The app is designed to help users manage PTSD symptoms between therapy sessions, not replace professional care.
 ```
 
+**Build 107 Update Notes** (append to the standing notes above for this submission):
+```
+Build 107 — Notification Reliability Fix
+
+This build fixes a bug where disabling notifications in Settings didn't always take effect. No new permissions, screens, or UI changes.
+
+To verify:
+1. Go to Settings → Notifications
+2. Enable "Enable Notifications" (grants permission) and turn on both "Daily Mood Check-ins" and "Breathing Reminders"
+3. Toggle "Enable Notifications" OFF
+4. Confirm both sub-toggles show as disabled
+
+No login or account required. All data is stored locally on device.
+```
+
 ### 9. Privacy Questionnaire
 
 **Data Collection:**
