@@ -1,6 +1,14 @@
-# App Store Description - Build 97
+# App Store Description - Build 107
 
-## What's New in Version 1.2.14
+## What's New in Version 1.2.15
+
+**Notification Reliability Improvements** — Fixed an issue where turning off notifications in Settings didn't always stick, and improved how the app tracks reminder scheduling so breathing and mood check-ins keep working reliably even if you haven't opened the app in a while.
+
+Also restored the full variety of breathing reminder messages (150 unique messages).
+
+---
+
+## Previous: What's New in Version 1.2.14 (Build 97)
 
 **PDF Progress Report** — Export your mood and technique history as a beautifully formatted PDF. Choose a date range (7 days, 30 days, 3 months, or all time) and share the report with your therapist or healthcare provider. Includes summary statistics, mood history, and technique effectiveness.
 
