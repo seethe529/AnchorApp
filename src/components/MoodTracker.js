@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { sanitizeText, validateMoodEntry } from '../utils/dataValidation';
 import { trackMoodLog } from '../utils/appRating';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme, designTokens } from '../context/ThemeContext';
 
 const MOODS = [
   { name: 'Excellent', icon: 'happy', color: '#4CAF50', value: 5 },
@@ -173,20 +173,20 @@ const MoodTracker = memo(({ onMoodLogged, onDetailedLogRequest }) => {
 export default MoodTracker;
 
 const styles = StyleSheet.create({
-  container: { padding: 20, borderRadius: 10, margin: 10 },
+  container: { padding: 20, borderRadius: designTokens.borderRadius.card, margin: 10 },
   title: { fontSize: 18, fontWeight: 'bold', textAlign: 'center', marginBottom: 20 },
   moodGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
   moodButton: { width: '19.5%', alignItems: 'center', padding: 6, borderRadius: 8, marginBottom: 10 },
   moodText: { fontSize: 9, marginTop: 4, textAlign: 'center', fontWeight: '600' },
   notesSection: { marginTop: 20 },
   notesLabel: { fontSize: 16, fontWeight: '500', marginBottom: 10 },
-  notesInput: { borderWidth: 1, borderRadius: 8, padding: 12, minHeight: 80, textAlignVertical: 'top' },
-  logButton: { marginTop: 15, padding: 15, borderRadius: 8, alignItems: 'center' },
+  notesInput: { borderWidth: 1, borderRadius: designTokens.borderRadius.input, padding: 12, minHeight: 80, textAlignVertical: 'top' },
+  logButton: { marginTop: 15, padding: 15, borderRadius: designTokens.borderRadius.button, alignItems: 'center' },
   logButtonText: { color: 'white', fontSize: 16, fontWeight: 'bold' },
   ctaContainer: { paddingVertical: 24 },
   ctaTitle: { fontSize: 18, fontWeight: '600', marginBottom: 8, textAlign: 'center', alignSelf: 'center' },
   ctaSubtitle: { fontSize: 15, marginBottom: 20, textAlign: 'center', lineHeight: 22, alignSelf: 'center' },
-  detailedButton: { paddingVertical: 16, borderRadius: 10, marginBottom: 10, alignItems: 'center', width: '100%' },
+  detailedButton: { paddingVertical: 16, borderRadius: designTokens.borderRadius.button, marginBottom: 10, alignItems: 'center', width: '100%' },
   detailedButtonText: { color: 'white', fontSize: 16, fontWeight: '600' },
   skipButton: { padding: 12, alignSelf: 'center' },
   skipButtonText: { fontSize: 15, fontWeight: '500', textAlign: 'center' }

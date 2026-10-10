@@ -75,18 +75,18 @@ export const designTokens = {
     caption: { fontSize: 13, fontWeight: '400' },
   },
   
-  // Border Radius
+  // Border Radius (iOS 26: softer, roomier corners)
   borderRadius: {
-    button: 16,
-    card: 18,
-    cardLarge: 20,
-    input: 14,
+    button: 20,
+    card: 22,
+    cardLarge: 26,
+    input: 16,
   },
   
   // Spacing
   spacing: {
-    section: 28,
-    cardPadding: 20,
+    section: 32,
+    cardPadding: 22,
     cardMargin: 16,
   },
   

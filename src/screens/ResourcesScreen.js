@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { citations, generalResources, disclaimer, formatCitation } from '../data/citations';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme, designTokens } from '../context/ThemeContext';
 
 export default function ResourcesScreen() {
   const { theme } = useTheme();
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     padding: 15, 
     margin: 15, 
-    borderRadius: 10,
+    borderRadius: designTokens.borderRadius.card,
     borderLeftWidth: 4
   },
   disclaimerContent: { flex: 1, marginLeft: 10 },
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   sectionDescription: { fontSize: 14, marginBottom: 15, lineHeight: 20 },
   citationCard: { 
     padding: 15, 
-    borderRadius: 10, 
+    borderRadius: designTokens.borderRadius.card, 
     marginBottom: 15,
     elevation: 2
   },
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   linkText: { fontSize: 14, fontWeight: '500', marginRight: 5 },
   resourceCard: { 
     padding: 15, 
-    borderRadius: 10, 
+    borderRadius: designTokens.borderRadius.card, 
     marginBottom: 15,
     elevation: 1
   },
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   footer: { 
     padding: 20, 
     margin: 15, 
-    borderRadius: 10,
+    borderRadius: designTokens.borderRadius.card,
     marginBottom: 30
   },
   footerText: { fontSize: 13, lineHeight: 20, marginBottom: 10 },

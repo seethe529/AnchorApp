@@ -6,7 +6,7 @@ import { getCitationForTechnique, formatCitation } from '../data/citations';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { trackTechniqueUsed } from '../utils/appRating';
 import { Platform, Linking } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme, designTokens } from '../context/ThemeContext';
 
 let Haptics;
 if (Platform.OS !== 'web') {
@@ -322,7 +322,7 @@ const styles = StyleSheet.create({
   categoryText: { fontSize: 15, fontWeight: '700' },
   activeTabText: { color: 'white' },
   techniquesList: { flex: 1, padding: 16 },
-  techniqueCard: { padding: 16, borderRadius: 12, marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },
+  techniqueCard: { padding: 16, borderRadius: designTokens.borderRadius.card, marginBottom: 12, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },
   techniqueHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   techniqueName: { fontSize: 17, fontWeight: '600', flex: 1 },
   techniqueDescription: { fontSize: 15, marginBottom: 12, lineHeight: 22 },
@@ -335,18 +335,18 @@ const styles = StyleSheet.create({
   content: { flex: 1 },
   contentContainer: { padding: 20, paddingBottom: 140 },
   fullDescription: { fontSize: 16, lineHeight: 26, marginBottom: 24 },
-  exampleBox: { padding: 16, borderRadius: 12, marginBottom: 24, borderLeftWidth: 4 },
+  exampleBox: { padding: 16, borderRadius: designTokens.borderRadius.card, marginBottom: 24, borderLeftWidth: 4 },
   exampleTitle: { fontSize: 15, fontWeight: '600', marginBottom: 8 },
   exampleText: { fontSize: 15, lineHeight: 24, fontStyle: 'italic' },
-  stepByStep: { padding: 16, borderRadius: 12, marginBottom: 24, borderWidth: 1 },
+  stepByStep: { padding: 16, borderRadius: designTokens.borderRadius.card, marginBottom: 24, borderWidth: 1 },
   stepTitle: { fontSize: 17, fontWeight: '600', marginBottom: 16 },
   step: { fontSize: 16, marginBottom: 12, paddingLeft: 8, lineHeight: 24 },
-  feedbackSection: { padding: 20, borderRadius: 12, marginTop: 24, borderWidth: 1 },
+  feedbackSection: { padding: 20, borderRadius: designTokens.borderRadius.card, marginTop: 24, borderWidth: 1 },
   feedbackQuestion: { fontSize: 17, fontWeight: '600', marginBottom: 16, textAlign: 'center' },
   feedbackButtons: { flexDirection: 'row', justifyContent: 'space-around' },
   feedbackButton: { alignItems: 'center', padding: 12, minWidth: 80 },
   feedbackText: { fontSize: 13, fontWeight: '500', marginTop: 6 },
-  citationBox: { padding: 16, borderRadius: 12, marginTop: 24, borderLeftWidth: 4 },
+  citationBox: { padding: 16, borderRadius: designTokens.borderRadius.card, marginTop: 24, borderLeftWidth: 4 },
   citationTitle: { fontSize: 15, fontWeight: '600', marginBottom: 8 },
   citationText: { fontSize: 13, lineHeight: 20, marginBottom: 12 },
   citationLink: { flexDirection: 'row', alignItems: 'center', paddingVertical: 10, paddingHorizontal: 14, borderRadius: 8, alignSelf: 'flex-start' },
