@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, AppState, Platform } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, AppState, Platform, AccessibilityInfo } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -32,6 +32,29 @@ const Stack = createStackNavigator();
 function MainTabs() {
   const { theme, isDark } = useTheme();
   const insets = useSafeAreaInsets();
+
+  // Honor the system "Reduce Transparency" accessibility setting. When a user
+  // enables it (Settings > Accessibility > Display & Text Size), we render the
+  // tab bar with a solid background instead of Liquid Glass so it stays legible.
+  const [reduceTransparency, setReduceTransparency] = useState(false);
+  useEffect(() => {
+    let mounted = true;
+    AccessibilityInfo.isReduceTransparencyEnabled?.()
+      .then((enabled) => { if (mounted) setReduceTransparency(!!enabled); })
+      .catch(() => {});
+    const sub = AccessibilityInfo.addEventListener(
+      'reduceTransparencyChanged',
+      (enabled) => setReduceTransparency(!!enabled)
+    );
+    return () => {
+      mounted = false;
+      sub?.remove?.();
+    };
+  }, []);
+
+  // Solid fallback colors (used when Reduce Transparency is on).
+  const solidTabBarColor = isDark ? '#0F1115' : '#FFFFFF';
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -50,13 +73,17 @@ function MainTabs() {
         tabBarInactiveTintColor: isDark ? '#9CA3AF' : '#94A3B8',
         headerStyle: { backgroundColor: theme.primary },
         headerTintColor: 'white',
+        // iOS 26 Liquid Glass: translucent tab bar.
+        // Height stays 64 + insets.bottom — the AI screen hardcodes this value
+        // in three places (input bar, suggestions, conversation margin), so it
+        // must not change. Only the background becomes glass.
         tabBarStyle: { 
           position: 'absolute',
           paddingBottom: insets.bottom,
           paddingTop: 8,
           paddingHorizontal: 4,
           height: 64 + insets.bottom,
-          backgroundColor: isDark ? '#0F1115' : '#FFFFFF',
+          backgroundColor: 'transparent',
           borderTopWidth: 0,
           elevation: 8,
           shadowColor: '#000',
@@ -64,6 +91,34 @@ function MainTabs() {
           shadowOpacity: 0.15,
           shadowRadius: 8,
         },
+        // Rendered behind the tab bar content. A subtle tint over the blur
+        // keeps labels legible on Android where blur is weaker/unsupported.
+        tabBarBackground: () =>
+          reduceTransparency ? (
+            // Accessibility: solid, fully opaque bar for Reduce Transparency users.
+            <View
+              style={[StyleSheet.absoluteFill, { backgroundColor: solidTabBarColor }]}
+            />
+          ) : (
+            // Default: Liquid Glass — blur with a light tint for legibility.
+            <View style={StyleSheet.absoluteFill}>
+              <BlurView
+                tint={isDark ? 'dark' : 'light'}
+                intensity={Platform.OS === 'ios' ? 70 : 100}
+                style={StyleSheet.absoluteFill}
+              />
+              <View
+                style={[
+                  StyleSheet.absoluteFill,
+                  {
+                    backgroundColor: isDark
+                      ? 'rgba(15, 17, 21, 0.3)'
+                      : 'rgba(255, 255, 255, 0.3)',
+                  },
+                ]}
+              />
+            </View>
+          ),
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '600',
