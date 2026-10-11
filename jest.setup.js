@@ -4,33 +4,92 @@ const mockPlatform = {
   select: jest.fn((obj) => obj.ios || obj.default),
 };
 
-jest.mock('react-native', () => ({
-  Platform: mockPlatform,
-  AppState: {
-    addEventListener: jest.fn(() => ({ remove: jest.fn() })),
-  },
-  StyleSheet: {
-    create: (styles) => styles,
-    flatten: (styles) => styles,
-  },
-  View: 'View',
-  Text: 'Text',
-  ScrollView: 'ScrollView',
-  TouchableOpacity: 'TouchableOpacity',
-  TextInput: 'TextInput',
-  ActivityIndicator: 'ActivityIndicator',
-  KeyboardAvoidingView: 'KeyboardAvoidingView',
-  FlatList: 'FlatList',
-  Dimensions: {
-    get: jest.fn(() => ({ width: 375, height: 667 })),
-  },
-  Linking: {
-    openURL: jest.fn(() => Promise.resolve()),
-  },
-  Alert: {
-    alert: jest.fn(),
-  },
-}));
+// Lightweight React Native mock. Each stub mirrors the real component's
+// accessibility-relevant defaults so accessibility tests check real behavior.
+jest.mock('react-native', () => {
+  const React = require('react');
+  const remover = () => ({ remove: jest.fn() });
+  const animation = () => ({ start: jest.fn(), stop: jest.fn() });
+
+  class AnimatedValue {
+    constructor(value) { this._value = value; }
+    setValue(value) { this._value = value; }
+    interpolate() { return this; }
+    stopAnimation() {}
+  }
+
+  return {
+    // Modal only renders its children when visible, like the real component,
+    // so open/cancel tests stay meaningful.
+    Modal: ({ visible, children }) => (visible ? children : null),
+    Platform: mockPlatform,
+    AppState: {
+      addEventListener: jest.fn(remover),
+    },
+    StyleSheet: {
+      create: (styles) => styles,
+      flatten: (styles) => styles,
+      absoluteFill: {},
+    },
+    View: 'View',
+    Text: 'Text',
+    ScrollView: 'ScrollView',
+    // Real TouchableOpacity is accessible unless accessible={false}.
+    TouchableOpacity: (props) =>
+      React.createElement('TouchableOpacity', { ...props, accessible: props.accessible !== false }),
+    TouchableWithoutFeedback: 'TouchableWithoutFeedback',
+    // Real Switch defaults its role to "switch".
+    Switch: (props) =>
+      React.createElement('Switch', { accessibilityRole: 'switch', ...props }),
+    TextInput: 'TextInput',
+    ActivityIndicator: 'ActivityIndicator',
+    KeyboardAvoidingView: 'KeyboardAvoidingView',
+    // Render every item so screens built on FlatList (e.g. Breathing) are testable.
+    FlatList: React.forwardRef(({ data = [], renderItem, keyExtractor }, _ref) =>
+      React.createElement(
+        'FlatList',
+        null,
+        data.map((item, index) =>
+          React.createElement(
+            React.Fragment,
+            { key: keyExtractor ? keyExtractor(item, index) : String(index) },
+            renderItem({ item, index })
+          )
+        )
+      )
+    ),
+    Animated: {
+      View: 'Animated.View',
+      Value: AnimatedValue,
+      timing: jest.fn(animation),
+      spring: jest.fn(animation),
+    },
+    Keyboard: {
+      addListener: jest.fn(remover),
+      dismiss: jest.fn(),
+    },
+    AccessibilityInfo: {
+      announceForAccessibility: jest.fn(),
+      isReduceMotionEnabled: jest.fn(() => Promise.resolve(false)),
+      isReduceTransparencyEnabled: jest.fn(() => Promise.resolve(false)),
+      addEventListener: jest.fn(remover),
+    },
+    Share: {
+      share: jest.fn(() => Promise.resolve()),
+    },
+    Dimensions: {
+      get: jest.fn(() => ({ width: 375, height: 667 })),
+    },
+    Linking: {
+      openURL: jest.fn(() => Promise.resolve()),
+    },
+    Alert: {
+      alert: jest.fn(),
+      // iOS-only API used by SafetyPlan for quick text entry.
+      prompt: jest.fn(),
+    },
+  };
+});
 
 // Export for test manipulation
 global.mockPlatform = mockPlatform;
@@ -81,9 +140,46 @@ jest.mock('@expo/vector-icons', () => ({
   Ionicons: 'Ionicons',
 }));
 
+// Mock export-related native modules used by SettingsScreen (PDF/JSON export).
+jest.mock('expo-print', () => ({
+  printToFileAsync: jest.fn(() => Promise.resolve({ uri: 'file:///mock.pdf' })),
+}));
+jest.mock('expo-sharing', () => ({
+  isAvailableAsync: jest.fn(() => Promise.resolve(true)),
+  shareAsync: jest.fn(() => Promise.resolve()),
+}));
+jest.mock('expo-file-system/next', () => ({
+  File: jest.fn().mockImplementation(() => ({
+    exists: false,
+    create: jest.fn(),
+    write: jest.fn(),
+    delete: jest.fn(),
+    uri: 'file:///mock.json',
+  })),
+  Paths: { cache: 'file:///cache/', document: 'file:///document/' },
+}));
+
+// Mock expo-device (native module; imported by src/services/openai.js, so any
+// test that renders the AI screen needs it).
+jest.mock('expo-device', () => ({
+  modelName: 'iPhone',
+  osVersion: '17.0',
+}));
+
+// Mock @react-navigation/elements (useHeaderHeight / HeaderHeightContext pull
+// in native view-manager code that isn't available in the Jest environment).
+jest.mock('@react-navigation/elements', () => {
+  const React = require('react');
+  return {
+    HeaderHeightContext: React.createContext(undefined),
+    useHeaderHeight: () => 0,
+  };
+});
+
 // Mock SafeAreaContext
 jest.mock('react-native-safe-area-context', () => ({
   SafeAreaProvider: ({ children }) => children,
+  SafeAreaView: ({ children }) => children,
   useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
 }));
 

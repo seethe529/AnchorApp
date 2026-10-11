@@ -246,7 +246,7 @@ export const disclaimer = {
   title: "Educational Disclaimer",
   content:
     "The techniques in this app are based on well-established therapeutic approaches but are provided for educational and self‑help purposes only. Anchor is not a medical device and does not provide diagnosis or treatment. Always consult a qualified provider for medical or mental health concerns. If you are in crisis, call emergency services immediately.",
-  lastUpdated: "November 2025"
+  lastUpdated: "October 2026"
 };
 
 // Map techniques → citations

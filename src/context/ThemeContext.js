@@ -6,8 +6,9 @@ const ThemeContext = createContext();
 export const useTheme = () => useContext(ThemeContext);
 
 export const lightTheme = {
-  // Backgrounds
-  background: '#F8F9FA',
+  // Backgrounds — a soft grey canvas so white cards separate cleanly
+  // (iOS 26 grouped-list style: separation from surface color, soft shadows).
+  background: '#F4F6F8',
   backgroundSecondary: '#FFFFFF',
   card: '#FFFFFF',
   
@@ -75,39 +76,39 @@ export const designTokens = {
     caption: { fontSize: 13, fontWeight: '400' },
   },
   
-  // Border Radius
+  // Border Radius (iOS 26: softer, roomier corners)
   borderRadius: {
-    button: 16,
-    card: 18,
-    cardLarge: 20,
-    input: 14,
+    button: 20,
+    card: 22,
+    cardLarge: 26,
+    input: 16,
   },
   
   // Spacing
   spacing: {
-    section: 28,
-    cardPadding: 20,
+    section: 32,
+    cardPadding: 22,
     cardMargin: 16,
   },
   
-  // Shadows (iOS-style)
+  // Shadows — iOS 26: soft, diffuse, low-opacity depth (not hard drop shadows)
   shadows: {
     card: {
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.08,
-      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.06,
+      shadowRadius: 16,
       elevation: 2,
     },
     cardStrong: {
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.12,
-      shadowRadius: 12,
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 0.09,
+      shadowRadius: 24,
       elevation: 4,
     },
     button: {
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 6,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.08,
+      shadowRadius: 12,
       elevation: 3,
     },
   },

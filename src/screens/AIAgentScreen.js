@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginLeft: 8,
   },
-  message: { marginVertical: 6, padding: 16, borderRadius: 16, maxWidth: '80%' },
+  message: { marginVertical: 6, padding: 16, borderRadius: 20, maxWidth: '80%' },
   userMessage: { alignSelf: 'flex-end', backgroundColor: '#2E845D' },
   aiMessage: { alignSelf: 'flex-start', ...designTokens.shadows.card },
   messageText: { fontSize: 16, lineHeight: 22 },
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
   },
   suggestionCard: { 
     padding: 14,
-    borderRadius: 12,
+    borderRadius: designTokens.borderRadius.card,
     marginBottom: 10,
   },
   suggestionName: { 

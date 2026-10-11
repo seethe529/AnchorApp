@@ -40,9 +40,10 @@ We welcome feature suggestions! Please:
 ### Pull Requests
 
 1. **Fork the repository**
-2. **Create a feature branch** from `develop`:
+2. **Create a feature branch** from `main` (see `BRANCHING_STRATEGY.md` —
+   `main` is the active trunk; `develop` is deprecated):
    ```bash
-   git checkout -b feature/your-feature-name develop
+   git checkout -b feature/your-feature-name main
    ```
 3. **Make your changes**
 4. **Test thoroughly**:
@@ -57,15 +58,17 @@ We welcome feature suggestions! Please:
    ```bash
    git push origin feature/your-feature-name
    ```
-7. **Create a Pull Request** to the `develop` branch
+7. **Create a Pull Request** to the `main` branch
 
 ## Development Setup
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Node.js LTS (18, 20, or 22). **Avoid Node 23/odd-numbered releases** — they
+  are not supported by Expo SDK 54 and can break Metro.
 - npm or yarn
-- Expo CLI
-- iOS Simulator or Android Emulator
+- Expo CLI (`npx expo`)
+- A physical iOS device, or an Android emulator (see the iOS note below about
+  simulators on Xcode 27)
 
 ### Installation
 ```bash
@@ -77,10 +80,47 @@ npm install
 ### Running the App
 ```bash
 npm start          # Start Expo dev server
-npm run ios        # Run on iOS simulator
 npm run android    # Run on Android emulator
 npm test           # Run tests
 ```
+
+### iOS local testing — IMPORTANT (Xcode 27 / macOS 27)
+
+The classic `npm run ios` / `expo run:ios` simulator flow is currently broken on
+this machine's toolchain, due to OS/tooling changes outside our control. This is
+documented here so nobody loses a night rediscovering it:
+
+- **Xcode 27 removed the standalone `Simulator.app`**, replacing it with
+  **DeviceHub**. Expo SDK 54's tooling still looks for the old `Simulator.app`,
+  so pressing `i` / `expo run:ios` fails with
+  `Can't determine id of Simulator app`. The simulator *engine* (`simctl`) still
+  works, but Expo can't launch the viewer. Tracked upstream in
+  expo/expo#46671 and expo/eas-cli#4403.
+- **macOS 27 also has a CoreDevice regression** where a cable-connected,
+  already-paired iPhone reports as `disconnected`/`unpaired` to `devicectl`,
+  so `expo run:ios --device` over USB can fail too.
+
+**The verification workflow that works today** (used to validate the iOS 26
+Liquid Glass work):
+
+1. Build a development client in the cloud (no local Xcode needed):
+   ```bash
+   eas build --profile development --platform ios
+   ```
+   This installs the real app (native modules, real BlurView — accurate
+   rendering) onto a registered device via an install link.
+2. Start the JS dev server locally:
+   ```bash
+   npx expo start            # dev build connects to this (do NOT use --go)
+   npx expo start --tunnel   # if the phone can't reach the LAN server
+   ```
+3. The installed dev build loads JS from Metro, so **Fast Refresh pushes code
+   changes to the device instantly** — good for iterating on UI.
+
+Expo Go (`npx expo start --go`) can preview purely-cosmetic changes, but this
+project uses `expo-dev-client` + native modules, so a dev build is the reliable
+option. To restore the local simulator later, install **Xcode 26 alongside
+Xcode 27** (Xcode 26 still ships the classic `Simulator.app`).
 
 ### Environment Variables
 Create a `.env` file:

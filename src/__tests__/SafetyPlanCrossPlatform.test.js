@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { render, fireEvent, waitFor, screen } from '@testing-library/react-native';
 import { Platform, Alert } from 'react-native';
 import SafetyPlan from '../components/SafetyPlan';
 import { secureStorage } from '../utils/storage';
@@ -40,7 +40,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getByText('Personal Safety Plan')).toBeTruthy());
       
-      fireEvent.press(getByText('Edit safety plan'));
+      fireEvent.press(screen.getByLabelText('Edit safety plan'));
       fireEvent.press(getByText('Add Item'));
       
       await waitFor(() => {
@@ -54,7 +54,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getByText('Personal Safety Plan')).toBeTruthy());
       
-      fireEvent.press(getByText('Edit safety plan'));
+      fireEvent.press(screen.getByLabelText('Edit safety plan'));
       fireEvent.press(getByText('Add Item'));
       
       const input = getByPlaceholderText('Enter item');
@@ -72,7 +72,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getAllByText('Personal Safety Plan')[0]).toBeTruthy());
       
-      fireEvent.press(getAllByText('Edit safety plan')[0]);
+      fireEvent.press(screen.getAllByLabelText('Edit safety plan')[0]);
       fireEvent.press(getAllByText('Add Contact')[0]);
       
       await waitFor(() => {
@@ -86,7 +86,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getAllByText('Personal Safety Plan')[0]).toBeTruthy());
       
-      fireEvent.press(getAllByText('Edit safety plan')[0]);
+      fireEvent.press(screen.getAllByLabelText('Edit safety plan')[0]);
       fireEvent.press(getAllByText('Add Contact')[0]);
       
       // Step 1: Enter name
@@ -114,7 +114,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getByText('Personal Safety Plan')).toBeTruthy());
       
-      fireEvent.press(getByText('Edit safety plan'));
+      fireEvent.press(screen.getByLabelText('Edit safety plan'));
       fireEvent.press(getByText('Add Item'));
       
       expect(getByPlaceholderText('Enter item')).toBeTruthy();
@@ -131,7 +131,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getAllByText('Personal Safety Plan')[0]).toBeTruthy());
       
-      fireEvent.press(getAllByText('Edit safety plan')[0]);
+      fireEvent.press(screen.getAllByLabelText('Edit safety plan')[0]);
       fireEvent.press(getAllByText('Add Contact')[0]);
       
       const nameInput = getByPlaceholderText('Enter name');
@@ -166,7 +166,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getByText('Personal Safety Plan')).toBeTruthy());
       
-      fireEvent.press(getByText('Edit safety plan'));
+      fireEvent.press(screen.getByLabelText('Edit safety plan'));
       fireEvent.press(getByText('Add Item'));
       
       expect(Alert.prompt).toHaveBeenCalledWith(
@@ -182,7 +182,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getAllByText('Personal Safety Plan')[0]).toBeTruthy());
       
-      fireEvent.press(getAllByText('Edit safety plan')[0]);
+      fireEvent.press(screen.getAllByLabelText('Edit safety plan')[0]);
       fireEvent.press(getAllByText('Add Contact')[0]);
       
       expect(Alert.prompt).toHaveBeenCalledWith(
@@ -204,7 +204,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getByText('Personal Safety Plan')).toBeTruthy());
       
-      fireEvent.press(getByText('Edit safety plan'));
+      fireEvent.press(screen.getByLabelText('Edit safety plan'));
       fireEvent.press(getByText('Add Item'));
       
       const input = getByPlaceholderText('Enter item');
@@ -229,7 +229,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getAllByText('Personal Safety Plan')[0]).toBeTruthy());
       
-      fireEvent.press(getAllByText('Edit safety plan')[0]);
+      fireEvent.press(screen.getAllByLabelText('Edit safety plan')[0]);
       fireEvent.press(getAllByText('Add Contact')[0]);
       
       const nameInput = getByPlaceholderText('Enter name');
@@ -258,7 +258,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getAllByText('Personal Safety Plan')[0]).toBeTruthy());
       
-      fireEvent.press(getAllByText('Edit safety plan')[0]);
+      fireEvent.press(screen.getAllByLabelText('Edit safety plan')[0]);
       fireEvent.press(getAllByText('Add Contact')[0]);
       
       fireEvent.changeText(getByPlaceholderText('Enter name'), 'Test');
@@ -279,7 +279,7 @@ describe('SafetyPlan - Cross-Platform Modal', () => {
       
       await waitFor(() => expect(getAllByText('Personal Safety Plan')[0]).toBeTruthy());
       
-      fireEvent.press(getAllByText('Edit safety plan')[0]);
+      fireEvent.press(screen.getAllByLabelText('Edit safety plan')[0]);
       fireEvent.press(getAllByText('Add Contact')[0]);
       
       fireEvent.changeText(getByPlaceholderText('Enter name'), 'Test');

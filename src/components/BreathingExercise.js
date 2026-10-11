@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, AccessibilityInfo } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform } from 'react-native';
+import useSafeHeaderHeight from '../utils/useSafeHeaderHeight';
 
 let Haptics;
 if (Platform.OS !== 'web') {
@@ -9,6 +10,7 @@ if (Platform.OS !== 'web') {
 }
 
 export default function BreathingExercise({ onComplete }) {
+  const headerHeight = useSafeHeaderHeight();
   const [isActive, setIsActive] = useState(false);
   const [phase, setPhase] = useState('inhale'); // inhale, hold, exhale, hold
   const [count, setCount] = useState(4);
@@ -114,7 +116,7 @@ export default function BreathingExercise({ onComplete }) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { paddingTop: headerHeight + 20 }]}>
       <Text style={styles.title}>Box Breathing Exercise</Text>
       <Text style={styles.subtitle}>4-4-4-4 Pattern</Text>
       

@@ -8,9 +8,11 @@ import { storage, STORAGE_KEYS } from '../utils/storage';
 import { useTheme, designTokens } from '../context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import Card from '../components/Card';
+import useSafeHeaderHeight from '../utils/useSafeHeaderHeight';
 
 export default function HomeScreen({ navigation }) {
   const { theme } = useTheme();
+  const headerHeight = useSafeHeaderHeight();
   const [showMoodTracker, setShowMoodTracker] = useState(false);
   const [showDetailedLog, setShowDetailedLog] = useState(false);
   const [todayMoodLogged, setTodayMoodLogged] = useState(false);
@@ -117,7 +119,7 @@ export default function HomeScreen({ navigation }) {
       <ScrollView 
         ref={scrollViewRef}
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ paddingBottom: keyboardHeight > 0 ? keyboardHeight + 120 : 120 }}
+        contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: keyboardHeight > 0 ? keyboardHeight + 120 : 120 }}
         contentInsetAdjustmentBehavior="automatic"
         showsVerticalScrollIndicator={false}
       >
@@ -281,7 +283,7 @@ const styles = StyleSheet.create({
   },
   header: { 
     paddingHorizontal: 24,
-    paddingTop: 24,
+    paddingTop: 0,
     paddingBottom: 16,
     alignItems: 'center',
   },
@@ -361,7 +363,7 @@ const styles = StyleSheet.create({
   },
   moodButtonContainer: {
     paddingHorizontal: 20,
-    marginTop: designTokens.spacing.section,
+    marginTop: 16,
   },
   moodButton: { 
     paddingVertical: 16,

@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, ScrollView, Dimensions, TouchableOpacity } from
 import { Ionicons } from '@expo/vector-icons';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import { storage, STORAGE_KEYS } from '../utils/storage';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme, designTokens } from '../context/ThemeContext';
+import useSafeHeaderHeight from '../utils/useSafeHeaderHeight';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -45,6 +46,7 @@ const QuickStats = memo(({ moodData, techniqueData, allMoodLogs, theme }) => {
 
 export default function ProgressScreen({ navigation }) {
   const { theme, isDark } = useTheme();
+  const headerHeight = useSafeHeaderHeight();
   const [moodData, setMoodData] = useState([]);
   const [techniqueData, setTechniqueData] = useState([]);
   const [allRatedTechniques, setAllRatedTechniques] = useState([]);
@@ -171,7 +173,7 @@ export default function ProgressScreen({ navigation }) {
   return (
     <ScrollView 
       style={[styles.container, { backgroundColor: theme.background }]}
-      contentContainerStyle={{ paddingBottom: 120 }}
+      contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: 120 }}
     >
       <Text 
         style={[styles.title, { color: theme.primary }]}
@@ -330,7 +332,7 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginVertical: 20 },
-  chartContainer: { margin: 20, padding: 15, borderRadius: 10, elevation: 2 },
+  chartContainer: { margin: 20, padding: 15, borderRadius: designTokens.borderRadius.card, shadowColor: '#000', ...designTokens.shadows.card },
   chartHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 15 },
   chartTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
   toggleButton: { padding: 8, borderRadius: 8 },
@@ -338,12 +340,12 @@ const styles = StyleSheet.create({
   noDataContainer: { alignItems: 'center', padding: 40 },
   noDataText: { fontSize: 16, fontWeight: '500', marginBottom: 5 },
   noDataSubtext: { fontSize: 14 },
-  statsContainer: { margin: 20, padding: 15, borderRadius: 10, elevation: 2 },
+  statsContainer: { margin: 20, padding: 15, borderRadius: designTokens.borderRadius.card, shadowColor: '#000', ...designTokens.shadows.card },
   statsTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
   statRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8 },
   statLabel: { fontSize: 16 },
   statValue: { fontSize: 16, fontWeight: 'bold' },
-  infoCard: { marginHorizontal: 20, marginBottom: 10, padding: 15, borderRadius: 10, flexDirection: 'row', alignItems: 'flex-start' },
+  infoCard: { marginHorizontal: 20, marginBottom: 10, padding: 15, borderRadius: designTokens.borderRadius.card, flexDirection: 'row', alignItems: 'flex-start' },
   infoIcon: { marginRight: 10, marginTop: 2 },
   infoText: { flex: 1, fontSize: 14, lineHeight: 20 },
   effectivenessRow: { marginBottom: 12 },
