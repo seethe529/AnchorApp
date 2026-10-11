@@ -130,7 +130,31 @@ The app is designed to help users manage PTSD symptoms between therapy sessions,
 
 **App Review Notes — Version History** (newest first; copy the relevant entry into App Store Connect's "Notes" field for that submission):
 
-### Version 1.2.15 (Build 108) — current
+### Version 1.3.0 (Build 109) — current
+```
+This update is a visual design refresh to align with the latest iOS look. There are NO new features, NO new permissions, NO new screens, and NO changes to data handling or the backend.
+
+What changed (appearance only):
+	•	Navigation bars (top and bottom) now use a translucent "glass" material
+	•	Cards have rounded corners and softer shadows; background is a light grey
+	•	The app's green brand color now appears in titles, icons, and buttons
+
+Accessibility is fully supported: Reduce Transparency (Settings → Accessibility → Display & Text Size) makes the bars solid, and VoiceOver and larger text sizes work throughout.
+
+Existing functionality is unchanged from the prior approved build:
+	•	Medical disclaimer shown on first launch (must be accepted)
+	•	Crisis resources prominently displayed
+	•	AI Support is optional and labeled as not replacing therapy
+	•	All data stored locally on device; no accounts or login required
+
+No login required.
+
+Thank you for reviewing Anchor!
+
+The Anchor PTSD Support Team
+```
+
+### Version 1.2.15 (Build 108)
 ```
 This build fixes two issues. No new permissions or screens.
 
