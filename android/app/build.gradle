@@ -92,8 +92,8 @@ android {
         applicationId 'com.anchor.ptsdsupport'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 108
-        versionName "1.2.15"
+        versionCode 109
+        versionName "1.3.0"
 
         buildConfigField "String", "REACT_NATIVE_RELEASE_LEVEL", "\"${findProperty('reactNativeReleaseLevel') ?: 'stable'}\""
     }
