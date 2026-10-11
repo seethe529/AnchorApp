@@ -17,15 +17,23 @@ jest.mock('expo-device', () => ({
 
 describe('OpenAI Service', () => {
   let originalDateNow;
+  let fakeNow;
 
   beforeAll(() => {
     originalDateNow = Date.now;
+    fakeNow = originalDateNow();
   });
 
   afterAll(() => {
     Date.now = originalDateNow;
   });
   beforeEach(() => {
+    // The service keeps recent request timestamps in module state for its
+    // 5-per-minute rate limit. Advance the clock past the 60s window before
+    // each test so the rate-limit test can't leak into the tests after it.
+    fakeNow += 61000;
+    Date.now = () => fakeNow;
+
     jest.clearAllMocks();
     // Mock storage to allow daily limit checks to pass
     storage.getItem.mockImplementation((key) => {
