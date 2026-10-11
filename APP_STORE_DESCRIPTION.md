@@ -1,4 +1,4 @@
-# App Store Description - Build 108
+# App Store Description - Build 109
 
 ## Localizable Information
 
@@ -95,7 +95,15 @@ Your journey to healing matters. Download Anchor today.
 
 (newest first; copy the relevant entry into App Store Connect's "What's New in This Version" field)
 
-### Version 1.2.15 (Build 108) — current
+### Version 1.3.0 (Build 109) — current
+
+**A refreshed, modern look** — Anchor has a cleaner, calmer new design. Navigation bars now use a soft translucent material so your content stays front and center, cards have gentler rounded corners and softer shadows, and the whole app feels more spacious and up to date with the latest iOS design.
+
+Your familiar green theme is still here, now carried through the titles, icons, and buttons. Everything works just as before, with full support for Reduce Transparency, VoiceOver, and larger text sizes.
+
+Also centered the numbers in the Safety Reminders steps and tidied up the Safety Plan screen.
+
+### Version 1.2.15 (Build 108)
 
 **Notification Reliability Improvements** — Fixed an issue where turning off notifications in Settings didn't always stick, and improved how the app tracks reminder scheduling so breathing and mood check-ins keep working reliably even if you haven't opened the app in a while.
 
