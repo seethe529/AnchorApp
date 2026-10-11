@@ -4,9 +4,16 @@ import { useIsFocused } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { useTheme } from '../context/ThemeContext';
+import useSafeHeaderHeight from '../utils/useSafeHeaderHeight';
 
-export default function SafetyPlan() {
+export default function SafetyPlan({ embedded = false }) {
   const { theme } = useTheme();
+  // Always call the hook (Rules of Hooks). When embedded (e.g. inside the
+  // Crisis screen, which draws its own header), the parent already handles top
+  // spacing, so we ignore the header offset to avoid a large empty gap. Only
+  // the standalone navigator route pads content below the glass header.
+  const safeHeaderHeight = useSafeHeaderHeight();
+  const headerHeight = embedded ? 0 : safeHeaderHeight;
   const isFocused = useIsFocused();
   const [plan, setPlan] = useState({
     warningSigns: [],
@@ -301,7 +308,7 @@ export default function SafetyPlan() {
     <>
       <ScrollView 
         style={[styles.container, { backgroundColor: theme.background }]}
-        contentContainerStyle={{ paddingBottom: 120 }}
+        contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: 120 }}
       >
         <View style={[styles.header, { backgroundColor: theme.card }]}>
           <Text style={[styles.title, { color: theme.primary }]}>Personal Safety Plan</Text>

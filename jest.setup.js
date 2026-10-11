@@ -81,6 +81,16 @@ jest.mock('@expo/vector-icons', () => ({
   Ionicons: 'Ionicons',
 }));
 
+// Mock @react-navigation/elements (useHeaderHeight / HeaderHeightContext pull
+// in native view-manager code that isn't available in the Jest environment).
+jest.mock('@react-navigation/elements', () => {
+  const React = require('react');
+  return {
+    HeaderHeightContext: React.createContext(undefined),
+    useHeaderHeight: () => 0,
+  };
+});
+
 // Mock SafeAreaContext
 jest.mock('react-native-safe-area-context', () => ({
   SafeAreaProvider: ({ children }) => children,

@@ -29,13 +29,11 @@ import { BlurView } from 'expo-blur';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-function MainTabs() {
-  const { theme, isDark } = useTheme();
-  const insets = useSafeAreaInsets();
-
-  // Honor the system "Reduce Transparency" accessibility setting. When a user
-  // enables it (Settings > Accessibility > Display & Text Size), we render the
-  // tab bar with a solid background instead of Liquid Glass so it stays legible.
+// Honor the system "Reduce Transparency" accessibility setting
+// (Settings > Accessibility > Display & Text Size). When enabled, glass
+// surfaces fall back to solid backgrounds so they stay legible. Shared by the
+// tab bar and the navigation headers.
+function useReduceTransparency() {
   const [reduceTransparency, setReduceTransparency] = useState(false);
   useEffect(() => {
     let mounted = true;
@@ -51,6 +49,13 @@ function MainTabs() {
       sub?.remove?.();
     };
   }, []);
+  return reduceTransparency;
+}
+
+function MainTabs() {
+  const { theme, isDark } = useTheme();
+  const insets = useSafeAreaInsets();
+  const reduceTransparency = useReduceTransparency();
 
   // Solid fallback colors (used when Reduce Transparency is on).
   const solidTabBarColor = isDark ? '#0F1115' : '#FFFFFF';
@@ -141,6 +146,7 @@ function MainTabs() {
 
 function AppContent() {
   const { theme } = useTheme();
+  const reduceTransparency = useReduceTransparency();
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(null);
   const [onboardingCompleted, setOnboardingCompleted] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -319,9 +325,31 @@ function AppContent() {
           'MainApp'
         }
         screenOptions={{
-          headerStyle: { backgroundColor: theme.primary },
+          // iOS 26 glass header: transparent so content frosts underneath,
+          // with a green-tinted BlurView behind it to preserve brand identity
+          // and keep white title text legible. Respects Reduce Transparency.
+          headerTransparent: true,
+          headerStyle: { backgroundColor: 'transparent' },
           headerTintColor: 'white',
           headerTitleStyle: { fontWeight: 'bold' },
+          headerBackground: () =>
+            reduceTransparency ? (
+              <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.primary }]} />
+            ) : (
+              <View style={StyleSheet.absoluteFill}>
+                <BlurView
+                  tint="dark"
+                  intensity={Platform.OS === 'ios' ? 70 : 100}
+                  style={StyleSheet.absoluteFill}
+                />
+                <View
+                  style={[
+                    StyleSheet.absoluteFill,
+                    { backgroundColor: theme.primary + 'A6' }, // ~65% green tint
+                  ]}
+                />
+              </View>
+            ),
           cardStyle: { backgroundColor: theme.background }
         }}
       >

@@ -3,9 +3,11 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'r
 import { Ionicons } from '@expo/vector-icons';
 import { citations, generalResources, disclaimer, formatCitation } from '../data/citations';
 import { useTheme, designTokens } from '../context/ThemeContext';
+import useSafeHeaderHeight from '../utils/useSafeHeaderHeight';
 
 export default function ResourcesScreen() {
   const { theme } = useTheme();
+  const headerHeight = useSafeHeaderHeight();
   const openURL = (url) => {
     if (url) {
       Linking.openURL(url);
@@ -13,7 +15,10 @@ export default function ResourcesScreen() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: theme.background }]}
+      contentContainerStyle={{ paddingTop: headerHeight }}
+    >
       <Text style={[styles.title, { color: theme.primary }]}>Resources & Citations</Text>
       
       <View style={[styles.disclaimerBox, { backgroundColor: theme.primary + '20', borderLeftColor: theme.primary }]}>

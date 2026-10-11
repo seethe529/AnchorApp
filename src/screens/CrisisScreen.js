@@ -166,7 +166,7 @@ export default function CrisisScreen({ navigation }) {
             Safety Plan
           </Text>
         </View>
-        <SafetyPlan />
+        <SafetyPlan embedded />
       </View>
     );
   }
