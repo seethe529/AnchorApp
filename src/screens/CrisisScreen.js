@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Linking, Alert, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { secureStorage, STORAGE_KEYS } from '../utils/storage';
-import SafetyPlan from '../components/SafetyPlan';
 import { useTheme, designTokens } from '../context/ThemeContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import Card from '../components/Card';
+import useSafeHeaderHeight from '../utils/useSafeHeaderHeight';
 
 let Location;
 if (Platform.OS !== 'web') {
@@ -14,9 +14,9 @@ if (Platform.OS !== 'web') {
 
 export default function CrisisScreen({ navigation }) {
   const { theme } = useTheme();
+  const headerHeight = useSafeHeaderHeight();
   const [userLocation, setUserLocation] = useState(null);
   const [emergencyContacts, setEmergencyContacts] = useState([]);
-  const [showSafetyPlan, setShowSafetyPlan] = useState(false);
 
   useEffect(() => {
     getCurrentLocation();
@@ -147,34 +147,10 @@ export default function CrisisScreen({ navigation }) {
     );
   };
 
-  if (showSafetyPlan) {
-    return (
-      <View style={[styles.container, { backgroundColor: theme.background }]}>
-        <View style={[styles.safetyPlanHeader, { backgroundColor: theme.primary }]}>
-          <TouchableOpacity 
-            onPress={() => setShowSafetyPlan(false)}
-            accessibilityLabel="Back to crisis resources"
-            accessibilityRole="button"
-          >
-            <Ionicons name="arrow-back" size={24} color="white" />
-          </TouchableOpacity>
-          <Text 
-            style={[styles.safetyPlanTitle, { color: 'white' }]}
-            accessibilityRole="header"
-            accessibilityLevel={1}
-          >
-            Safety Plan
-          </Text>
-        </View>
-        <SafetyPlan embedded />
-      </View>
-    );
-  }
-
   return (
     <ScrollView 
       style={[styles.container, { backgroundColor: theme.background }]}
-      contentContainerStyle={{ paddingBottom: 120 }}
+      contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: 120 }}
     >
       <View 
         style={[styles.warningBanner, { backgroundColor: theme.primary + '20' }]}
@@ -311,7 +287,7 @@ export default function CrisisScreen({ navigation }) {
         </Text>
         
         <TouchableOpacity
-          onPress={() => setShowSafetyPlan(true)}
+          onPress={() => navigation.navigate('Safety Plan')}
           accessibilityLabel="View My Safety Plan"
           accessibilityHint="Opens your personal safety plan"
           accessibilityRole="button"
@@ -361,7 +337,9 @@ export default function CrisisScreen({ navigation }) {
         >
           {safetyPlan.map((step, index) => (
             <View key={index} style={styles.safetyStep} accessible={false}>
-              <Text style={[styles.stepNumber, { backgroundColor: theme.primary }]} accessible={false}>{index + 1}</Text>
+              <View style={[styles.stepNumber, { backgroundColor: theme.primary }]} accessible={false}>
+                <Text style={styles.stepNumberText} accessible={false}>{index + 1}</Text>
+              </View>
               <Text style={[styles.stepText, { color: theme.text }]} accessible={false}>{step}</Text>
             </View>
           ))}
@@ -393,16 +371,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
     fontWeight: '700',
-  },
-  safetyPlanHeader: { 
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
-  },
-  safetyPlanTitle: { 
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginLeft: 15,
   },
   section: { 
     paddingHorizontal: 20,
@@ -516,15 +484,20 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     marginBottom: 16,
   },
+  // The circle is a View and the number is flex-centered inside it.
+  // (Centering text via lineHeight renders low on iOS.)
   stepNumber: { 
-    color: 'white',
     width: 28,
     height: 28,
     borderRadius: 14,
-    textAlign: 'center',
-    lineHeight: 28,
-    fontWeight: '700',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 16,
+  },
+  stepNumberText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 14,
   },
   stepText: { 
     flex: 1,

@@ -6,14 +6,10 @@ import { secureStorage, STORAGE_KEYS } from '../utils/storage';
 import { useTheme } from '../context/ThemeContext';
 import useSafeHeaderHeight from '../utils/useSafeHeaderHeight';
 
-export default function SafetyPlan({ embedded = false }) {
+export default function SafetyPlan() {
   const { theme } = useTheme();
-  // Always call the hook (Rules of Hooks). When embedded (e.g. inside the
-  // Crisis screen, which draws its own header), the parent already handles top
-  // spacing, so we ignore the header offset to avoid a large empty gap. Only
-  // the standalone navigator route pads content below the glass header.
-  const safeHeaderHeight = useSafeHeaderHeight();
-  const headerHeight = embedded ? 0 : safeHeaderHeight;
+  // Pad content below the transparent glass header.
+  const headerHeight = useSafeHeaderHeight();
   const isFocused = useIsFocused();
   const [plan, setPlan] = useState({
     warningSigns: [],

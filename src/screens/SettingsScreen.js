@@ -10,6 +10,7 @@ import { requestPermissions, scheduleMoodReminder, scheduleBreathingReminder, ca
 import Constants from 'expo-constants';
 import { useTheme, designTokens } from '../context/ThemeContext';
 import Card from '../components/Card';
+import useSafeHeaderHeight from '../utils/useSafeHeaderHeight';
 
 const APP_VERSION = Constants.expoConfig?.version || '1.0.0';
 
@@ -18,6 +19,7 @@ const LOGO_BASE64 = 'iVBORw0KGgoAAAANSUhEUgAAAHgAAAB4CAIAAAC2BqGFAAAAAXNSR0IArs4
 
 export default function SettingsScreen({ navigation }) {
   const { theme, isDark, toggleTheme } = useTheme();
+  const headerHeight = useSafeHeaderHeight();
   const [preferences, setPreferences] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showTimePicker, setShowTimePicker] = useState(false);
@@ -560,7 +562,7 @@ export default function SettingsScreen({ navigation }) {
   return (
     <ScrollView 
       style={[styles.container, { backgroundColor: theme.background }]}
-      contentContainerStyle={{ paddingBottom: 120 }}
+      contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: 120 }}
     >
       <Text 
         style={[styles.title, { color: theme.primary }]}

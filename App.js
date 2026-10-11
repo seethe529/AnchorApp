@@ -52,13 +52,39 @@ function useReduceTransparency() {
   return reduceTransparency;
 }
 
+// Solid bar color used when Reduce Transparency is on (and for the AI header,
+// which can't be transparent because of its keyboard layout).
+const solidBarColor = (isDark) => (isDark ? '#0F1115' : '#FFFFFF');
+
+// Shared neutral Liquid Glass surface for every bar (tab bar + all headers),
+// following Apple's iOS 26 guidance: bars stay neutral so content shows
+// through, and brand color lives in titles, icons, and controls instead.
+// One component so the top and bottom of the app can never drift apart.
+function GlassBarBackground({ isDark, reduceTransparency }) {
+  if (reduceTransparency) {
+    return <View style={[StyleSheet.absoluteFill, { backgroundColor: solidBarColor(isDark) }]} />;
+  }
+  return (
+    <View style={StyleSheet.absoluteFill}>
+      <BlurView
+        tint={isDark ? 'dark' : 'light'}
+        intensity={Platform.OS === 'ios' ? 70 : 100}
+        style={StyleSheet.absoluteFill}
+      />
+      <View
+        style={[
+          StyleSheet.absoluteFill,
+          { backgroundColor: isDark ? 'rgba(15, 17, 21, 0.3)' : 'rgba(255, 255, 255, 0.3)' },
+        ]}
+      />
+    </View>
+  );
+}
+
 function MainTabs() {
   const { theme, isDark } = useTheme();
   const insets = useSafeAreaInsets();
   const reduceTransparency = useReduceTransparency();
-
-  // Solid fallback colors (used when Reduce Transparency is on).
-  const solidTabBarColor = isDark ? '#0F1115' : '#FFFFFF';
 
   return (
     <Tab.Navigator
@@ -76,8 +102,14 @@ function MainTabs() {
         },
         tabBarActiveTintColor: isDark ? '#3FAF7F' : '#2E845D',
         tabBarInactiveTintColor: isDark ? '#9CA3AF' : '#94A3B8',
-        headerStyle: { backgroundColor: theme.primary },
-        headerTintColor: 'white',
+        // Neutral glass header (matches the tab bar), brand-green title.
+        headerTransparent: true,
+        headerStyle: { backgroundColor: 'transparent' },
+        headerTintColor: theme.primary,
+        headerTitleStyle: { fontWeight: 'bold' },
+        headerBackground: () => (
+          <GlassBarBackground isDark={isDark} reduceTransparency={reduceTransparency} />
+        ),
         // iOS 26 Liquid Glass: translucent tab bar.
         // Height stays 64 + insets.bottom — the AI screen hardcodes this value
         // in three places (input bar, suggestions, conversation margin), so it
@@ -96,34 +128,10 @@ function MainTabs() {
           shadowOpacity: 0.15,
           shadowRadius: 8,
         },
-        // Rendered behind the tab bar content. A subtle tint over the blur
-        // keeps labels legible on Android where blur is weaker/unsupported.
-        tabBarBackground: () =>
-          reduceTransparency ? (
-            // Accessibility: solid, fully opaque bar for Reduce Transparency users.
-            <View
-              style={[StyleSheet.absoluteFill, { backgroundColor: solidTabBarColor }]}
-            />
-          ) : (
-            // Default: Liquid Glass — blur with a light tint for legibility.
-            <View style={StyleSheet.absoluteFill}>
-              <BlurView
-                tint={isDark ? 'dark' : 'light'}
-                intensity={Platform.OS === 'ios' ? 70 : 100}
-                style={StyleSheet.absoluteFill}
-              />
-              <View
-                style={[
-                  StyleSheet.absoluteFill,
-                  {
-                    backgroundColor: isDark
-                      ? 'rgba(15, 17, 21, 0.3)'
-                      : 'rgba(255, 255, 255, 0.3)',
-                  },
-                ]}
-              />
-            </View>
-          ),
+        // Same neutral glass surface as the headers.
+        tabBarBackground: () => (
+          <GlassBarBackground isDark={isDark} reduceTransparency={reduceTransparency} />
+        ),
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '600',
@@ -136,7 +144,20 @@ function MainTabs() {
     >
       <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Tools" component={ToolsScreen} />
-      <Tab.Screen name="AI" component={AIAgentScreen} options={{ tabBarLabel: 'AI', title: 'Support Chat' }} />
+      <Tab.Screen
+        name="AI"
+        component={AIAgentScreen}
+        options={{
+          tabBarLabel: 'AI',
+          title: 'Support Chat',
+          // The AI screen's KeyboardAvoidingView layout depends on a solid,
+          // non-floating header, so it can't be transparent. It uses the same
+          // neutral color as the glass bars so it still looks consistent.
+          headerTransparent: false,
+          headerStyle: { backgroundColor: solidBarColor(isDark) },
+          headerBackground: undefined,
+        }}
+      />
       <Tab.Screen name="Crisis" component={CrisisScreen} />
       <Tab.Screen name="Progress" component={ProgressScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
@@ -145,7 +166,7 @@ function MainTabs() {
 }
 
 function AppContent() {
-  const { theme } = useTheme();
+  const { theme, isDark } = useTheme();
   const reduceTransparency = useReduceTransparency();
   const [disclaimerAccepted, setDisclaimerAccepted] = useState(null);
   const [onboardingCompleted, setOnboardingCompleted] = useState(null);
@@ -325,31 +346,15 @@ function AppContent() {
           'MainApp'
         }
         screenOptions={{
-          // iOS 26 glass header: transparent so content frosts underneath,
-          // with a green-tinted BlurView behind it to preserve brand identity
-          // and keep white title text legible. Respects Reduce Transparency.
+          // Neutral glass header (same as tab screens), brand-green title
+          // and back arrow. Respects Reduce Transparency.
           headerTransparent: true,
           headerStyle: { backgroundColor: 'transparent' },
-          headerTintColor: 'white',
+          headerTintColor: theme.primary,
           headerTitleStyle: { fontWeight: 'bold' },
-          headerBackground: () =>
-            reduceTransparency ? (
-              <View style={[StyleSheet.absoluteFill, { backgroundColor: theme.primary }]} />
-            ) : (
-              <View style={StyleSheet.absoluteFill}>
-                <BlurView
-                  tint="dark"
-                  intensity={Platform.OS === 'ios' ? 70 : 100}
-                  style={StyleSheet.absoluteFill}
-                />
-                <View
-                  style={[
-                    StyleSheet.absoluteFill,
-                    { backgroundColor: theme.primary + 'A6' }, // ~65% green tint
-                  ]}
-                />
-              </View>
-            ),
+          headerBackground: () => (
+            <GlassBarBackground isDark={isDark} reduceTransparency={reduceTransparency} />
+          ),
           cardStyle: { backgroundColor: theme.background }
         }}
       >

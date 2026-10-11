@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LineChart, BarChart } from 'react-native-chart-kit';
 import { storage, STORAGE_KEYS } from '../utils/storage';
 import { useTheme, designTokens } from '../context/ThemeContext';
+import useSafeHeaderHeight from '../utils/useSafeHeaderHeight';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -45,6 +46,7 @@ const QuickStats = memo(({ moodData, techniqueData, allMoodLogs, theme }) => {
 
 export default function ProgressScreen({ navigation }) {
   const { theme, isDark } = useTheme();
+  const headerHeight = useSafeHeaderHeight();
   const [moodData, setMoodData] = useState([]);
   const [techniqueData, setTechniqueData] = useState([]);
   const [allRatedTechniques, setAllRatedTechniques] = useState([]);
@@ -171,7 +173,7 @@ export default function ProgressScreen({ navigation }) {
   return (
     <ScrollView 
       style={[styles.container, { backgroundColor: theme.background }]}
-      contentContainerStyle={{ paddingBottom: 120 }}
+      contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: 120 }}
     >
       <Text 
         style={[styles.title, { color: theme.primary }]}

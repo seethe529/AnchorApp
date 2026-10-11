@@ -7,6 +7,7 @@ import { storage, STORAGE_KEYS } from '../utils/storage';
 import { trackTechniqueUsed } from '../utils/appRating';
 import { Platform, Linking } from 'react-native';
 import { useTheme, designTokens } from '../context/ThemeContext';
+import useSafeHeaderHeight from '../utils/useSafeHeaderHeight';
 
 let Haptics;
 if (Platform.OS !== 'web') {
@@ -15,6 +16,7 @@ if (Platform.OS !== 'web') {
 
 export default function ToolsScreen() {
   const { theme } = useTheme();
+  const headerHeight = useSafeHeaderHeight();
   const [selectedCategory, setSelectedCategory] = useState('grounding');
   const [selectedTechnique, setSelectedTechnique] = useState(null);
   const scrollViewRef = useRef(null);
@@ -82,7 +84,7 @@ export default function ToolsScreen() {
 
   if (selectedTechnique) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.container, { backgroundColor: theme.background, paddingTop: headerHeight }]}>
         <View style={[styles.header, { backgroundColor: theme.card, borderBottomColor: theme.border }]}>
           <TouchableOpacity 
             onPress={() => setSelectedTechnique(null)} 
@@ -288,7 +290,7 @@ export default function ToolsScreen() {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <View style={[styles.container, { backgroundColor: theme.background, paddingTop: headerHeight }]}>
       <ScrollView horizontal style={[styles.categoryTabs, { backgroundColor: theme.card, borderBottomColor: theme.border }]} showsHorizontalScrollIndicator={false}>
         {categories.map(category => (
           <TouchableOpacity
