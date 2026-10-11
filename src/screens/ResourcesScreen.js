@@ -185,7 +185,8 @@ const styles = StyleSheet.create({
     padding: 15, 
     borderRadius: designTokens.borderRadius.card, 
     marginBottom: 15,
-    elevation: 2
+    shadowColor: '#000',
+    ...designTokens.shadows.card,
   },
   citationTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 5 },
   citationText: { fontSize: 13, fontStyle: 'italic', marginBottom: 8 },
@@ -203,7 +204,8 @@ const styles = StyleSheet.create({
     padding: 15, 
     borderRadius: designTokens.borderRadius.card, 
     marginBottom: 15,
-    elevation: 1
+    shadowColor: '#000',
+    ...designTokens.shadows.card,
   },
   resourceTitle: { fontSize: 16, fontWeight: 'bold', marginBottom: 3 },
   resourceOrg: { fontSize: 14, marginBottom: 8 },
