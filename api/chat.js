@@ -65,8 +65,9 @@ export default async function handler(req, res) {
         // is gpt-6-luna (their smallest/cheapest current tier).
         model: 'gpt-6-luna',
         messages,
-        max_tokens: Math.min(max_tokens, 800),
-        temperature: 0.7
+        // Newer models reject max_tokens; they use max_completion_tokens.
+        // temperature omitted: gpt-6-luna only supports the default (1).
+        max_completion_tokens: Math.min(max_tokens, 800)
       })
     });
 
