@@ -62,7 +62,7 @@ describe('OpenAI Service', () => {
     const response = await sendMessageToOpenAI('test message', []);
     expect(response).toBe('AI response from Vercel');
     expect(fetch).toHaveBeenCalledWith(
-      'https://anchor-hdhkcdg9l-ryans-projects-1d0e75af.vercel.app/api/chat',
+      'https://anchor-app-pi.vercel.app/api/chat',
       expect.objectContaining({
         method: 'POST',
         headers: expect.objectContaining({

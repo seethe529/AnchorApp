@@ -4,7 +4,9 @@ import ErrorLogger from '../utils/errorLogger';
 
 // SECURITY: API calls now go through Vercel backend (not directly to OpenAI)
 // This prevents API key exposure and enables server-side rate limiting
-const BACKEND_API_URL = 'https://anchor-hdhkcdg9l-ryans-projects-1d0e75af.vercel.app/api/chat';
+// Use the stable production alias, not a per-deployment URL. Per-deployment
+// URLs are frozen to old code, so backend updates would never reach the app.
+const BACKEND_API_URL = 'https://anchor-app-pi.vercel.app/api/chat';
 
 // Client-side rate limiting (backup layer)
 const RATE_LIMIT = 5; // Reduced from 10
