@@ -61,7 +61,9 @@ export default async function handler(req, res) {
         'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        // gpt-4o-mini retires Jan 14, 2027. OpenAI's recommended replacement
+        // is gpt-6-luna (their smallest/cheapest current tier).
+        model: 'gpt-6-luna',
         messages,
         max_tokens: Math.min(max_tokens, 800),
         temperature: 0.7
